@@ -24,10 +24,14 @@ const baseConfig = {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
       },
+      {
+        test: /\.ts$/i,
+        use: 'ts-loader',
+      },
     ],
   },
   resolve: {
-    extensions: ['.js', '.json'],
+    extensions: ['.ts', '.js', '.json'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
