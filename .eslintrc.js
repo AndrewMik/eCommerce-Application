@@ -7,6 +7,8 @@ module.exports = {
     'airbnb-base',
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+    'prettier'
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',
@@ -15,7 +17,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prettier'],
   root: true,
   rules: {
     'import/extensions': 'off',
@@ -44,6 +46,16 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/no-non-null-assertion': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        "trailingComma": "all",
+        "tabWidth": 2,
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 120
+      }
+    ],
   },
   ignorePatterns: ['webpack.config.js', 'webpack.dev.config.js', '.eslintrc.js'],
 };
