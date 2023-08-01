@@ -14,7 +14,7 @@ What kind of change does this PR introduce?
 
 #### Related Tasks
 
-List any related task links from the issue tracker:
+List any related task links from the issue tracker:  
 [EA-5](https://deadliners.atlassian.net/browse/EA-5?atlOrigin=eyJpIjoiNTc4OGJiZWJkMmM3NDgxMTgxNWJkNzdhMTg3NDc2YTQiLCJwIjoiaiJ9)
 
 #### Changes made
