@@ -79,9 +79,9 @@ In the project directory, you can run the following commands:
 
 ## Contact 📧
 
-- **TeamLead:** Lizaveta Dondysh (lizadondysh@icloud.com)
-- **TeamMember:** Alina Nosovets (alinanosovets6849@gmail.com)
-- **TeamMember:** Andrew Mikitchuk (andrew.mikitchuk@gmail.com)
+- **Team Lead:** Lizaveta Dondysh (lizadondysh@icloud.com)
+- **Team Member:** Alina Nosovets (alinanosovets6849@gmail.com)
+- **Team Member:** Andrew Mikitchuk (andrew.mikitchuk@gmail.com)
 
 
 
