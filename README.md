@@ -18,7 +18,7 @@ We strive to make toy shopping 🛍 an exciting and delightful experience for fa
 
 Our user-friendly eCommerce platform is designed with parents and kids in mind, providing an engaging, secure, and hassle-free shopping journey. We aspire to be a trusted partner in building happy memories, supporting families in their quest for the perfect toy that sparks creativity and fun.
 
-At Kiddo Kingdom, every toy is a treasure, every smile is a success, and every child is a king🤴 or queen👸 of their own magical realm 🏜 Welcome to Kiddo Kingdom 🧸🏰, where imagination reigns supreme!
+At Kiddo Kingdom, every toy is a treasure, every smile is a success, and every child is a king🤴 or queen👸 of their magical realm 🏜 Welcome to Kiddo Kingdom 🧸🏰, where imagination reigns supreme!
 
 ## Features 📘
 
@@ -69,7 +69,7 @@ To get the Kiddo Kingdom application running locally, follow these instructions:
 
 In the project directory, you can run the following commands:
 
-- `npm start`: runs the app in the development mode. Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+- `npm start`: runs the app in development mode. Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 - `npm run build`: builds the app for production to the `dist` folder.
 
@@ -79,9 +79,9 @@ In the project directory, you can run the following commands:
 
 ## Contact 📧
 
-- **Team Lead:** Lizaveta Dondysh (lizadondysh@icloud.com)
-- **Team Member:** Alina Nosovets (alinanosovets6849@gmail.com)
-- **Team Member:** Andrew Mikitchuk (andrew.mikitchuk@gmail.com)
+- Lizaveta Dondysh (lizadondysh@icloud.com)
+- Alina Nosovets (alinanosovets6849@gmail.com)
+- Andrew Mikitchuk (andrew.mikitchuk@gmail.com)
 
 
 
