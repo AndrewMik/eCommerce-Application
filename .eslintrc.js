@@ -8,7 +8,7 @@ module.exports = {
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
-    'prettier'
+    'prettier',
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',
@@ -49,12 +49,12 @@ module.exports = {
     'prettier/prettier': [
       'error',
       {
-        "trailingComma": "all",
-        "tabWidth": 2,
-        "semi": true,
-        "singleQuote": true,
-        "printWidth": 120
-      }
+        trailingComma: 'all',
+        tabWidth: 2,
+        semi: true,
+        singleQuote: true,
+        printWidth: 120,
+      },
     ],
   },
   ignorePatterns: ['webpack.config.js', 'webpack.dev.config.js', '.eslintrc.js'],
