@@ -14,7 +14,7 @@ Welcome to our Kiddo Kingdom 🧸🏰 the magical eCommerce application for chil
 ## Mission ☝️
 At Kiddo Kingdom, we believe in the boundless magic🪄 of childhood and the transformative power of play. Our mission is to nurture imagination, curiosity, and joy in children by providing a vast kingdom of high-quality toys. 
 
-We strive to make toy shopping 🛍 an exciting and delightful experience for families, offering a carefully curated selection that encourages creative exploration and personal growth. Safety, quality, and ethical sourcing are the pillars of our commitment, ensuring that every toy in our kingdom brings not just entertainment but enrichment.
+We strive to make toy shopping 🛍 an exciting and delightful experience for families, offering a carefully curated selection that encourages creative exploration and personal growth. Safety, quality, and ethical sourcing are the pillars of our commitment, ensuring that every toy in our kingdom brings entertainment and enrichment.
 
 Our user-friendly eCommerce platform is designed with parents and kids in mind, providing an engaging, secure, and hassle-free shopping journey. We aspire to be a trusted partner in building happy memories, supporting families in their quest for the perfect toy that sparks creativity and fun.
 
