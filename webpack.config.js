@@ -25,6 +25,13 @@ const baseConfig = {
         test: /\.ts$/i,
         use: 'ts-loader',
       },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/fonts/[name][ext]',
+        },
+      }
     ],
   },
   resolve: {
