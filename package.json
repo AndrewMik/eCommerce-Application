@@ -6,6 +6,8 @@
   "scripts": {
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "test": "jest --passWithNoTests",
     "lint": "eslint '**/*.ts'",
     "format": "prettier --config .prettierrc.js 'src/**/*.ts' --write",
