@@ -10,14 +10,21 @@
     "format": "prettier --config .prettierrc.js 'app/**/*.tsx' --write",
     "prettier": "prettier --config .prettierrc.js 'app/**/*.tsx'",
     "test": "jest",
-    "test:coverage": "jest --ci --runInBand --coverage --reporters='default' --reporters='jest-junit' --watchAll=false"
+    "test:coverage": "jest --ci --runInBand --coverage --reporters='default' --reporters='jest-junit' --watchAll=false",
+    "prepare": "husky install",
+    "pre-commit": "npm run prettier; npm run lint; npm test",
+    "pre-push": "npx validate-branch-name"
+  },
+  "validate-branch-name": {
+    "pattern": "^(feature|release|fix|hotfix|docs|build|test|refactor)/([A-Z-]+-\\d+/)?[a-z-]+",
+    "errorMsg": "Check your branch name. Use 'git branch -m new-branch-name' to rename it."
   },
   "dependencies": {
     "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
-  "devDependencies": {  
+  "devDependencies": {
     "typescript": "5.1.6",
     "@types/node": "20.4.7",
     "@types/react": "18.2.18",
@@ -40,6 +47,7 @@
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
     "prettier": "^3.0.1",
-    "ts-jest": "^29.1.1"
+    "ts-jest": "^29.1.1",
+    "husky": "^8.0.0"
   }
 }
