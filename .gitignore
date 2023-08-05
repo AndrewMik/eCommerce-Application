@@ -124,3 +124,7 @@ dist
 kiddo-kingdom/junit.xml
 kiddo-kingdom/.vscode/settings.json
 junit.xml
+
+
+#vscode
+.vscode

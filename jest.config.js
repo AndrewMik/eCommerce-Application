@@ -18,9 +18,5 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
-  transformIgnorePatterns: [
-    '/node_modules/',
-    '^.+\\.module\\.(css|sass|scss)$',
-  ],
-}
-
+  transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
+};
