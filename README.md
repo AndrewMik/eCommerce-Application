@@ -53,8 +53,8 @@ using npm:
 - **clone repository:** `git clone https://github.com/AndrewMik/eCommerce-Application.git`
 - **navigate to the project directory:** `cd ecommerce-application`
 - **install dependencies:** `npm install --legacy-peer-deps`
+- **build for production:** `npm run build`
 - **start development server:** `npm start`
-- **build for production (if needed):** `npm run build`
 
 using yarn:
 
