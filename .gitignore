@@ -105,3 +105,5 @@ dist
 
 # macOS Files
 .DS_Store
+kiddo-kingdom/junit.xml
+kiddo-kingdom/.vscode/settings.json
