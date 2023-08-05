@@ -35,7 +35,7 @@ At Kiddo Kingdom, every toy is a treasure, every smile is a success, and every c
 
 ## Technology stack 💻
 
-- **Frontend**: [HTML](https://html.com/document/), [CSS](https://devdocs.io/css/), [JavaScript](https://tc39.es/ecma262/) [TypeScript](https://www.typescriptlang.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
+- **Frontend**: HTML, CSS, JavaScript, [TypeScript](https://www.typescriptlang.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
 - **Bundling**: Managed by Next.js (using Webpack)
 - **Testing**: [Jest](https://jestjs.io/), [React Testing Library](https://testing-library.com/)
 - **Code Quality**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/)
