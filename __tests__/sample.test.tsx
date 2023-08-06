@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
-import MyComponent from '../app/MyComponent';
+import MyComponent from '../components/test-component/test-component-for-jest';
 
 test('renders hello world', () => {
   render(<MyComponent />);
