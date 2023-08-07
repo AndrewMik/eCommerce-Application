@@ -37,7 +37,6 @@
     "react/no-unknown-property": [2, { "ignore": ["jsx", "global", "p-id"] }],
     "react/prop-types": 0,
     "react/react-in-jsx-scope": 0,
-    "max-lines-per-function": ["error", 40],
     "prettier/prettier": [
       "error",
       {
@@ -48,7 +47,6 @@
         "printWidth": 120
       }
     ]
-    
   },
   "overrides": [
     {
@@ -62,6 +60,3 @@
     }
   }
 }
-
-
-
