@@ -1,38 +1,53 @@
 'use client';
 
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Col, Row } from 'antd';
+import Image from 'next/image';
+import Link from 'next/link';
+import logo from '../../public/kiddo-kingdom-logo.svg';
 
 const MainHeader: React.FC = () => {
   const { Header } = Layout;
-  const navbar = ['About', 'Login', 'Registration', 'Catalog', 'Cart'];
+  const menuItems = [
+    { key: '/', label: 'About' },
+    { key: '/login', label: 'Login' },
+    { key: '/registration', label: 'Registration' },
+    { key: '/catalog', label: 'Catalog' },
+    { key: '/cart', label: 'Cart' },
+  ];
 
   return (
-    <div>
+    <>
       <Layout>
         <Header
           style={{
             position: 'sticky',
             top: 0,
             zIndex: 1,
-            width: '100%',
-            display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#fff',
+            backgroundColor: '#f5f5f5',
+            minHeight: '90px',
           }}
         >
-          <div className="demo-logo" />
-          <Menu
-            theme="light"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            items={navbar.map((nav, index) => ({
-              key: String(index + 1),
-              label: nav,
-            }))}
-          />
+          <Row>
+            <Col span={8}>
+              <Link href={'./'}>
+                <Image src={logo} width={120} height={80} alt="Picture of the author" style={{ marginRight: '20px' }} />
+              </Link>
+            </Col>
+            <Col span={8} offset={8}>
+              <Menu
+                mode="horizontal"
+                style={{ backgroundColor: '#f5f5f5' }}
+                items={menuItems.map((item, index) => ({
+                  key: `item${index}`,
+                  label: <Link href={item.key}>{item.label}</Link>,
+                }))}
+              />
+            </Col>
+          </Row>
         </Header>
       </Layout>
-    </div>
+    </>
   );
 };
 

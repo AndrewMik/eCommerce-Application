@@ -6,7 +6,7 @@ const MainFooter: React.FC = () => {
   const { Footer } = Layout;
 
   return (
-    <div style={{ padding: '0 24px' }}>
+    <div style={{ margin: '0', width: '100vw' }}>
       <Layout>
         <Footer
           style={{
