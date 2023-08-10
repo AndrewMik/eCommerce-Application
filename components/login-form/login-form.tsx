@@ -2,25 +2,12 @@
 
 import { Button, Form, Input, Space, Row, Col } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Placeholders, ValidationMessages } from './enums.login-form';
 
 type FieldType = {
   password?: string;
   email?: string;
 };
-
-enum Placeholders {
-  Email = 'your.email@gmail.com',
-  Password = 'Password',
-}
-
-enum ValidationMessages {
-  EmailRequired = 'Please enter your email',
-  EmailInvalid = 'The email is not valid',
-  PasswordRequired = 'Please enter your password',
-  PasswordPattern = `Your password must contain at least one uppercase and lowercase letter, 
-                    digit, and special character (such as !, @, #, $, etc.) 
-                    and must not start or end with a whitespace character.`,
-}
 
 const LoginForm: React.FC = () => {
   const regExp = /(^(?![\s]))(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W)(.{7,})(.*!?(\S+)$)/;
