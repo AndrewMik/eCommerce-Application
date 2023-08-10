@@ -119,6 +119,10 @@ class Client {
 
     return this.cachedClients.anonymous;
   }
+
+  clearApiRoot() {
+    this.cachedClients = {};
+  }
 }
 
 export default Client;
