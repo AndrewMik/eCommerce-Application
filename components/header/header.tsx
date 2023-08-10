@@ -64,6 +64,7 @@ const MainHeader: React.FC = () => {
                   alt="Picture of the author"
                   style={{ marginRight: '20px' }}
                   priority={true}
+                  onClick={() => handleNavClick('/')}
                 />
               </Link>
             </Col>
