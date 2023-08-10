@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --config .prettierrc.js 'app/**/*.tsx' --write",
-    "prettier": "prettier --config .prettierrc.js 'app/**/*.tsx' --check",
+    "format": "prettier --config .prettierrc.js \"**/*.{ts,tsx}\" --write",
+    "prettier": "prettier --config .prettierrc.js \"**/*.{ts,tsx}\" --check",
     "test": "jest",
     "test:coverage": "jest --ci --runInBand --coverage --reporters='default' --reporters='jest-junit' --watchAll=false",
     "prepare": "husky install",
-    "pre-commit": "npm run prettier; npm run lint; npm test",
+    "pre-commit": "npm run prettier && npm run lint && npm test",
     "pre-push": "npx validate-branch-name"
   },
   "validate-branch-name": {
