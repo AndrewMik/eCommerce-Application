@@ -2,6 +2,7 @@
 
 import { Button, Form, Input, Space, Row, Col } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import validatePasswordRegExp from '../../utils/input-validation';
 import { Placeholders, ValidationMessages } from './enums.login-form';
 
 type FieldType = {
@@ -10,8 +11,6 @@ type FieldType = {
 };
 
 const LoginForm: React.FC = () => {
-  const regExp = /(^(?![\s]))(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W)(.{7,})(.*!?(\S+)$)/;
-
   const iconStyle = {
     color: 'rgba(0,0,0,.25)',
     display: 'flex',
@@ -63,7 +62,7 @@ const LoginForm: React.FC = () => {
                   rules={[
                     { required: true, message: ValidationMessages.PasswordRequired },
                     {
-                      pattern: regExp,
+                      pattern: validatePasswordRegExp,
                       message: ValidationMessages.PasswordPattern,
                     },
                   ]}

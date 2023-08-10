@@ -1,21 +1,10 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import mockMatchMedia from '../../utils/mock';
 import LoginForm from '../../components/login-form/login-form';
 import { Placeholders, ValidationMessages } from '../../components/login-form/enums.login-form';
 
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+mockMatchMedia();
 
 enum TestMessage {
   InvalidPassword = 'displays validation message for invalid password format',
