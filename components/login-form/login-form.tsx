@@ -4,10 +4,23 @@ import { Button, Form, Input, Space, Row, Col } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 type FieldType = {
-  username?: string;
   password?: string;
   email?: string;
 };
+
+enum Placeholders {
+  Email = 'your.email@gmail.com',
+  Password = 'Password',
+}
+
+enum ValidationMessages {
+  EmailRequired = 'Please enter your email',
+  EmailInvalid = 'The email is not valid',
+  PasswordRequired = 'Please enter your password',
+  PasswordPattern = `Your password must contain at least one uppercase and lowercase letter, 
+                    digit, and special character (such as !, @, #, $, etc.) 
+                    and must not start or end with a whitespace character.`,
+}
 
 const LoginForm: React.FC = () => {
   const regExp = /(^(?![\s]))(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W)(.{7,})(.*!?(\S+)$)/;
@@ -36,7 +49,6 @@ const LoginForm: React.FC = () => {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             name="login-form"
-            className="login-form"
             initialValues={{ remember: true }}
             autoComplete="off"
           >
@@ -46,8 +58,8 @@ const LoginForm: React.FC = () => {
                   label="Email"
                   name="email"
                   rules={[
-                    { required: true, message: 'Please enter your email' },
-                    { type: 'email', message: 'The email is not valid' },
+                    { required: true, message: ValidationMessages.EmailRequired },
+                    { type: 'email', message: ValidationMessages.EmailInvalid },
                   ]}
                 >
                   <Input
@@ -59,7 +71,7 @@ const LoginForm: React.FC = () => {
                         }}
                       />
                     }
-                    placeholder="your.email@gmail.com"
+                    placeholder={Placeholders.Email}
                   />
                 </Form.Item>
 
@@ -67,10 +79,10 @@ const LoginForm: React.FC = () => {
                   label="Password"
                   name="password"
                   rules={[
-                    { required: true, message: 'Please enter your password' },
+                    { required: true, message: ValidationMessages.PasswordRequired },
                     {
                       pattern: regExp,
-                      message: `Your password must contain at least one uppercase and lowercase letters, digit, and special character (such as !, @, #, $, etc.) and must not start or end with a whitespace character.`,
+                      message: ValidationMessages.PasswordPattern,
                     },
                   ]}
                 >
@@ -83,7 +95,7 @@ const LoginForm: React.FC = () => {
                         }}
                       />
                     }
-                    placeholder="Password"
+                    placeholder={Placeholders.Password}
                     iconRender={(visible): ReturnType<typeof EyeTwoTone> =>
                       visible ? (
                         <EyeTwoTone />
