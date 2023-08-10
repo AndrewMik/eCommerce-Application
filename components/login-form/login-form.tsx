@@ -12,6 +12,11 @@ type FieldType = {
 const LoginForm: React.FC = () => {
   const regExp = /(^(?![\s]))(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W)(.{7,})(.*!?(\S+)$)/;
 
+  const iconStyle = {
+    color: 'rgba(0,0,0,.25)',
+    display: 'flex',
+  };
+
   return (
     <>
       <Row
@@ -49,17 +54,7 @@ const LoginForm: React.FC = () => {
                     { type: 'email', message: ValidationMessages.EmailInvalid },
                   ]}
                 >
-                  <Input
-                    prefix={
-                      <MailOutlined
-                        style={{
-                          color: 'rgba(0,0,0,.25)',
-                          display: 'flex',
-                        }}
-                      />
-                    }
-                    placeholder={Placeholders.Email}
-                  />
+                  <Input prefix={<MailOutlined style={iconStyle} />} placeholder={Placeholders.Email} />
                 </Form.Item>
 
                 <Form.Item<FieldType>
@@ -74,14 +69,7 @@ const LoginForm: React.FC = () => {
                   ]}
                 >
                   <Input.Password
-                    prefix={
-                      <LockOutlined
-                        style={{
-                          color: 'rgba(0,0,0,.25)',
-                          display: 'flex',
-                        }}
-                      />
-                    }
+                    prefix={<LockOutlined style={iconStyle} />}
                     placeholder={Placeholders.Password}
                     iconRender={(visible): ReturnType<typeof EyeTwoTone> =>
                       visible ? (
