@@ -1,12 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { ImgHTMLAttributes } from 'react';
 import MainHeader from '../components/header/header';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props: ImgHTMLAttributes<HTMLImageElement>) => {
-    return <img {...props} />;
+  default: (props: JSX.IntrinsicElements['img'] & { priority?: boolean }) => {
+    const { priority, ...imgProps } = props;
+    return <img {...imgProps} />;
   },
 }));
 
