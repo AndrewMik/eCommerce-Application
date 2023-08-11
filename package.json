@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --config .prettierrc.js 'app/**/*.tsx' --write",
-    "prettier": "prettier --config .prettierrc.js 'app/**/*.tsx' --check",
+    "format": "prettier --config .prettierrc.js \"**/*.{ts,tsx}\" --write",
+    "prettier": "prettier --config .prettierrc.js \"**/*.{ts,tsx}\" --check",
     "test": "jest",
     "test:coverage": "jest --ci --runInBand --coverage --reporters='default' --reporters='jest-junit' --watchAll=false",
     "prepare": "husky install",
-    "pre-commit": "npm run prettier; npm run lint; npm test",
+    "pre-commit": "npm run prettier && npm run lint && npm test",
     "pre-push": "npx validate-branch-name"
+    "predev": "ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx",
+    "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/genAntdCss.tsx"
   },
   "validate-branch-name": {
     "pattern": "^(feature|release|fix|hotfix|docs|build|test|refactor)/([A-Z-]+-\\d+/)?[a-z-]+",
@@ -23,6 +25,7 @@
     "@ant-design/cssinjs": "^1.16.1",
     "@commercetools/platform-sdk": "^4.11.0",
     "@commercetools/sdk-client-v2": "^2.2.0",
+    "@ant-design/static-style-extract": "^1.0.1",
     "@ant-design/icons": "^5.2.5",
     "antd": "^5.8.2",
     "next": "13.4.12",
@@ -39,6 +42,7 @@
     "@types/react-dom": "18.2.7",
     "@types/testing-library__react": "^10.2.0",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "cross-env": "^7.0.3",
     "eslint": "8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -54,6 +58,8 @@
     "jest-junit": "^16.0.0",
     "prettier": "^3.0.1",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.1",
     "typescript": "5.1.6"
   }
 }
