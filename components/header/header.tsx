@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from '../../public/kiddo-kingdom-logo.svg';
+import logo from '../../public/kiddo-logo.svg';
 import Paths from './header-types';
 
 const { Header } = Layout;
