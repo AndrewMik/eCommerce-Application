@@ -22,12 +22,12 @@ class Client {
   } = {};
 
   constructor() {
-    this.projectKey = process.env.NEXT_PUBLIC_CTP_PROJECT_KEY || '';
-    this.clientSecret = process.env.NEXT_PUBLIC_CTP_CLIENT_SECRET || '';
-    this.clientId = process.env.NEXT_PUBLIC_CTP_CLIENT_ID || '';
-    this.authUrl = process.env.NEXT_PUBLIC_CTP_AUTH_URL || '';
-    this.apiUrl = process.env.NEXT_PUBLIC_CTP_API_URL || '';
-    this.scopes = (process.env.NEXT_PUBLIC_CTP_SCOPES || '').split(' ');
+    this.projectKey = process.env.NEXT_PUBLIC_CTP_PROJECT_KEY ?? '';
+    this.clientSecret = process.env.NEXT_PUBLIC_CTP_CLIENT_SECRET ?? '';
+    this.clientId = process.env.NEXT_PUBLIC_CTP_CLIENT_ID ?? '';
+    this.authUrl = process.env.NEXT_PUBLIC_CTP_AUTH_URL ?? '';
+    this.apiUrl = process.env.NEXT_PUBLIC_CTP_API_URL ?? '';
+    this.scopes = (process.env.NEXT_PUBLIC_CTP_SCOPES ?? '').split(' ');
   }
 
   private get httpMiddlewareOptions(): HttpMiddlewareOptions {
