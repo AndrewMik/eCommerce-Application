@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
 import {
   HomeOutlined,
@@ -13,19 +14,25 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../../public/kiddo-kingdom-logo.svg';
+import Paths from './header-types';
 
 const { Header } = Layout;
 
 const menuItems = [
-  { key: '1', label: <Link href={'./'}>Home</Link>, icon: <HomeOutlined /> },
-  { key: '2', label: <Link href={'./login'}>Sign in</Link>, icon: <LoginOutlined /> },
-  { key: '3', label: <Link href={'./registration'}>Sign up</Link>, icon: <UserOutlined /> },
-  { key: '4', label: <Link href={'./catalog'}>Catalog</Link>, icon: <ShoppingOutlined /> },
-  { key: '5', label: <Link href={'./cart'}>Cart</Link>, icon: <ShoppingCartOutlined /> },
+  { key: Paths.HOME, label: <Link href={Paths.HOME}>Home</Link>, icon: <HomeOutlined /> },
+  { key: Paths.LOGIN, label: <Link href={Paths.LOGIN}>Sign in</Link>, icon: <LoginOutlined /> },
+  {
+    key: Paths.REGISTRATION,
+    label: <Link href={Paths.REGISTRATION}>Sign up</Link>,
+    icon: <UserOutlined />,
+  },
+  { key: Paths.CATALOG, label: <Link href={Paths.CATALOG}>Catalog</Link>, icon: <ShoppingOutlined /> },
+  { key: Paths.CART, label: <Link href={Paths.CART}>Cart</Link>, icon: <ShoppingCartOutlined /> },
 ];
 
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
 
   const showDrawer = () => {
     setVisible(true);
@@ -51,7 +58,7 @@ const MainHeader = () => {
           xl={{ span: 10, offset: 10 }}
           xxl={{ span: 8, offset: 12 }}
         >
-          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} items={menuItems} />
+          <Menu theme="dark" mode="horizontal" selectedKeys={[`${pathname}`]} items={menuItems} />
         </Col>
         <Col xs={4} sm={4} md={0}>
           <Button type="primary" onClick={showDrawer}>
@@ -60,7 +67,7 @@ const MainHeader = () => {
         </Col>
       </Row>
       <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
-        <Menu mode="vertical" defaultSelectedKeys={['1']} items={menuItems} />
+        <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={menuItems} />
       </Drawer>
     </Header>
   );
