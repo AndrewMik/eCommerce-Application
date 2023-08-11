@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.16.1",
+    "@commercetools/platform-sdk": "^4.11.0",
+    "@commercetools/sdk-client-v2": "^2.2.0",
     "@ant-design/static-style-extract": "^1.0.1",
     "@ant-design/icons": "^5.2.5",
     "antd": "^5.8.2",
