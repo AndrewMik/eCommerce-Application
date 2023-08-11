@@ -6,10 +6,10 @@ function registerUser(customerDraft: CustomerDraft) {
 
   try {
     const response = client.customers().post({ body: customerDraft }).execute();
-    return response; // this will contain details of the newly created customer
+    return response;
   } catch (error) {
     console.error('Error registering user:', error);
-    throw error; // or handle it more gracefully depending on your application's requirements
+    throw error;
   }
 }
 
