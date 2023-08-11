@@ -1,9 +1,3 @@
-import Main from '../components/main/main';
-
-const Page = (): JSX.Element => (
-  <div>
-    <Main />
-  </div>
-);
+const Page = (): JSX.Element => <></>;
 
 export default Page;

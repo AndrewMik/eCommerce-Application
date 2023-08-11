@@ -1,92 +1,68 @@
 'use client';
 
-import { Layout, Menu, Col, Row } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import {
+  HomeOutlined,
+  LoginOutlined,
+  UserOutlined,
+  MenuOutlined,
+  ShoppingOutlined,
+  ShoppingCartOutlined,
+} from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import logo from '../../public/kiddo-kingdom-logo.svg';
 
-const MainHeader: React.FC = () => {
-  const { Header } = Layout;
-  const menuItems = [
-    { key: '/', label: 'About' },
-    { key: '/login', label: 'Login' },
-    { key: '/registration', label: 'Registration' },
-    { key: '/catalog', label: 'Catalog' },
-    { key: '/cart', label: 'Cart' },
-  ];
+const { Header } = Layout;
 
-  const getInitialSelectedItemKey = () => {
-    const currentPath = window.location.pathname;
-    return `item${menuItems.findIndex((item) => item.key === currentPath)}`;
+const menuItems = [
+  { key: '1', label: <Link href={'./'}>Home</Link>, icon: <HomeOutlined /> },
+  { key: '2', label: <Link href={'./login'}>Sign in</Link>, icon: <LoginOutlined /> },
+  { key: '3', label: <Link href={'./registration'}>Sign up</Link>, icon: <UserOutlined /> },
+  { key: '4', label: <Link href={'./catalog'}>Catalog</Link>, icon: <ShoppingOutlined /> },
+  { key: '5', label: <Link href={'./cart'}>Cart</Link>, icon: <ShoppingCartOutlined /> },
+];
+
+const MainHeader = () => {
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
   };
 
-  const [selectedNavLink, setSelectedNavLink] = useState<string>(getInitialSelectedItemKey);
-
-  useEffect(() => {
-    const updateSelectedNavKey = () => {
-      setSelectedNavLink(getInitialSelectedItemKey());
-    };
-
-    window.addEventListener('popstate', updateSelectedNavKey);
-    return () => {
-      window.removeEventListener('popstate', updateSelectedNavKey);
-    };
-  }, []);
-
-  const handleNavClick = (path: string) => {
-    setTimeout(() => {
-      const key = `item${menuItems.findIndex((item) => item.key === path)}`;
-      setSelectedNavLink(key);
-    }, 0);
+  const onClose = () => {
+    setVisible(false);
   };
 
   return (
-    <>
-      <Layout>
-        <Header
-          style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 1,
-            alignItems: 'center',
-            backgroundColor: '#f5f5f5',
-            minHeight: '90px',
-          }}
+    <Header style={{ padding: 0 }}>
+      <Row>
+        <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
+          <Link href={'./'} style={{ marginLeft: 10 }}>
+            <Image src={logo} height={64} alt="Kiddo Kingdom" />
+          </Link>
+        </Col>
+        <Col
+          xs={0}
+          sm={0}
+          md={{ span: 16, offset: 4 }}
+          lg={{ span: 13, offset: 7 }}
+          xl={{ span: 10, offset: 10 }}
+          xxl={{ span: 8, offset: 12 }}
         >
-          <Row>
-            <Col span={8}>
-              <Link href={'./'}>
-                <Image
-                  src={logo}
-                  width={120}
-                  height={80}
-                  alt="Picture of the author"
-                  style={{ marginRight: '20px' }}
-                  priority={true}
-                  onClick={() => handleNavClick('/')}
-                />
-              </Link>
-            </Col>
-            <Col span={8} offset={8}>
-              <Menu
-                mode="horizontal"
-                style={{ backgroundColor: '#f5f5f5' }}
-                selectedKeys={[selectedNavLink]}
-                items={menuItems.map((item, index) => ({
-                  key: `item${index}`,
-                  label: (
-                    <Link href={item.key} onClick={() => handleNavClick(item.key)}>
-                      {item.label}
-                    </Link>
-                  ),
-                }))}
-              />
-            </Col>
-          </Row>
-        </Header>
-      </Layout>
-    </>
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} items={menuItems} />
+        </Col>
+        <Col xs={4} sm={4} md={0}>
+          <Button type="primary" onClick={showDrawer}>
+            <MenuOutlined />
+          </Button>
+        </Col>
+      </Row>
+      <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
+        <Menu mode="vertical" defaultSelectedKeys={['1']} items={menuItems} />
+      </Drawer>
+    </Header>
   );
 };
 

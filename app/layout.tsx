@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Layout } from 'antd';
 import StyledComponentsRegistry from '../lib/AntdRegistry';
 import MainHeader from '../components/header/header';
 import MainFooter from '../components/footer/footer';
+import Main from '../components/main/main';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,9 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
     <html lang="en">
       <body className={inter.className} style={{ margin: 0 }}>
         <StyledComponentsRegistry>
-          <MainHeader />
-          {children}
-          <MainFooter />
+          <Layout style={{ height: '100vh' }}>
+            <MainHeader />
+            <Main>{children}</Main>
+            <MainFooter />
+          </Layout>
         </StyledComponentsRegistry>
       </body>
     </html>

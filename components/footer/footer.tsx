@@ -2,22 +2,10 @@
 
 import { Layout } from 'antd';
 
-const MainFooter: React.FC = () => {
-  const { Footer } = Layout;
+const { Footer } = Layout;
 
-  return (
-    <div style={{ margin: '0', width: '100vw' }}>
-      <Layout>
-        <Footer
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          Ant Design ©2023 Created by Ant UED
-        </Footer>
-      </Layout>
-    </div>
-  );
+const MainFooter: React.FC = () => {
+  return <Footer>Kiddo Kingdom ©2023</Footer>;
 };
 
 export default MainFooter;
