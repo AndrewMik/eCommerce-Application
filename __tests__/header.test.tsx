@@ -1,4 +1,4 @@
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ImgHTMLAttributes } from 'react';
 import MainHeader from '../components/header/header';
 import '@testing-library/jest-dom/extend-expect';
