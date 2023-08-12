@@ -2,12 +2,19 @@
 
 import { Button, Form, Input, Space, Row, Col } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
 import { Placeholders, ValidationMessages } from './enums.login-form';
 
 type FieldType = {
   password?: string;
   email?: string;
+};
+
+const onFinish = async ({ email, password }: FieldType) => {
+  if (email && password) {
+    await loginUser(email, password);
+  }
 };
 
 const LoginForm: React.FC = () => {
@@ -42,6 +49,7 @@ const LoginForm: React.FC = () => {
             name="login-form"
             initialValues={{ remember: true }}
             autoComplete="off"
+            onFinish={onFinish}
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
               <div>
