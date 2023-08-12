@@ -27,6 +27,7 @@
     "@typescript-eslint/no-non-null-assertion": 0,
     "import/no-anonymous-default-export": 0,
     "jsx-a11y/alt-text": 0,
+    "linebreak-style": ["error", "unix"],
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "react-hooks/exhaustive-deps": 0,
     "react/display-name": 0,
