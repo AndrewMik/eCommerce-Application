@@ -8,7 +8,7 @@ async function loginUser(email: string, password: string) {
   };
 
   try {
-    return await client.login().post({ body }).execute();
+    await client.login().post({ body }).execute();
   } catch (error) {
     throw error;
   }
