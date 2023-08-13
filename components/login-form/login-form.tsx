@@ -113,7 +113,7 @@ const LoginForm: React.FC = () => {
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
               <div>
-                <Form.Item<FieldType>
+                <Form.Item
                   label="Email"
                   name="email"
                   rules={[
@@ -124,7 +124,7 @@ const LoginForm: React.FC = () => {
                   <Input prefix={<MailOutlined style={iconStyle} />} placeholder={Placeholders.Email} />
                 </Form.Item>
 
-                <Form.Item<FieldType>
+                <Form.Item
                   label="Password"
                   name="password"
                   rules={[
