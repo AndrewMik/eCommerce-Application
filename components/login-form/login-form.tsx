@@ -36,7 +36,15 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (hasError) {
+    if (unknownError) {
+      openNotificationWithIcon(
+        NotificationType.ERROR,
+        NotificationMessage.UNKNOWN_ERROR,
+        NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
+        NotificationPlacement.BOTTOM,
+      );
+      setUnknownError(false);
+    } else if (hasError) {
       openNotificationWithIcon(
         NotificationType.ERROR,
         NotificationMessage.INVALID_CREDENTIALS,
@@ -48,14 +56,6 @@ const LoginForm: React.FC = () => {
         NotificationType.SUCCESS,
         NotificationMessage.AUTENTICATED,
         NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
-        NotificationPlacement.BOTTOM,
-      );
-    }
-    if (unknownError) {
-      openNotificationWithIcon(
-        NotificationType.ERROR,
-        NotificationMessage.UNKNOWN_ERROR,
-        NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
         NotificationPlacement.BOTTOM,
       );
     }
