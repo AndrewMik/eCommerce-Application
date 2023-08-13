@@ -13,7 +13,6 @@ import {
   NotificationDescription,
   Placeholders,
   ValidationMessages,
-  CustomErrorResponse,
 } from './types.login';
 
 const LoginForm: React.FC = () => {
@@ -62,19 +61,15 @@ const LoginForm: React.FC = () => {
   }, [notificationToggle]);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    try {
-      await loginUser(email, password);
+    const statusCode = await loginUser(email, password);
+    if (statusCode === 200) {
       setHasError(false);
-    } catch (error) {
-      const errorResponse = JSON.parse(JSON.stringify(error)) as CustomErrorResponse;
-      if (errorResponse.body.statusCode === 400) {
-        setHasError(true);
-      } else {
-        setUnknownError(true);
-      }
-    } finally {
-      setNotificationToggle((prevState) => !prevState);
+    } else if (statusCode === 400) {
+      setHasError(true);
+    } else {
+      setUnknownError(true);
     }
+    setNotificationToggle((prevState) => !prevState);
   };
 
   const iconStyle = {

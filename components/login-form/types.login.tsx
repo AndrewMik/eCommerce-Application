@@ -44,20 +44,3 @@ export enum ValidationMessages {
                     digit, and special character (such as !, @, #, $, etc.) 
                     and must not start or end with a whitespace character.`,
 }
-
-type ErrorDescriptiob = {
-  code: string;
-  message: string;
-};
-
-export interface ErrorBodyResponse {
-  statusCode: number;
-  message: string;
-  error: string;
-  error_description: string;
-  errors: ErrorDescriptiob[];
-}
-
-export interface CustomErrorResponse {
-  body: ErrorBodyResponse;
-}
