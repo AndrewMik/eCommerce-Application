@@ -1,8 +1,6 @@
 'use client';
 
-import { Form, Input, Button, DatePicker, Switch, Row, Col, Layout, Divider, Select, Card } from 'antd';
-import moment from 'moment';
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Button, Row, Col, Layout, Card } from 'antd';
 import postalCodes from 'postal-codes-js';
 import { getCode } from 'country-list';
 import hasOnlyLetters from '@/utils/inputsValidation/checkOnlyLetters';
@@ -11,6 +9,15 @@ import hasMinimumUppercase from '@/utils/inputsValidation/checkUppercaseCount';
 import hasMinimumNumbers from '@/utils/inputsValidation/checkNumbersCount';
 import hasMinimumLowercase from '@/utils/inputsValidation/checkLowerCaseCount';
 import isCertainAge from '@/utils/inputsValidation/checkAge';
+
+import InputField from './fields/input-field';
+import DateField from './fields/date-field';
+import SelectField from './fields/select-field';
+import SwitchField from './fields/switch-field';
+import DividerText from './fields/divider-field';
+import EmailField from './fields/email-field';
+import PasswordField from './fields/password-field';
+import Footer from './fields/footer';
 import Paths from '../header/header-types';
 
 interface CountryOptionsProps {
@@ -20,11 +27,8 @@ interface CountryOptionsProps {
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
 
-  const iconStyle = {
-    color: 'rgba(0,0,0,.25)',
-  };
-
-  const handleFormSubmit = (formData: any) => {
+  // TODO: don't forget to remove
+  const handleFormSubmit = (formData: object) => {
     // eslint-disable-next-line no-console
     console.log('Form data', formData);
   };
@@ -32,7 +36,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   return (
     <Layout>
       <Layout.Content>
-        <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
+        <Row justify="center" align="middle">
           <Col xs={22} sm={20} md={18} lg={14} xl={12}>
             <Card bordered style={{ borderRadius: '15px', marginBlock: '40px' }}>
               <Form
@@ -43,18 +47,19 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 layout="vertical"
                 onFinish={handleFormSubmit}
               >
-                <Divider orientation="center">Personal</Divider>
+                <DividerText text="Personal"></DividerText>
 
-                <Form.Item
+                <InputField
                   label="Name"
                   name="name"
+                  placeholder="John"
                   rules={[
                     {
                       required: true,
                       message: 'Name must have at least one character',
                     },
                     {
-                      validator: (_, value) => {
+                      validator: (_: string, value: string) => {
                         if (!hasOnlyLetters(value)) {
                           return Promise.reject(new Error('Name can only contain letters'));
                         }
@@ -62,20 +67,18 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       },
                     },
                   ]}
-                >
-                  <Input placeholder="John" />
-                </Form.Item>
-
-                <Form.Item
+                />
+                <InputField
                   label="Surname"
                   name="surname"
-                  required={true}
+                  placeholder="Smith"
                   rules={[
                     {
-                      validator: (_, value) => {
-                        if (!value) {
-                          return Promise.reject(new Error('Surname must have at least one character'));
-                        }
+                      required: true,
+                      message: 'Surname must have at least one character',
+                    },
+                    {
+                      validator: (_: string, value: string) => {
                         if (!hasOnlyLetters(value)) {
                           return Promise.reject(new Error('Surname can only contain letters'));
                         }
@@ -83,19 +86,17 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       },
                     },
                   ]}
-                >
-                  <Input placeholder="Smith" />
-                </Form.Item>
+                />
 
                 <Row gutter={16}>
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item
+                    <DateField
                       label="Date of Birth"
                       name="date-of-birth"
-                      required={true}
+                      placeholder="1990-03-20"
                       rules={[
                         {
-                          validator: (_, value) => {
+                          validator: (_: string, value: string) => {
                             if (!value) {
                               return Promise.reject(new Error('Please input your date of birth'));
                             }
@@ -106,35 +107,34 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                           },
                         },
                       ]}
-                    >
-                      <DatePicker
-                        style={{ width: '100%' }}
-                        format="YYYY-MM-DD"
-                        placeholder="1990-03-20"
-                        disabledDate={(current) => current && current > moment().endOf('day')}
-                      />
-                    </Form.Item>
+                    />
                   </Col>
 
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item label="Gender" name="gender">
-                      <Select placeholder="Select Gender">
-                        <Select.Option value="female">Female</Select.Option>
-                        <Select.Option value="male">Male</Select.Option>
-                        <Select.Option value="other">Other</Select.Option>
-                      </Select>
-                    </Form.Item>
+                    <SelectField
+                      label="Gender"
+                      name="gender"
+                      placeholder="Select Gender"
+                      options={[
+                        { value: 'female', label: 'Female' },
+                        { value: 'male', label: 'Male' },
+                        { value: 'other', label: 'Other' },
+                      ]}
+                      rules={[]}
+                    />
                   </Col>
                 </Row>
 
-                <Divider orientation="center">Address</Divider>
+                <DividerText text="Address"></DividerText>
 
-                <Form.Item
+                <InputField
                   label="Street"
                   name="street"
+                  placeholder="Park Avenue"
+                  required={true}
                   rules={[
                     {
-                      validator: (_, value) => {
+                      validator: (_: string, value: string) => {
                         if (!value || value.length === 0) {
                           return Promise.reject(new Error('Street name must contain at least one character'));
                         }
@@ -142,58 +142,40 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       },
                     },
                   ]}
-                >
-                  <Input placeholder="Park Avenue" />
-                </Form.Item>
+                ></InputField>
 
                 <Row gutter={16}>
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item label="House" name="house">
-                      <Input placeholder="34" />
-                    </Form.Item>
+                    <InputField label="House" name="house" placeholder="34" rules={[]}></InputField>
                   </Col>
-
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item label="Flat" name="flat">
-                      <Input placeholder="128" />
-                    </Form.Item>
+                    <InputField label="Flat" name="flat" placeholder="128" rules={[]}></InputField>
                   </Col>
-                </Row>
-                <Row gutter={16}>
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item
+                    <SelectField
                       label="Country"
                       name="country"
+                      placeholder="Select Country"
+                      options={countries.map((country) => ({ value: country, label: country }))}
                       rules={[
                         {
                           required: true,
                           message: 'Please select the country from list',
                         },
                       ]}
-                    >
-                      <Select
-                        placeholder="Select Country"
-                        onChange={() => {
-                          form.validateFields(['postal-code']);
-                        }}
-                      >
-                        {countries.map((country) => (
-                          <Select.Option key={country} value={country}>
-                            {country}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
+                      required={true}
+                      onChange={() => form.validateFields(['postal-code'])}
+                    />
                   </Col>
 
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <Form.Item
-                      label="Postal Code"
+                    <InputField
+                      label="Postal code"
                       name="postal-code"
-                      required={true}
+                      placeholder="4701"
                       rules={[
                         {
-                          validator: (_, value) => {
+                          validator: (_: string, value: string) => {
                             const countryName = form.getFieldValue('country');
                             const countryCode = countryName ? getCode(countryName) : null;
 
@@ -213,49 +195,34 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                           },
                         },
                       ]}
-                    >
-                      <Input placeholder="4701" />
-                    </Form.Item>
+                      required={true}
+                    ></InputField>
                   </Col>
                 </Row>
 
-                <Form.Item name="set-default-address" valuePropName="checked">
-                  <Row align="middle">
-                    <Col>
-                      <Switch defaultChecked={true} />
-                    </Col>
-                    <Col>
-                      <span style={{ marginLeft: '8px' }}>Set as default address</span>
-                    </Col>
-                  </Row>
-                </Form.Item>
+                <SwitchField
+                  name="set-default-address"
+                  label="Set as default address"
+                  defaultChecked={true}
+                ></SwitchField>
 
-                <Divider orientation="center">Credentials</Divider>
+                <DividerText text="Credentials"></DividerText>
 
-                <Form.Item
-                  label="Email"
+                <EmailField
                   name="email"
+                  placeholder="your.email@gmail.com"
                   rules={[
-                    {
-                      required: true,
-                      message: 'Please input your e-mail',
-                    },
-                    {
-                      type: 'email',
-                      message: 'Your e-mail is incorrectly formatted',
-                    },
+                    { required: true, message: 'Please input your e-mail' },
+                    { type: 'email', message: 'Your e-mail is incorrectly formatted' },
                   ]}
-                >
-                  <Input prefix={<MailOutlined style={iconStyle} />} placeholder="your.email@gmail.com" />
-                </Form.Item>
+                />
 
-                <Form.Item
-                  label="Password"
+                <PasswordField
                   name="password"
-                  required={true}
+                  placeholder="securePassword1"
                   rules={[
                     {
-                      validator: (_, value) => {
+                      validator: (_: string, value: string) => {
                         if (!value) {
                           return Promise.reject(new Error('Please input your password'));
                         }
@@ -275,24 +242,14 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       },
                     },
                   ]}
-                  hasFeedback
-                >
-                  <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder="securePassword1" />
-                </Form.Item>
+                />
 
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
                     Register
                   </Button>
                 </Form.Item>
-                <Divider />
-
-                <div style={{ textAlign: 'center' }}>
-                  Already registered?
-                  <Button type="link" href={Paths.LOGIN}>
-                    Login
-                  </Button>
-                </div>
+                <Footer href={Paths.LOGIN} />
               </Form>
             </Card>
           </Col>
