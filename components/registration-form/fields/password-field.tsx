@@ -1,11 +1,12 @@
 import { Form, Input } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { Rule } from 'antd/es/form';
 
 interface PasswordFieldProps {
   label?: string;
   name: string;
   placeholder?: string;
-  rules: any[];
+  rules: Rule[];
   iconStyle?: React.CSSProperties;
   hasFeedback?: boolean;
 }

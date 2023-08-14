@@ -1,4 +1,5 @@
 import { Form, Select } from 'antd';
+import { Rule } from 'antd/es/form';
 
 interface Option {
   value: string;
@@ -9,7 +10,7 @@ interface SelectFieldProps {
   label: string;
   name: string;
   placeholder: string;
-  rules: any[];
+  rules: Rule[];
   options: Option[];
   required?: boolean;
   onChange?: (value: any) => void;

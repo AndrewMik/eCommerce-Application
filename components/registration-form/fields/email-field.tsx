@@ -1,11 +1,12 @@
 import { Form, Input } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
+import { Rule } from 'antd/es/form';
 
 interface EmailFieldProps {
   label?: string;
   name: string;
   placeholder?: string;
-  rules?: any[];
+  rules?: Rule[];
   iconStyle?: React.CSSProperties;
 }
 

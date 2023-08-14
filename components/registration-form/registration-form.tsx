@@ -1,14 +1,17 @@
 'use client';
 
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
-import postalCodes from 'postal-codes-js';
-import { getCode } from 'country-list';
-import hasOnlyLetters from '@/utils/inputsValidation/checkOnlyLetters';
-import checkLength from '@/utils/inputsValidation/checkLength';
-import hasMinimumUppercase from '@/utils/inputsValidation/checkUppercaseCount';
-import hasMinimumNumbers from '@/utils/inputsValidation/checkNumbersCount';
-import hasMinimumLowercase from '@/utils/inputsValidation/checkLowerCaseCount';
-import isCertainAge from '@/utils/inputsValidation/checkAge';
+
+import {
+  getNameRules,
+  getSurnameRules,
+  getBirthDateRules,
+  getStreetRules,
+  getCountryRules,
+  getEmailRules,
+  getPasswordRules,
+  getPostalCodeRules,
+} from './helpers/validation-rules';
 
 import InputField from './fields/input-field';
 import DateField from './fields/date-field';
@@ -49,44 +52,8 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
               >
                 <DividerText text="Personal"></DividerText>
 
-                <InputField
-                  label="Name"
-                  name="name"
-                  placeholder="John"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Name must have at least one character',
-                    },
-                    {
-                      validator: (_: string, value: string) => {
-                        if (!hasOnlyLetters(value)) {
-                          return Promise.reject(new Error('Name can only contain letters'));
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                />
-                <InputField
-                  label="Surname"
-                  name="surname"
-                  placeholder="Smith"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Surname must have at least one character',
-                    },
-                    {
-                      validator: (_: string, value: string) => {
-                        if (!hasOnlyLetters(value)) {
-                          return Promise.reject(new Error('Surname can only contain letters'));
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                />
+                <InputField label="Name" name="name" placeholder="John" rules={getNameRules()} />
+                <InputField label="Surname" name="surname" placeholder="Smith" rules={getSurnameRules()} />
 
                 <Row gutter={16}>
                   <Col xs={24} sm={24} md={12} lg={12} xl={12}>
@@ -94,19 +61,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       label="Date of Birth"
                       name="date-of-birth"
                       placeholder="1990-03-20"
-                      rules={[
-                        {
-                          validator: (_: string, value: string) => {
-                            if (!value) {
-                              return Promise.reject(new Error('Please input your date of birth'));
-                            }
-                            if (!isCertainAge(value, 13)) {
-                              return Promise.reject(new Error('You should be at least 13 years old to register'));
-                            }
-                            return Promise.resolve();
-                          },
-                        },
-                      ]}
+                      rules={getBirthDateRules()}
                     />
                   </Col>
 
@@ -132,16 +87,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                   name="street"
                   placeholder="Park Avenue"
                   required={true}
-                  rules={[
-                    {
-                      validator: (_: string, value: string) => {
-                        if (!value || value.length === 0) {
-                          return Promise.reject(new Error('Street name must contain at least one character'));
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
+                  rules={getStreetRules()}
                 ></InputField>
 
                 <Row gutter={16}>
@@ -157,12 +103,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       name="country"
                       placeholder="Select Country"
                       options={countries.map((country) => ({ value: country, label: country }))}
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please select the country from list',
-                        },
-                      ]}
+                      rules={getCountryRules()}
                       required={true}
                       onChange={() => form.validateFields(['postal-code'])}
                     />
@@ -173,28 +114,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                       label="Postal code"
                       name="postal-code"
                       placeholder="4701"
-                      rules={[
-                        {
-                          validator: (_: string, value: string) => {
-                            const countryName = form.getFieldValue('country');
-                            const countryCode = countryName ? getCode(countryName) : null;
-
-                            if (!value) {
-                              return Promise.reject(new Error(`Please input postal code`));
-                            }
-                            if (!countryCode) {
-                              return Promise.reject(new Error(`Please choose country`));
-                            }
-                            if (postalCodes.validate(countryCode, value) !== true) {
-                              if (countryName) {
-                                return Promise.reject(new Error(`Invalid postal code format for ${countryName}`));
-                              }
-                              return Promise.reject(new Error('Invalid postal code'));
-                            }
-                            return Promise.resolve();
-                          },
-                        },
-                      ]}
+                      rules={getPostalCodeRules(form)}
                       required={true}
                     ></InputField>
                   </Col>
@@ -208,41 +128,9 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
 
                 <DividerText text="Credentials"></DividerText>
 
-                <EmailField
-                  name="email"
-                  placeholder="your.email@gmail.com"
-                  rules={[
-                    { required: true, message: 'Please input your e-mail' },
-                    { type: 'email', message: 'Your e-mail is incorrectly formatted' },
-                  ]}
-                />
+                <EmailField name="email" placeholder="your.email@gmail.com" rules={getEmailRules()} />
 
-                <PasswordField
-                  name="password"
-                  placeholder="securePassword1"
-                  rules={[
-                    {
-                      validator: (_: string, value: string) => {
-                        if (!value) {
-                          return Promise.reject(new Error('Please input your password'));
-                        }
-                        if (!checkLength(8, value)) {
-                          return Promise.reject(new Error('Password must have at least 8 characters'));
-                        }
-                        if (!hasMinimumLowercase(value, 1)) {
-                          return Promise.reject(new Error('Password must have at least 1 lowercase character'));
-                        }
-                        if (!hasMinimumUppercase(value, 1)) {
-                          return Promise.reject(new Error('Password must have at least 1 uppercase character'));
-                        }
-                        if (!hasMinimumNumbers(value, 1)) {
-                          return Promise.reject(new Error('Password must have at least 1 number character'));
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                />
+                <PasswordField name="password" placeholder="securePassword1" rules={getPasswordRules()} />
 
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">

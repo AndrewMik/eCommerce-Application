@@ -1,10 +1,11 @@
 import { Form, Input } from 'antd';
+import { Rule } from 'antd/es/form';
 
 interface InputFieldProps {
   label: string;
   name: string;
   placeholder: string;
-  rules: any[];
+  rules: Rule[];
   required?: boolean;
 }
 
