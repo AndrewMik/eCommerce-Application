@@ -4,14 +4,14 @@
 
 Welcome to our Kiddo Kingdom 🧸🏰 the magical eCommerce application for children's toys. From educational puzzles to adventurous playsets, Kiddo Kingdom🧸 offers a wide range of toys that inspire creativity, learning, and endless fun! Our online store provides a seamless shopping experience, catering to kids and parents alike. Our user-friendly platform makes shopping for toys a breeze, offering quality products that inspire creativity, learning, and lots of fun!
 
-- **Our Mission**☝️
+- **Mission**☝️
 - **Features** 📘
 - **Technology Stack** 💻
 - **Setting up and running locally** 🛠️
 - **Available Scripts** 📝
 - **Contact** 📧
 
-## Our Mission ☝️
+## Mission ☝️
 
 At Kiddo Kingdom, we believe in the boundless magic🪄 of childhood and the transformative power of play. Our mission is to nurture imagination, curiosity, and joy in children by providing a vast kingdom of high-quality toys.
 

@@ -44,7 +44,6 @@
     "@types/testing-library__react": "^10.2.0",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "cross-env": "^7.0.3",
-    "encoding": "^0.1.13",
     "eslint": "8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
