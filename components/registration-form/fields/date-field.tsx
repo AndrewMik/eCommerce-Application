@@ -1,11 +1,12 @@
 import { Form, DatePicker } from 'antd';
+import { Rule } from 'antd/es/form';
 import moment from 'moment';
 
 interface DateFieldProps {
   label: string;
   name: string;
   placeholder: string;
-  rules: any[];
+  rules: Rule[];
 }
 
 const DateField: React.FC<DateFieldProps> = ({ label, name, placeholder, rules }) => (
