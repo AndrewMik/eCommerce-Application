@@ -1,10 +1,11 @@
 import { errorPositiveNumMessage } from './types';
 
-function lowercaseCount(minCount: number): RegExp {
+function hasMinimumLowercase(str: string, minCount: number): boolean {
   if (minCount < 1) {
     throw new Error(errorPositiveNumMessage);
   }
-  return new RegExp(`^(?:[^a-z]*[a-z][^a-z]*){${minCount},}$`);
+  const regex = new RegExp(`^(?:[^a-z]*[a-z][^a-z]*){${minCount},}$`);
+  return regex.test(str);
 }
 
-export default lowercaseCount;
+export default hasMinimumLowercase;

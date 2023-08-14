@@ -19,5 +19,3 @@ function isCertainAge(dateOfBirth: string, minAge: number): boolean {
 export default isCertainAge;
 
 // Date from DatePicker component is retrieved in format 'YYYY-MM-DD' (dateString)
-
-// TODO: update functions not only to return regex but also to check whether the provided value is correct

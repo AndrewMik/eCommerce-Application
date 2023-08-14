@@ -1,10 +1,11 @@
 import { errorPositiveNumMessage } from './types';
 
-function numbersCount(minCount: number): RegExp {
+function hasMinimumNumbers(str: string, minCount: number): boolean {
   if (typeof minCount !== 'number' || minCount < 1) {
     throw new Error(errorPositiveNumMessage);
   }
-  return new RegExp(`^(?:[^0-9]*[0-9][^0-9]*){${minCount},}$`);
+  const regex = new RegExp(`^(?:[^0-9]*[0-9][^0-9]*){${minCount},}$`);
+  return regex.test(str);
 }
 
-export default numbersCount;
+export default hasMinimumNumbers;

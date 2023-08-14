@@ -1,10 +1,11 @@
 import { errorPositiveNumMessage } from './types';
 
-function checkLength(minLength: number): RegExp {
+function checkLength(minLength: number, inputString: string): boolean {
   if (minLength < 1) {
     throw new Error(errorPositiveNumMessage);
   }
-  return new RegExp(`^.{${minLength},}$`);
+  const regex = new RegExp(`^.{${minLength},}$`);
+  return regex.test(inputString);
 }
 
 export default checkLength;
