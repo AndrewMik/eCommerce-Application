@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import mockMatchMedia from '../../utils/mock';
 import LoginForm from '../../components/login-form/login-form';
-import { Placeholders, ValidationMessages } from '../../components/login-form/enums.login-form';
+import { Placeholders, ValidationMessages } from '../../components/login-form/types.login';
 
 const formatMessage = (message: string): string => message.replace(/\s\s+/g, ' ');
 
