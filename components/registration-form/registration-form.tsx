@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
 
 import Footer from './fields/footer';
-import Paths from '../header/header-types';
+import { Paths } from '../../utils/route-links';
 
 import AddressSection from './sections/address-section';
 import CredentialsSection from './sections/credentials-section';
@@ -53,7 +53,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 <CredentialsSection></CredentialsSection>
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
-                    Register
+                    Sign up
                   </Button>
                 </Form.Item>
                 <Footer href={Paths.LOGIN} />

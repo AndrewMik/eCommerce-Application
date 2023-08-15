@@ -159,7 +159,7 @@ const LoginForm: React.FC = () => {
                 wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 14, offset: 10 }, md: { span: 13, offset: 11 } }}
               >
                 <Button type="primary" htmlType="submit">
-                  Log in
+                  Sign in
                 </Button>
               </Form.Item>
             </Space>
