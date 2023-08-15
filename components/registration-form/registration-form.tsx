@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
 
 import Footer from './fields/footer';
@@ -15,6 +16,7 @@ interface CountryOptionsProps {
 
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
+  const [useBillingAddress, setUseBillingAddress] = useState(false);
 
   // TODO: don't forget to remove
   const handleFormSubmit = (formData: object) => {
@@ -37,9 +39,18 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 onFinish={handleFormSubmit}
               >
                 <PersonalSection></PersonalSection>
-                <AddressSection countries={countries} form={form}></AddressSection>
+                <AddressSection
+                  countries={countries}
+                  form={form}
+                  title="Shipping Address"
+                  nameSuffix="_shipping"
+                  showCheckbox={true}
+                  onUseBillingAddressChange={setUseBillingAddress}
+                />
+                {!useBillingAddress && (
+                  <AddressSection countries={countries} form={form} title="Billing Address" nameSuffix="_billing" />
+                )}{' '}
                 <CredentialsSection></CredentialsSection>
-
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
                     Register
