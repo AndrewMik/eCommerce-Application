@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button, Form, Input, Space, Row, Col, notification } from 'antd';
+import { Button, Form, Input, Space, Row, Col, notification, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import loginUser from '../../api/login-user';
@@ -15,6 +15,8 @@ import {
   Placeholders,
   ValidationMessages,
 } from './types.login';
+
+const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
   const [hasError, setHasError] = useState<boolean | null>(null);
@@ -171,6 +173,16 @@ const LoginForm: React.FC = () => {
           md={{ span: 5, offset: 1 }}
           lg={{ span: 6, offset: 1 }}
         />
+      </Row>
+      <Divider />
+      <Row justify="center">
+        <Col>
+          <span>Haven't registered yet? </span>
+          <span>
+            Sign up
+            <Link href={'/registration'}> here!</Link>
+          </span>
+        </Col>
       </Row>
     </>
   );
