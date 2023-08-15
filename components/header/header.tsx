@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import { Layout, Menu, Button, Drawer, Row, Col, Typography } from 'antd';
 import {
   HomeOutlined,
   LoginOutlined,
@@ -12,11 +12,11 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
-import Link from 'next/link';
 import logo from '../../public/kiddo-logo.svg';
 import Paths from './header-types';
 
 const { Header } = Layout;
+const { Link } = Typography;
 
 const menuItems = [
   { key: Paths.HOME, label: <Link href={Paths.HOME}>Home</Link>, icon: <HomeOutlined /> },
