@@ -1,6 +1,6 @@
 import { errorPositiveNumMessage } from './types';
 
-function checkLength(minLength: number, inputString: string): boolean {
+function checkLength(inputString: string, minLength: number): boolean {
   if (minLength < 1) {
     throw new Error(errorPositiveNumMessage);
   }

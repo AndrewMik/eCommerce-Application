@@ -3,12 +3,14 @@ import { FormInstance } from 'antd/lib/form';
 import postalCodes from 'postal-codes-js';
 import { getCode } from 'country-list';
 
-import hasOnlyLetters from '@/utils/inputsValidation/checkOnlyLetters';
-import isCertainAge from '@/utils/inputsValidation/checkAge';
-import checkLength from '@/utils/inputsValidation/checkLength';
-import hasMinimumLowercase from '@/utils/inputsValidation/checkLowerCaseCount';
-import hasMinimumUppercase from '@/utils/inputsValidation/checkUppercaseCount';
-import hasMinimumNumbers from '@/utils/inputsValidation/checkNumbersCount';
+import hasOnlyLetters from '@/utils/inputs-validation/checkOnlyLetters';
+import isCertainAge from '@/utils/inputs-validation/checkAge';
+import checkLength from '@/utils/inputs-validation/checkLength';
+import hasMinimumLowercase from '@/utils/inputs-validation/checkLowerCaseCount';
+import hasMinimumUppercase from '@/utils/inputs-validation/checkUppercaseCount';
+import hasMinimumNumbers from '@/utils/inputs-validation/checkNumbersCount';
+import hasNoSpaces from '@/utils/inputs-validation/checkNoSpaces';
+import hasSpecialCharacters from '@/utils/inputs-validation/checkSpecialChars';
 
 const getNameRules = (): Rule[] => [
   {
@@ -83,7 +85,10 @@ const getPasswordRules = (): Rule[] => [
       if (!value) {
         return Promise.reject(new Error('Please input your password'));
       }
-      if (!checkLength(8, value)) {
+      if (!hasNoSpaces(value)) {
+        return Promise.reject(new Error('Password must not contain whitespaces'));
+      }
+      if (!checkLength(value, 8)) {
         return Promise.reject(new Error('Password must have at least 8 characters'));
       }
       if (!hasMinimumLowercase(value, 1)) {
@@ -94,6 +99,9 @@ const getPasswordRules = (): Rule[] => [
       }
       if (!hasMinimumNumbers(value, 1)) {
         return Promise.reject(new Error('Password must have at least 1 number character'));
+      }
+      if (!hasSpecialCharacters(value, 1)) {
+        return Promise.reject(new Error('Password must have at least 1 special character'));
       }
       return Promise.resolve();
     },

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Typography, Divider, Row, Col } from 'antd';
-
-const { Link } = Typography;
+import { Divider, Row, Col } from 'antd';
+import Link from 'next/link';
 
 interface FooterProps {
   href: string;
@@ -14,7 +13,7 @@ const FooterMessage: React.FC<FooterProps> = ({ href }) => {
       <Row justify="center">
         <Col>
           <span>Already registered? </span>
-          <Link href={href}>Login here!</Link>
+          <Link href={href}>Sign in here!</Link>
         </Col>
       </Row>
     </>
