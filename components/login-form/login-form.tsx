@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, notification } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ const LoginForm: React.FC = () => {
   const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
   const [unknownError, setUnknownError] = useState<boolean>(false);
   const [api, contextHolder] = notification.useNotification();
+  const router = useRouter();
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -70,6 +72,11 @@ const LoginForm: React.FC = () => {
       setUnknownError(true);
     }
     setNotificationToggle((prevState) => !prevState);
+    if (statusCode === 200) {
+      setTimeout(() => {
+        router.replace(`/`);
+      }, 1500);
+    }
   };
 
   const iconStyle = {
