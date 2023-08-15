@@ -1,3 +1,4 @@
+import { ClientResponse, ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
 async function loginUser(email: string, password: string) {
@@ -8,9 +9,11 @@ async function loginUser(email: string, password: string) {
   };
 
   try {
-    return await client.login().post({ body }).execute();
+    const response = await client.login().post({ body }).execute();
+    return response.statusCode;
   } catch (error) {
-    throw error;
+    const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
+    return errorResponse.body.statusCode;
   }
 }
 

@@ -1,16 +1,77 @@
 'use client';
 
-import { Button, Form, Input, Space, Row, Col } from 'antd';
+import { Button, Form, Input, Space, Row, Col, notification } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
-import { Placeholders, ValidationMessages } from './enums.login-form';
-
-type FieldType = {
-  password?: string;
-  email?: string;
-};
+import {
+  FieldType,
+  NotificationType,
+  NotificationPlacement,
+  NotificationMessage,
+  NotificationDescription,
+  Placeholders,
+  ValidationMessages,
+} from './types.login';
 
 const LoginForm: React.FC = () => {
+  const [hasError, setHasError] = useState<boolean | null>(null);
+  const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
+  const [unknownError, setUnknownError] = useState<boolean>(false);
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    message: string,
+    description: string,
+    placement: NotificationPlacement,
+  ) => {
+    api[type]({
+      message,
+      description,
+      placement,
+    });
+  };
+
+  useEffect(() => {
+    if (unknownError) {
+      openNotificationWithIcon(
+        NotificationType.ERROR,
+        NotificationMessage.UNKNOWN_ERROR,
+        NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
+        NotificationPlacement.BOTTOM,
+      );
+      setUnknownError(false);
+    } else if (hasError) {
+      openNotificationWithIcon(
+        NotificationType.ERROR,
+        NotificationMessage.INVALID_CREDENTIALS,
+        NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
+        NotificationPlacement.BOTTOM,
+      );
+    } else if (hasError === false) {
+      openNotificationWithIcon(
+        NotificationType.SUCCESS,
+        NotificationMessage.AUTENTICATED,
+        NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
+        NotificationPlacement.BOTTOM,
+      );
+    }
+  }, [notificationToggle]);
+
+  const onFinish = async ({ email, password }: FieldType) => {
+    const statusCode = await loginUser(email, password);
+    if (statusCode === 200) {
+      setHasError(false);
+    } else if (statusCode === 400) {
+      setHasError(true);
+    } else {
+      setUnknownError(true);
+    }
+    setNotificationToggle((prevState) => !prevState);
+  };
+
   const iconStyle = {
     color: 'rgba(0,0,0,.25)',
     display: 'flex',
@@ -18,6 +79,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <>
+      {contextHolder}
       <Row
         style={{
           height: '40vh',
@@ -42,10 +104,11 @@ const LoginForm: React.FC = () => {
             name="login-form"
             initialValues={{ remember: true }}
             autoComplete="off"
+            onFinish={onFinish}
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
               <div>
-                <Form.Item<FieldType>
+                <Form.Item
                   label="Email"
                   name="email"
                   rules={[
@@ -56,7 +119,7 @@ const LoginForm: React.FC = () => {
                   <Input prefix={<MailOutlined style={iconStyle} />} placeholder={Placeholders.Email} />
                 </Form.Item>
 
-                <Form.Item<FieldType>
+                <Form.Item
                   label="Password"
                   name="password"
                   rules={[
