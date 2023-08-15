@@ -3,6 +3,16 @@ import '@testing-library/jest-dom/extend-expect';
 import mockMatchMedia from '../../utils/mock';
 import LoginForm from '../../components/login-form/login-form';
 import { Placeholders, ValidationMessages } from '../../components/login-form/types.login';
+import { useRouter } from 'next/navigation';
+
+jest.mock('next/navigation');
+
+beforeEach(() => {
+  (useRouter as jest.Mock).mockReturnValue({
+    push: jest.fn(),
+    pathname: '',
+  });
+});
 
 const formatMessage = (message: string): string => message.replace(/\s\s+/g, ' ');
 
