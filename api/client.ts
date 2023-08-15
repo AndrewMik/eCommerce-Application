@@ -10,11 +10,17 @@ import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/dec
 
 class Client {
   private projectKey: string;
+
   private clientSecret: string;
+
   private clientId: string;
+
   private authUrl: string;
+
   private apiUrl: string;
+
   private scopes: string[];
+
   private cachedClients: {
     clientCredentials?: ByProjectKeyRequestBuilder;
     passwordFlow?: ByProjectKeyRequestBuilder;

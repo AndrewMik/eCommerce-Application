@@ -1,11 +1,21 @@
-import { Button, Space } from 'antd';
+'use client';
 
-const Page = (): JSX.Element => (
-  <div style={{ padding: '0 24px' }}>
-    <Space style={{ padding: '0 50px', minHeight: '82vh' }}>
-      <Button type="primary">Test registration Route</Button>
-    </Space>
-  </div>
-);
+import { useState, useEffect } from 'react';
+import RegistrationForm from '@/components/registration-form/registration-form';
+import getCountries from '@/api/get-countries';
+
+const Page = (): JSX.Element => {
+  const [countries, setCountries] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function fetchCountries() {
+      const countryList = await getCountries();
+      setCountries(countryList);
+    }
+    fetchCountries();
+  }, []);
+
+  return <RegistrationForm countries={countries} />;
+};
 
 export default Page;
