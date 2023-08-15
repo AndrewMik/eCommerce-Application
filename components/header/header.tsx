@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { navigationLinks } from '@/utils/route-links';
+import { navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
 
 const { Header } = Layout;
