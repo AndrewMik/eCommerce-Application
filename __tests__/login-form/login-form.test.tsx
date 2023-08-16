@@ -4,7 +4,6 @@ import mockMatchMedia from '../../utils/mock';
 import LoginForm from '../../components/login-form/login-form';
 import { Placeholders, ValidationMessages } from '../../components/login-form/types.login';
 import { useRouter } from 'next/navigation';
-import { navigationLinks } from '@/utils/route-links';
 
 jest.mock('next/navigation');
 

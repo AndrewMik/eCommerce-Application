@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, notification, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/authorization-context';
 import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
 import {
@@ -15,7 +16,6 @@ import {
   Placeholders,
   ValidationMessages,
 } from './types.login';
-import { AuthContext } from '@/context/authorization-context';
 
 const { Link } = Typography;
 
@@ -68,7 +68,6 @@ const LoginForm: React.FC = () => {
 
   const onFinish = async ({ email, password }: FieldType) => {
     const { statusCode, customer } = await loginUser(email, password);
-    console.log(customer);
     if (statusCode === 200) {
       if (customer) {
         saveLogInState(customer.id);
