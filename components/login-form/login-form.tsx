@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, notification, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
 import {
@@ -15,6 +15,7 @@ import {
   Placeholders,
   ValidationMessages,
 } from './types.login';
+import { AuthContext } from '@/context/authorization-context';
 
 const { Link } = Typography;
 
@@ -24,6 +25,7 @@ const LoginForm: React.FC = () => {
   const [unknownError, setUnknownError] = useState<boolean>(false);
   const [api, contextHolder] = notification.useNotification();
   const router = useRouter();
+  const { saveLogInState } = useContext(AuthContext);
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -65,8 +67,12 @@ const LoginForm: React.FC = () => {
   }, [notificationToggle]);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const statusCode = await loginUser(email, password);
+    const { statusCode, customer } = await loginUser(email, password);
+    console.log(customer);
     if (statusCode === 200) {
+      if (customer) {
+        saveLogInState(customer.id);
+      }
       setHasError(false);
     } else if (statusCode === 400) {
       setHasError(true);
