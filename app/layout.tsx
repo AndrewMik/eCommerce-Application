@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Layout } from 'antd';
 import StyledComponentsRegistry from '../lib/AntdRegistry';
+import Wrapper from '../components/wrapper/wrapper';
 import MainHeader from '../components/header/header';
 import MainFooter from '../components/footer/footer';
 import Main from '../components/main/main';
@@ -20,9 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }):
       <body className={inter.className} style={{ margin: 0 }}>
         <StyledComponentsRegistry>
           <Layout style={{ minHeight: '100vh' }}>
-            <MainHeader />
-            <Main>{children}</Main>
-            <MainFooter />
+            <Wrapper>
+              <MainHeader />
+              <Main>{children}</Main>
+              <MainFooter />
+            </Wrapper>
           </Layout>
         </StyledComponentsRegistry>
       </body>
