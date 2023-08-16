@@ -59,7 +59,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
             options={countries.map((country) => ({ value: country, label: country }))}
             rules={getCountryRules()}
             required={true}
-            onChange={() => form.validateFields(['postal-code'])}
+            onChange={() => form.validateFields([postalCodeFieldName])}
           />
         </Col>
 
@@ -67,7 +67,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
           <InputField
             {...fieldDefinitions.postalCode}
             name={postalCodeFieldName}
-            rules={getPostalCodeRules(form)}
+            rules={getPostalCodeRules(form, countryFieldName)}
             required={true}
           ></InputField>
         </Col>
