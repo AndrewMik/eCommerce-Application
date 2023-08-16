@@ -19,6 +19,14 @@ interface AddressSectionProps {
   onUseBillingAddressChange?: (checked: boolean) => void;
 }
 
+enum ShippingFieldsName {
+  STREET = 'street_shipping',
+  HOUSE = 'house_shipping',
+  FLAT = 'flat_shipping',
+  COUNTRY = 'country_shipping',
+  POSTAL_CODE = 'postalCode_shipping',
+}
+
 const AddressSection: React.FC<AddressSectionProps> = ({
   countries,
   form,
@@ -35,6 +43,22 @@ const AddressSection: React.FC<AddressSectionProps> = ({
 
   const handleUseBillingAddressChange = (e: CheckboxChangeEvent) => {
     if (onUseBillingAddressChange) {
+      const shippingAddressValues = form.getFieldsValue([
+        ShippingFieldsName.STREET,
+        ShippingFieldsName.HOUSE,
+        ShippingFieldsName.FLAT,
+        ShippingFieldsName.COUNTRY,
+        ShippingFieldsName.POSTAL_CODE,
+      ]);
+
+      form.setFieldsValue({
+        street_billing: shippingAddressValues[ShippingFieldsName.STREET],
+        house_billing: shippingAddressValues[ShippingFieldsName.HOUSE],
+        flat_billing: shippingAddressValues[ShippingFieldsName.FLAT],
+        country_billing: shippingAddressValues[ShippingFieldsName.COUNTRY],
+        postalCode_billing: shippingAddressValues[ShippingFieldsName.POSTAL_CODE],
+      });
+
       onUseBillingAddressChange(e.target.checked);
     }
   };
