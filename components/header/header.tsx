@@ -46,7 +46,7 @@ const MainHeader = () => {
     <Header style={{ padding: 0 }}>
       <Row>
         <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
-          <Link href={'./'} style={{ marginLeft: 10 }}>
+          <Link href={Paths.HOME} style={{ marginLeft: 10 }}>
             <Image src={logo} height={64} alt="Kiddo Kingdom" priority={true} />
           </Link>
         </Col>
