@@ -5,15 +5,6 @@ import { MenuOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
-import {
-  HomeOutlined,
-  LoginOutlined,
-  UserOutlined,
-  MenuOutlined,
-  ShoppingOutlined,
-  ShoppingCartOutlined,
-} from '@ant-design/icons';
 import Image from 'next/image';
 import { navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
@@ -36,7 +27,7 @@ const MainHeader = () => {
     <Header style={{ padding: 0 }}>
       <Row>
         <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
-          <Link href={Paths.HOME} style={{ marginLeft: 10 }}>
+          <Link href={'/'} style={{ marginLeft: 10 }}>
             <Image src={logo} height={64} alt="Kiddo Kingdom" priority={true} />
           </Link>
         </Col>
