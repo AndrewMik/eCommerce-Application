@@ -13,10 +13,10 @@ const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   userId: null,
   saveLogInState: () => {
-    throw new Error('logIn function must be overridden');
+    throw new Error('saveLogInState function must be overridden');
   },
   removeLogInState: () => {
-    throw new Error('logOut function must be overridden');
+    throw new Error('removeLogInState function must be overridden');
   },
 });
 
