@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, Form, Input, Space, Row, Col, notification } from 'antd';
+import { useRouter } from 'next/navigation';
+import { Button, Form, Input, Space, Row, Col, notification, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import loginUser from '../../api/login-user';
@@ -15,11 +16,14 @@ import {
   ValidationMessages,
 } from './types.login';
 
+const { Link } = Typography;
+
 const LoginForm: React.FC = () => {
   const [hasError, setHasError] = useState<boolean | null>(null);
   const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
   const [unknownError, setUnknownError] = useState<boolean>(false);
   const [api, contextHolder] = notification.useNotification();
+  const router = useRouter();
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -70,6 +74,11 @@ const LoginForm: React.FC = () => {
       setUnknownError(true);
     }
     setNotificationToggle((prevState) => !prevState);
+    if (statusCode === 200) {
+      setTimeout(() => {
+        router.replace(`/`);
+      }, 1500);
+    }
   };
 
   const iconStyle = {
@@ -152,7 +161,7 @@ const LoginForm: React.FC = () => {
                 wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 14, offset: 10 }, md: { span: 13, offset: 11 } }}
               >
                 <Button type="primary" htmlType="submit">
-                  Log in
+                  Sign in
                 </Button>
               </Form.Item>
             </Space>
@@ -164,6 +173,16 @@ const LoginForm: React.FC = () => {
           md={{ span: 5, offset: 1 }}
           lg={{ span: 6, offset: 1 }}
         />
+      </Row>
+      <Divider />
+      <Row justify="center">
+        <Col>
+          <span>Haven't registered yet? </span>
+          <span>
+            Sign up
+            <Link href={'/registration'}> here!</Link>
+          </span>
+        </Col>
       </Row>
     </>
   );

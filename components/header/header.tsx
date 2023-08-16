@@ -1,5 +1,7 @@
 'use client';
 
+import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -13,22 +15,10 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
+import { navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
-import Paths from './header-types';
 
 const { Header } = Layout;
-
-const menuItems = [
-  { key: Paths.HOME, label: <Link href={Paths.HOME}>Home</Link>, icon: <HomeOutlined /> },
-  { key: Paths.LOGIN, label: <Link href={Paths.LOGIN}>Sign in</Link>, icon: <LoginOutlined /> },
-  {
-    key: Paths.REGISTRATION,
-    label: <Link href={Paths.REGISTRATION}>Sign up</Link>,
-    icon: <UserOutlined />,
-  },
-  { key: Paths.CATALOG, label: <Link href={Paths.CATALOG}>Catalog</Link>, icon: <ShoppingOutlined /> },
-  { key: Paths.CART, label: <Link href={Paths.CART}>Cart</Link>, icon: <ShoppingCartOutlined /> },
-];
 
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
@@ -58,7 +48,7 @@ const MainHeader = () => {
           xl={{ span: 10, offset: 10 }}
           xxl={{ span: 8, offset: 12 }}
         >
-          <Menu theme="dark" mode="horizontal" selectedKeys={[`${pathname}`]} items={menuItems} />
+          <Menu theme="dark" mode="horizontal" selectedKeys={[`${pathname}`]} items={navigationLinks} />
         </Col>
         <Col xs={4} sm={4} md={0}>
           <Button type="primary" onClick={showDrawer}>
@@ -67,7 +57,7 @@ const MainHeader = () => {
         </Col>
       </Row>
       <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
-        <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={menuItems} />
+        <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={navigationLinks} />
       </Drawer>
     </Header>
   );

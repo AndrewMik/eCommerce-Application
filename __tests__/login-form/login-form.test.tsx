@@ -3,6 +3,17 @@ import '@testing-library/jest-dom/extend-expect';
 import mockMatchMedia from '../../utils/mock';
 import LoginForm from '../../components/login-form/login-form';
 import { Placeholders, ValidationMessages } from '../../components/login-form/types.login';
+import { useRouter } from 'next/navigation';
+import { navigationLinks } from '@/utils/route-links';
+
+jest.mock('next/navigation');
+
+beforeEach(() => {
+  (useRouter as jest.Mock).mockReturnValue({
+    push: jest.fn(),
+    pathname: '',
+  });
+});
 
 const formatMessage = (message: string): string => message.replace(/\s\s+/g, ' ');
 
@@ -25,7 +36,7 @@ describe('LoginForm - basic tests', () => {
   it('displays validation messages for required fields', async () => {
     render(<LoginForm />);
 
-    fireEvent.click(screen.getByText('Log in'));
+    fireEvent.click(screen.getByText('Sign in'));
 
     expect(await screen.findByText(ValidationMessages.EmailRequired)).toBeInTheDocument();
     expect(await screen.findByText(ValidationMessages.PasswordRequired)).toBeInTheDocument();
