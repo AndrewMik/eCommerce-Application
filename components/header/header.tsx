@@ -9,28 +9,26 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
+import { useContext, useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   NotificationType,
   NotificationPlacement,
   NotificationMessage,
   NotificationDescription,
-} from '../../components/login-form/types.login';
-import { useContext, useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+} from '../login-form/types.login';
 import { AuthContext } from '../../context/authorization-context';
 import { Paths, navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
-import { log } from 'console';
 
 const { Header } = Layout;
 
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, toggleNotification, logInStatusCode, registrationStatusCode, isRegistered } =
-    useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, toggleNotification, logInStatusCode } = useContext(AuthContext);
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
   const showDrawer = () => {
@@ -60,25 +58,22 @@ const MainHeader = () => {
   };
 
   useEffect(() => {
-    console.log(logInStatusCode);
-    if (logInStatusCode === 200) {
-      openNotificationWithIcon(
-        NotificationType.SUCCESS,
-        NotificationMessage.AUTENTICATED,
-        NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
-        NotificationPlacement.BOTTOM,
-      );
-    } else if (logInStatusCode === 400) {
-      openNotificationWithIcon(
-        NotificationType.ERROR,
-        NotificationMessage.INVALID_CREDENTIALS,
-        NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
-        NotificationPlacement.BOTTOM,
-      );
-    } else if (!logInStatusCode) {
-      return;
-    } else {
-      {
+    if (logInStatusCode) {
+      if (logInStatusCode === 200) {
+        openNotificationWithIcon(
+          NotificationType.SUCCESS,
+          NotificationMessage.AUTENTICATED,
+          NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
+          NotificationPlacement.BOTTOM,
+        );
+      } else if (logInStatusCode === 400) {
+        openNotificationWithIcon(
+          NotificationType.ERROR,
+          NotificationMessage.INVALID_CREDENTIALS,
+          NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
+          NotificationPlacement.BOTTOM,
+        );
+      } else {
         openNotificationWithIcon(
           NotificationType.ERROR,
           NotificationMessage.UNKNOWN_ERROR,

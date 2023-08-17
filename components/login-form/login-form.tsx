@@ -3,19 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../../context/authorization-context';
 import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
-import {
-  FieldType,
-  NotificationType,
-  NotificationPlacement,
-  NotificationMessage,
-  NotificationDescription,
-  Placeholders,
-  ValidationMessages,
-} from './types.login';
+import { FieldType, Placeholders, ValidationMessages } from './types.login';
 
 const { Link } = Typography;
 
