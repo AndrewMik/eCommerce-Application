@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout, Menu, Button, Drawer, Row, Col, notification } from 'antd';
+import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
 import {
   MenuOutlined,
   HomeOutlined,
@@ -9,17 +9,12 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  NotificationType,
-  NotificationPlacement,
-  NotificationMessage,
-  NotificationDescription,
-} from '../login-form/types.login';
 import { AuthContext } from '../../context/authorization-context';
+import Notifications from '../notifications/notifications';
 import { Paths, navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
 
@@ -28,9 +23,8 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, toggleNotification, logInStatusCode } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState } = useContext(AuthContext);
   const router = useRouter();
-  const [api, contextHolder] = notification.useNotification();
   const showDrawer = () => {
     setVisible(true);
   };
@@ -43,46 +37,6 @@ const MainHeader = () => {
     removeLogInState();
     router.push(Paths.LOGIN);
   };
-
-  const openNotificationWithIcon = (
-    type: NotificationType,
-    message: string,
-    description: string,
-    placement: NotificationPlacement,
-  ) => {
-    api[type]({
-      message,
-      description,
-      placement,
-    });
-  };
-
-  useEffect(() => {
-    if (logInStatusCode) {
-      if (logInStatusCode === 200) {
-        openNotificationWithIcon(
-          NotificationType.SUCCESS,
-          NotificationMessage.AUTENTICATED,
-          NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
-          NotificationPlacement.BOTTOM,
-        );
-      } else if (logInStatusCode === 400) {
-        openNotificationWithIcon(
-          NotificationType.ERROR,
-          NotificationMessage.INVALID_CREDENTIALS,
-          NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
-          NotificationPlacement.BOTTOM,
-        );
-      } else {
-        openNotificationWithIcon(
-          NotificationType.ERROR,
-          NotificationMessage.UNKNOWN_ERROR,
-          NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
-          NotificationPlacement.BOTTOM,
-        );
-      }
-    }
-  }, [toggleNotification]);
 
   const navigationLinksForAuthorizedUser = [
     {
@@ -118,7 +72,7 @@ const MainHeader = () => {
 
   return (
     <>
-      {contextHolder}
+      <Notifications />
       <Header style={{ padding: 0 }}>
         <Row>
           <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
