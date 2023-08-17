@@ -21,13 +21,8 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  let storedUserId = null;
-
-  if (typeof window !== 'undefined') {
-    storedUserId = localStorage.getItem('userId');
-  }
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!storedUserId);
-  const [userId, setUserId] = useState<string | null>(storedUserId);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
