@@ -26,7 +26,7 @@ export enum NotificationMessage {
 }
 
 export enum NotificationDescription {
-  CUSTOMER_ACCOUNT_DOES_NOT_EXIST = 'Incorrect emain or password',
+  CUSTOMER_ACCOUNT_DOES_NOT_EXIST = 'Incorrect email or password',
   CUSTOMER_ACCOUNT_AUTHENTICATED = 'You successfully logged in',
   CUSTOMER_ACCOUNT_UNKNOWN_ERROR = 'Something went wrong. Try again later',
 }

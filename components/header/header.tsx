@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import { Layout, Menu, Button, Drawer, Row, Col, notification } from 'antd';
 import {
   MenuOutlined,
   HomeOutlined,
@@ -9,21 +9,30 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { useContext, useState } from 'react';
+import {
+  NotificationType,
+  NotificationPlacement,
+  NotificationMessage,
+  NotificationDescription,
+} from '../../components/login-form/types.login';
+import { useContext, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AuthContext } from '../../context/authorization-context';
 import { Paths, navigationLinks } from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
+import { log } from 'console';
 
 const { Header } = Layout;
 
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, toggleNotification, logInStatusCode, registrationStatusCode, isRegistered } =
+    useContext(AuthContext);
   const router = useRouter();
+  const [api, contextHolder] = notification.useNotification();
   const showDrawer = () => {
     setVisible(true);
   };
@@ -36,6 +45,49 @@ const MainHeader = () => {
     removeLogInState();
     router.push(Paths.LOGIN);
   };
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    message: string,
+    description: string,
+    placement: NotificationPlacement,
+  ) => {
+    api[type]({
+      message,
+      description,
+      placement,
+    });
+  };
+
+  useEffect(() => {
+    console.log(logInStatusCode);
+    if (logInStatusCode === 200) {
+      openNotificationWithIcon(
+        NotificationType.SUCCESS,
+        NotificationMessage.AUTENTICATED,
+        NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
+        NotificationPlacement.BOTTOM,
+      );
+    } else if (logInStatusCode === 400) {
+      openNotificationWithIcon(
+        NotificationType.ERROR,
+        NotificationMessage.INVALID_CREDENTIALS,
+        NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
+        NotificationPlacement.BOTTOM,
+      );
+    } else if (!logInStatusCode) {
+      return;
+    } else {
+      {
+        openNotificationWithIcon(
+          NotificationType.ERROR,
+          NotificationMessage.UNKNOWN_ERROR,
+          NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
+          NotificationPlacement.BOTTOM,
+        );
+      }
+    }
+  }, [toggleNotification]);
 
   const navigationLinksForAuthorizedUser = [
     {
@@ -70,38 +122,41 @@ const MainHeader = () => {
   ];
 
   return (
-    <Header style={{ padding: 0 }}>
-      <Row>
-        <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
-          <Link href={'/'} style={{ marginLeft: 10 }}>
-            <Image src={logo} height={64} alt="Kiddo Kingdom" priority={true} />
-          </Link>
-        </Col>
-        <Col
-          xs={0}
-          sm={0}
-          md={{ span: 16, offset: 4 }}
-          lg={{ span: 13, offset: 7 }}
-          xl={{ span: 10, offset: 10 }}
-          xxl={{ span: 8, offset: 12 }}
-        >
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            selectedKeys={[`${pathname}`]}
-            items={isLoggedIn ? navigationLinksForAuthorizedUser : navigationLinks}
-          />
-        </Col>
-        <Col xs={4} sm={4} md={0}>
-          <Button type="primary" onClick={showDrawer}>
-            <MenuOutlined />
-          </Button>
-        </Col>
-      </Row>
-      <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
-        <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={navigationLinks} />
-      </Drawer>
-    </Header>
+    <>
+      {contextHolder}
+      <Header style={{ padding: 0 }}>
+        <Row>
+          <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
+            <Link href={'/'} style={{ marginLeft: 10 }}>
+              <Image src={logo} height={64} alt="Kiddo Kingdom" priority={true} />
+            </Link>
+          </Col>
+          <Col
+            xs={0}
+            sm={0}
+            md={{ span: 16, offset: 4 }}
+            lg={{ span: 13, offset: 7 }}
+            xl={{ span: 10, offset: 10 }}
+            xxl={{ span: 8, offset: 12 }}
+          >
+            <Menu
+              theme="dark"
+              mode="horizontal"
+              selectedKeys={[`${pathname}`]}
+              items={isLoggedIn ? navigationLinksForAuthorizedUser : navigationLinks}
+            />
+          </Col>
+          <Col xs={4} sm={4} md={0}>
+            <Button type="primary" onClick={showDrawer}>
+              <MenuOutlined />
+            </Button>
+          </Col>
+        </Row>
+        <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
+          <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={navigationLinks} />
+        </Drawer>
+      </Header>
+    </>
   );
 };
 

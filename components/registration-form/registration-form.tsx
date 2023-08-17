@@ -8,7 +8,7 @@ import { Paths } from '../../utils/route-links';
 import AddressSection from './sections/address-section';
 import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
-import { AddressSuffix, AddressFieldsName } from './helpers/registration.types';
+import { AddressSuffix, AddressFieldsName, FormData } from './helpers/registration.types';
 
 interface CountryOptionsProps {
   countries: string[];
@@ -17,6 +17,28 @@ interface CountryOptionsProps {
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [useBillingAddress, setUseBillingAddress] = useState(false);
+
+  const handleRegisterUser = async (formData: FormData) => {
+    console.log(formData);
+    const statusCode = await registerUser(formData);
+    console.log(statusCode);
+    // if (statusCode === 200) {
+    //   if (customer) {
+    //     saveLogInState(customer.id);
+    //   }
+    //   setHasError(false);
+    // } else if (statusCode === 400) {
+    //   setHasError(true);
+    // } else {
+    //   setUnknownError(true);
+    // }
+    // setNotificationToggle((prevState) => !prevState);
+    // if (statusCode === 200) {
+    //   setTimeout(() => {
+    //     router.replace(`/`);
+    //   }, 1500);
+    // }
+  };
 
   return (
     <Layout>
@@ -35,7 +57,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 }}
                 autoComplete="on"
                 layout="vertical"
-                onFinish={registerUser}
+                onFinish={handleRegisterUser}
               >
                 <PersonalSection></PersonalSection>
                 <AddressSection
