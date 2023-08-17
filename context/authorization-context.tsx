@@ -1,4 +1,4 @@
-'use sclient';
+'use client';
 
 import { createContext, useState, useEffect } from 'react';
 
@@ -21,8 +21,13 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string | null>(null);
+  let storedUserId = null;
+
+  if (typeof window !== 'undefined') {
+    storedUserId = localStorage.getItem('userId');
+  }
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!storedUserId);
+  const [userId, setUserId] = useState<string | null>(storedUserId);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
