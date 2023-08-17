@@ -1,62 +1,63 @@
+import { AddressFieldsName } from './registration.types';
+
 const fieldDefinitions = {
   name: {
-    label: 'Name',
-    name: 'name',
-    placeholder: 'John',
+    label: `Name`,
+    name: `firstName`,
+    placeholder: `John`,
   },
   surname: {
-    label: 'Surname',
-    name: 'surname',
-    placeholder: 'Doe',
+    label: `Surname`,
+    name: `lastName`,
+    placeholder: `Doe`,
   },
   birthDate: {
-    label: 'Date of Birth',
-    name: 'date-of-birth"',
-    placeholder: '1990-03-20',
+    label: `Date of Birth`,
+    name: `dateOfBirth`,
+    placeholder: `1990-03-20`,
   },
   gender: {
-    label: 'Gender',
-    name: 'gender',
-    placeholder: 'Select Gender',
+    label: `Gender`,
+    name: `gender`,
+    placeholder: `Select Gender`,
   },
   street: {
-    label: 'Street',
-    name: 'street',
-    placeholder: 'Park Avenue',
+    label: `Street`,
+    name: `${AddressFieldsName.STREET_NAME}`,
+    placeholder: `Park Avenue`,
   },
-  house: {
-    label: 'House',
-    name: 'house',
-    placeholder: '34',
+  streetNumber: {
+    label: `Street Number`,
+    name: `${AddressFieldsName.STREET_NUMBER}`,
+    placeholder: `34`,
   },
-  flat: {
-    label: 'Flat',
-    name: 'flat',
-    placeholder: '128',
+  apartment: {
+    label: `Apartment`,
+    name: `${AddressFieldsName.APARTMENT}`,
+    placeholder: `128`,
   },
   country: {
-    label: 'Country',
-    name: 'country',
-    placeholder: 'Select Country',
+    label: `Country`,
+    name: `${AddressFieldsName.COUNTRY}`,
+    placeholder: `Select Country`,
   },
   postalCode: {
-    label: 'Postal code',
-    name: 'postal-code',
-    placeholder: '4701',
+    label: `Postal code`,
+    name: `${AddressFieldsName.POSTAL_CODE}`,
+    placeholder: `4701`,
   },
   defaultAddress: {
-    label: 'Set as default address',
-    name: 'set-default-address',
+    label: `Set as default address`,
   },
   email: {
-    label: 'Email',
-    name: 'email',
-    placeholder: 'your.email@gmail.com',
+    label: `Email`,
+    name: `email`,
+    placeholder: `your.email@gmail.com`,
   },
   password: {
-    label: 'Password',
-    name: 'password',
-    placeholder: 'securePassword1',
+    label: `Password`,
+    name: `password`,
+    placeholder: `securePassword1!`,
   },
 };
 
