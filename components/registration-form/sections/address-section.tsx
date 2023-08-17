@@ -9,6 +9,7 @@ import DividerText from '../fields/divider-field';
 
 import { getStreetRules, getCountryRules, getPostalCodeRules } from '../helpers/validation-rules';
 import fieldDefinitions from '../helpers/field-definitions';
+import { AddressFieldsName, ShippingFieldsName } from '../helpers/registration.types';
 
 interface AddressSectionProps {
   countries: string[];
@@ -19,14 +20,6 @@ interface AddressSectionProps {
   onUseBillingAddressChange?: (checked: boolean) => void;
 }
 
-enum ShippingFieldsName {
-  STREET = 'street_shipping',
-  HOUSE = 'house_shipping',
-  FLAT = 'flat_shipping',
-  COUNTRY = 'country_shipping',
-  POSTAL_CODE = 'postalCode_shipping',
-}
-
 const AddressSection: React.FC<AddressSectionProps> = ({
   countries,
   form,
@@ -35,31 +28,34 @@ const AddressSection: React.FC<AddressSectionProps> = ({
   showCheckbox = false,
   onUseBillingAddressChange,
 }) => {
-  const streetFieldName = `street${nameSuffix}`;
-  const houseFieldName = `house${nameSuffix}`;
-  const flatFieldName = `flat${nameSuffix}`;
-  const countryFieldName = `country${nameSuffix}`;
-  const postalCodeFieldName = `postalCode${nameSuffix}`;
+  const streetFieldName = `${AddressFieldsName.STREET_NAME}${nameSuffix}`;
+  const houseFieldName = `${AddressFieldsName.STREET_NUMBER}${nameSuffix}`;
+  const flatFieldName = `${AddressFieldsName.APARTMENT}${nameSuffix}`;
+  const countryFieldName = `${AddressFieldsName.COUNTRY}${nameSuffix}`;
+  const postalCodeFieldName = `${AddressFieldsName.POSTAL_CODE}${nameSuffix}`;
+  const setAsDefault = `${AddressFieldsName.SET_AS_DEFAULT}${nameSuffix}`;
+  const useAsBillingAddress = AddressFieldsName.USE_AS_BILLING_ADDRESS;
 
   const handleUseBillingAddressChange = (e: CheckboxChangeEvent) => {
     if (onUseBillingAddressChange) {
       const shippingAddressValues = form.getFieldsValue([
-        ShippingFieldsName.STREET,
-        ShippingFieldsName.HOUSE,
-        ShippingFieldsName.FLAT,
+        ShippingFieldsName.STREET_NAME,
+        ShippingFieldsName.STREET_NUMBER,
+        ShippingFieldsName.APARTMENT,
         ShippingFieldsName.COUNTRY,
         ShippingFieldsName.POSTAL_CODE,
       ]);
 
       form.setFieldsValue({
-        street_billing: shippingAddressValues[ShippingFieldsName.STREET],
-        house_billing: shippingAddressValues[ShippingFieldsName.HOUSE],
-        flat_billing: shippingAddressValues[ShippingFieldsName.FLAT],
+        street_billing: shippingAddressValues[ShippingFieldsName.STREET_NAME],
+        house_billing: shippingAddressValues[ShippingFieldsName.STREET_NUMBER],
+        flat_billing: shippingAddressValues[ShippingFieldsName.APARTMENT],
         country_billing: shippingAddressValues[ShippingFieldsName.COUNTRY],
         postalCode_billing: shippingAddressValues[ShippingFieldsName.POSTAL_CODE],
       });
 
       onUseBillingAddressChange(e.target.checked);
+      e.target.value = e.target.checked;
     }
   };
 
@@ -71,10 +67,10 @@ const AddressSection: React.FC<AddressSectionProps> = ({
 
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField label="House" name={houseFieldName} placeholder="34" rules={[]}></InputField>
+          <InputField {...fieldDefinitions.streetNumber} name={houseFieldName} rules={[]}></InputField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField label="Flat" name={flatFieldName} placeholder="128" rules={[]}></InputField>
+          <InputField {...fieldDefinitions.apartment} name={flatFieldName} rules={[]}></InputField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SelectField
@@ -99,11 +95,13 @@ const AddressSection: React.FC<AddressSectionProps> = ({
 
       <Row>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <SwitchField {...fieldDefinitions.defaultAddress} defaultChecked={true}></SwitchField>
+          <Form.Item valuePropName="checked">
+            <SwitchField name={setAsDefault} {...fieldDefinitions.defaultAddress}></SwitchField>
+          </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           {showCheckbox && (
-            <Form.Item>
+            <Form.Item name={useAsBillingAddress} valuePropName="checked">
               <Checkbox onChange={handleUseBillingAddressChange}>Also use as billing address</Checkbox>
             </Form.Item>
           )}{' '}

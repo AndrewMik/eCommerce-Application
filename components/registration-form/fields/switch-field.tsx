@@ -6,15 +6,15 @@ interface SwitchFieldProps {
   defaultChecked?: boolean;
 }
 
-const SwitchField: React.FC<SwitchFieldProps> = ({ name, label, defaultChecked }) => (
-  <Form.Item name={name} valuePropName="checked">
-    <Row align="middle">
-      <Col>
-        <Switch defaultChecked={defaultChecked} />
-      </Col>
-      <Col>{label && <span style={{ marginLeft: '8px' }}>{label}</span>}</Col>
-    </Row>
-  </Form.Item>
+const SwitchField: React.FC<SwitchFieldProps> = ({ name, label }) => (
+  <Row align="middle">
+    <Col>
+      <Form.Item name={name} valuePropName="checked">
+        <Switch defaultChecked />
+      </Form.Item>
+    </Col>
+    <Col>{label && <span style={{ marginLeft: '8px' }}>{label}</span>}</Col>
+  </Row>
 );
 
 export default SwitchField;
