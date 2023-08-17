@@ -10,7 +10,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { useContext, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AuthContext } from '../../context/authorization-context';
@@ -23,7 +23,7 @@ const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
   const { isLoggedIn, removeLogInState } = useContext(AuthContext);
-
+  const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
   };
@@ -34,6 +34,7 @@ const MainHeader = () => {
 
   const handleSignOutButtonClick = () => {
     removeLogInState();
+    router.push(Paths.LOGIN);
   };
 
   const navigationLinksForAuthorizedUser = [

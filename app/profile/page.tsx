@@ -1,11 +1,14 @@
-import { Button, Space } from 'antd';
+'use client';
 
-const Page = (): JSX.Element => (
-  <div style={{ padding: '0 24px' }}>
-    <Space>
-      <Button type="primary">Test user profile page</Button>
-    </Space>
-  </div>
-);
+import { useContext } from 'react';
+import Home from '@/components/home/home';
+import { AuthContext } from '@/context/authorization-context';
+import Profile from '@/components/user-profile/user-profile';
+
+const Page = (): JSX.Element => {
+  const { isLoggedIn } = useContext(AuthContext);
+
+  return <>{isLoggedIn ? <Profile /> : <Home />}</>;
+};
 
 export default Page;
