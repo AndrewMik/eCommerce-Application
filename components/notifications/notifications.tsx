@@ -7,12 +7,12 @@ import {
   NotificationPlacement,
   NotificationMessage,
   NotificationDescription,
-} from '../login-form/types.login';
+} from './notifications.types';
 import { AuthContext } from '../../context/authorization-context';
 
 const Notifications = () => {
   const [api, contextHolder] = notification.useNotification();
-  const { toggleNotification, logInStatusCode } = useContext(AuthContext);
+  const { toggleNotificationForLogIn, logInStatusCode } = useContext(AuthContext);
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -52,7 +52,7 @@ const Notifications = () => {
         );
       }
     }
-  }, [toggleNotification]);
+  }, [toggleNotificationForLogIn]);
 
   return <>{contextHolder}</>;
 };

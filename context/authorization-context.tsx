@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
-  toggleNotification: boolean;
+  toggleNotificationForLogIn: boolean;
   registrationStatusCode: number | null;
   logInStatusCode: number | null;
   isLoggedIn: boolean;
@@ -13,7 +13,7 @@ interface AuthContextType {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   saveLogInState: (id: string) => void;
   removeLogInState: () => void;
-  setToggleNotification: (state: boolean | ((prevState: boolean) => boolean)) => void;
+  setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setRegistrationStatusCode: (statusCode: number) => void;
   setLogInStatusCode: (statusCode: number) => void;
 }
@@ -21,7 +21,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   logInStatusCode: null,
   registrationStatusCode: null,
-  toggleNotification: false,
+  toggleNotificationForLogIn: false,
   isLoggedIn: false,
   userId: null,
   isRegistered: false,
@@ -33,13 +33,13 @@ const AuthContext = createContext<AuthContextType>({
   removeLogInState: () => {
     throw new Error('removeLogInState function must be overridden');
   },
-  setToggleNotification: () => {},
+  setToggleNotificationForLogIn: () => {},
   setRegistrationStatusCode: () => {},
   setLogInStatusCode: () => {},
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [toggleNotification, setToggleNotification] = useState<boolean>(false);
+  const [toggleNotificationForLogIn, setToggleNotificationForLogIn] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
@@ -75,8 +75,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         removeLogInState,
         isRegistered,
         setIsRegistered,
-        toggleNotification,
-        setToggleNotification,
+        toggleNotificationForLogIn,
+        setToggleNotificationForLogIn,
         registrationStatusCode,
         setRegistrationStatusCode,
         logInStatusCode,
