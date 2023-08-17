@@ -12,7 +12,8 @@ import { AuthContext } from '../../context/authorization-context';
 
 const Notifications = () => {
   const [api, contextHolder] = notification.useNotification();
-  const { toggleNotificationForLogIn, logInStatusCode } = useContext(AuthContext);
+  const { toggleNotificationForLogIn, logInStatusCode, registrationStatusCode, toggleNotificationForRegistration } =
+    useContext(AuthContext);
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -53,6 +54,33 @@ const Notifications = () => {
       }
     }
   }, [toggleNotificationForLogIn]);
+
+  useEffect(() => {
+    if (registrationStatusCode) {
+      if (registrationStatusCode === 201) {
+        openNotificationWithIcon(
+          NotificationType.SUCCESS,
+          NotificationMessage.REGISTERED,
+          NotificationDescription.CUSTOMER_ACCOUNT_REGISTERED,
+          NotificationPlacement.BOTTOM,
+        );
+      } else if (registrationStatusCode === 400) {
+        openNotificationWithIcon(
+          NotificationType.ERROR,
+          NotificationMessage.ACCOUNT_EXISTS,
+          NotificationDescription.CUSTOMER_ACCOUNT_EXISTS,
+          NotificationPlacement.BOTTOM,
+        );
+      } else {
+        openNotificationWithIcon(
+          NotificationType.ERROR,
+          NotificationMessage.UNKNOWN_ERROR,
+          NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
+          NotificationPlacement.BOTTOM,
+        );
+      }
+    }
+  }, [toggleNotificationForRegistration]);
 
   return <>{contextHolder}</>;
 };

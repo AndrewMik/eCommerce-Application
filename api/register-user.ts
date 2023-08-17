@@ -51,10 +51,10 @@ async function registerUser(formData: FormData) {
 
   try {
     const respose = await client.customers().post({ body: customerDraft }).execute();
-    return respose.statusCode;
+    return { statusCode: respose.statusCode, customer: respose.body.customer };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error));
-    return errorResponse.code;
+    return { statusCode: errorResponse.code };
   }
 }
 
