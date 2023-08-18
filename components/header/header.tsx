@@ -23,8 +23,13 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, setToggleNotificationForLogIn, setToggleNotificationForRegistration } =
-    useContext(AuthContext);
+  const {
+    isLoggedIn,
+    removeLogInState,
+    setToggleNotificationForLogIn,
+    setToggleNotificationForRegistration,
+    isRegistered,
+  } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
@@ -37,7 +42,7 @@ const MainHeader = () => {
   useEffect(() => {
     setToggleNotificationForLogIn((prevState) => !prevState);
     setToggleNotificationForRegistration((prevState) => !prevState);
-  }, []);
+  }, [isLoggedIn, isRegistered]);
 
   // eslint-disable-next-line no-console
   console.log('isLoggedIn', isLoggedIn);
