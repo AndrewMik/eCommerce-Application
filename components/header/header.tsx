@@ -9,7 +9,7 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,7 +23,8 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, setToggleNotificationForLogIn, setToggleNotificationForRegistration } =
+    useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
@@ -32,6 +33,12 @@ const MainHeader = () => {
   const onClose = () => {
     setVisible(false);
   };
+
+  useEffect(() => {
+    setToggleNotificationForLogIn((prevState) => !prevState);
+    setToggleNotificationForRegistration((prevState) => !prevState);
+  }, []);
+
   // eslint-disable-next-line no-console
   console.log('isLoggedIn', isLoggedIn);
   const handleSignOutButtonClick = () => {
