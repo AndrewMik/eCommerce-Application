@@ -20,10 +20,10 @@ const LoginForm: React.FC = () => {
     if (statusCode) {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
-        router.replace(`/`);
         if (customer) {
           setIsLoggedIn(true);
           saveLogInState(customer.id);
+          router.replace(`/`);
         }
       }
     }
