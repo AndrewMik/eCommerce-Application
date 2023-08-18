@@ -29,6 +29,7 @@ const MainHeader = () => {
     setToggleNotificationForLogIn,
     setToggleNotificationForRegistration,
     isRegistered,
+    setLogInStatusCode,
   } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
