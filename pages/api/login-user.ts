@@ -10,6 +10,7 @@ async function loginUser(email: string, password: string) {
 
   try {
     const response = await client.login().post({ body }).execute();
+    // eslint-disable-next-line no-console
     console.log(Client.token.get());
     return { statusCode: response.statusCode, customer: response.body.customer };
   } catch (error) {

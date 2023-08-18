@@ -2,6 +2,7 @@ import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 
 class Token implements TokenCache {
   private token: TokenStore;
+
   constructor() {
     this.token = {
       token: '',
