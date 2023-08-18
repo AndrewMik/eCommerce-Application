@@ -7,7 +7,7 @@ interface AuthContextType {
   toggleNotificationForRegistration: boolean;
   registrationStatusCode: number | null;
   logInStatusCode: number | null;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | null;
   userId: string | null;
   isRegistered: boolean;
   setIsRegistered: (isRegistered: boolean) => void;
@@ -17,7 +17,7 @@ interface AuthContextType {
   setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setRegistrationStatusCode: (statusCode: number) => void;
-  setLogInStatusCode: (statusCode: number) => void;
+  setLogInStatusCode: (statusCode: number | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType>({
   registrationStatusCode: null,
   toggleNotificationForLogIn: false,
   toggleNotificationForRegistration: false,
-  isLoggedIn: false,
+  isLoggedIn: null,
   userId: null,
   isRegistered: false,
   setIsLoggedIn: () => {},
@@ -45,7 +45,7 @@ const AuthContext = createContext<AuthContextType>({
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toggleNotificationForLogIn, setToggleNotificationForLogIn] = useState<boolean>(false);
   const [toggleNotificationForRegistration, setToggleNotificationForRegistration] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);

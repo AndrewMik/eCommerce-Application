@@ -48,6 +48,7 @@ const MainHeader = () => {
   console.log('isLoggedIn', isLoggedIn);
   const handleSignOutButtonClick = () => {
     removeLogInState();
+    setLogInStatusCode(null);
     router.push(Paths.LOGIN);
   };
 

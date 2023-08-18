@@ -13,7 +13,7 @@ const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn } = useContext(AuthContext);
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn } = useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
     const { statusCode, customer } = await loginUser(email, password);
@@ -24,10 +24,11 @@ const LoginForm: React.FC = () => {
           setIsLoggedIn(true);
           saveLogInState(customer.id);
           router.push(`/`);
+        } else {
+          setIsLoggedIn(false);
         }
       }
     }
-    setToggleNotificationForLogIn((prevState) => !prevState);
   };
 
   const iconStyle = {
