@@ -32,7 +32,8 @@ const MainHeader = () => {
   const onClose = () => {
     setVisible(false);
   };
-
+  // eslint-disable-next-line no-console
+  console.log('isLoggedIn', isLoggedIn);
   const handleSignOutButtonClick = () => {
     removeLogInState();
     router.push(Paths.LOGIN);

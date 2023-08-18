@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
         if (customer) {
           setIsLoggedIn(true);
           saveLogInState(customer.id);
-          router.replace(`/`);
+          router.push(`/`);
         }
       }
     }
