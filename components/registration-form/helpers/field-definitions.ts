@@ -1,17 +1,19 @@
+import { AddressFieldsName } from './registration.types';
+
 const fieldDefinitions = {
   name: {
     label: 'Name',
-    name: 'name',
+    name: 'firstName',
     placeholder: 'John',
   },
   surname: {
     label: 'Surname',
-    name: 'surname',
+    name: 'lastName',
     placeholder: 'Doe',
   },
   birthDate: {
     label: 'Date of Birth',
-    name: 'date-of-birth"',
+    name: 'dateOfBirth',
     placeholder: '1990-03-20',
   },
   gender: {
@@ -21,32 +23,31 @@ const fieldDefinitions = {
   },
   street: {
     label: 'Street',
-    name: 'street',
+    name: `${AddressFieldsName.STREET_NAME}`,
     placeholder: 'Park Avenue',
   },
-  house: {
-    label: 'House',
-    name: 'house',
+  streetNumber: {
+    label: 'Street Number',
+    name: `${AddressFieldsName.STREET_NUMBER}`,
     placeholder: '34',
   },
-  flat: {
-    label: 'Flat',
-    name: 'flat',
+  apartment: {
+    label: 'Apartment',
+    name: `${AddressFieldsName.APARTMENT}`,
     placeholder: '128',
   },
   country: {
     label: 'Country',
-    name: 'country',
+    name: `${AddressFieldsName.COUNTRY}`,
     placeholder: 'Select Country',
   },
   postalCode: {
     label: 'Postal code',
-    name: 'postal-code',
+    name: `${AddressFieldsName.POSTAL_CODE}`,
     placeholder: '4701',
   },
   defaultAddress: {
     label: 'Set as default address',
-    name: 'set-default-address',
   },
   email: {
     label: 'Email',
@@ -56,7 +57,7 @@ const fieldDefinitions = {
   password: {
     label: 'Password',
     name: 'password',
-    placeholder: 'securePassword1',
+    placeholder: 'securePassword1!',
   },
 };
 
