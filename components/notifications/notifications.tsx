@@ -12,14 +12,8 @@ import { AuthContext } from '../../context/authorization-context';
 
 const Notifications = () => {
   const [api, contextHolder] = notification.useNotification();
-  const {
-    toggleNotificationForLogIn,
-    logInStatusCode,
-    registrationStatusCode,
-    toggleNotificationForRegistration,
-    isLoggedIn,
-    isRegistered,
-  } = useContext(AuthContext);
+  const { toggleNotificationForLogIn, logInStatusCode, registrationStatusCode, toggleNotificationForRegistration } =
+    useContext(AuthContext);
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -36,7 +30,7 @@ const Notifications = () => {
 
   useEffect(() => {
     if (logInStatusCode) {
-      if (logInStatusCode === 200 && isLoggedIn) {
+      if (logInStatusCode === 200) {
         openNotificationWithIcon(
           NotificationType.SUCCESS,
           NotificationMessage.AUTENTICATED,
@@ -63,7 +57,7 @@ const Notifications = () => {
 
   useEffect(() => {
     if (registrationStatusCode) {
-      if (registrationStatusCode === 201 && isRegistered) {
+      if (registrationStatusCode === 201) {
         openNotificationWithIcon(
           NotificationType.SUCCESS,
           NotificationMessage.REGISTERED,

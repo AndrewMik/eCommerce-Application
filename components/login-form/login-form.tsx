@@ -1,5 +1,3 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
@@ -13,7 +11,7 @@ const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn } = useContext(AuthContext);
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn } = useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
     const { statusCode, customer } = await loginUser(email, password);
@@ -29,6 +27,7 @@ const LoginForm: React.FC = () => {
         }
       }
     }
+    setToggleNotificationForLogIn((prevState) => !prevState);
   };
 
   const iconStyle = {

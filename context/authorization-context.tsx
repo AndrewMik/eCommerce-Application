@@ -16,7 +16,7 @@ interface AuthContextType {
   removeLogInState: () => void;
   setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
-  setRegistrationStatusCode: (statusCode: number) => void;
+  setRegistrationStatusCode: (statusCode: number | null) => void;
   setLogInStatusCode: (statusCode: number | null) => void;
 }
 
