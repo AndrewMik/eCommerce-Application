@@ -1,83 +1,33 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button, Form, Input, Space, Row, Col, notification, Divider, Typography } from 'antd';
+import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/authorization-context';
 import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
-import {
-  FieldType,
-  NotificationType,
-  NotificationPlacement,
-  NotificationMessage,
-  NotificationDescription,
-  Placeholders,
-  ValidationMessages,
-} from './types.login';
+import { FieldType, Placeholders, ValidationMessages } from './types.login';
 
 const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
-  const [hasError, setHasError] = useState<boolean | null>(null);
-  const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
-  const [unknownError, setUnknownError] = useState<boolean>(false);
-  const [api, contextHolder] = notification.useNotification();
   const router = useRouter();
-
-  const openNotificationWithIcon = (
-    type: NotificationType,
-    message: string,
-    description: string,
-    placement: NotificationPlacement,
-  ) => {
-    api[type]({
-      message,
-      description,
-      placement,
-    });
-  };
-
-  useEffect(() => {
-    if (unknownError) {
-      openNotificationWithIcon(
-        NotificationType.ERROR,
-        NotificationMessage.UNKNOWN_ERROR,
-        NotificationDescription.CUSTOMER_ACCOUNT_UNKNOWN_ERROR,
-        NotificationPlacement.BOTTOM,
-      );
-      setUnknownError(false);
-    } else if (hasError) {
-      openNotificationWithIcon(
-        NotificationType.ERROR,
-        NotificationMessage.INVALID_CREDENTIALS,
-        NotificationDescription.CUSTOMER_ACCOUNT_DOES_NOT_EXIST,
-        NotificationPlacement.BOTTOM,
-      );
-    } else if (hasError === false) {
-      openNotificationWithIcon(
-        NotificationType.SUCCESS,
-        NotificationMessage.AUTENTICATED,
-        NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
-        NotificationPlacement.BOTTOM,
-      );
-    }
-  }, [notificationToggle]);
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn } = useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const statusCode = await loginUser(email, password);
-    if (statusCode === 200) {
-      setHasError(false);
-    } else if (statusCode === 400) {
-      setHasError(true);
-    } else {
-      setUnknownError(true);
-    }
-    setNotificationToggle((prevState) => !prevState);
-    if (statusCode === 200) {
-      setTimeout(() => {
-        router.replace(`/`);
-      }, 1500);
+    const { statusCode, customer } = await loginUser(email, password);
+    if (statusCode) {
+      setLogInStatusCode(statusCode);
+      if (statusCode === 200) {
+        if (customer) {
+          setIsLoggedIn(true);
+          saveLogInState(customer.id);
+          router.push(`/`);
+        } else {
+          setIsLoggedIn(false);
+        }
+      }
     }
   };
 
@@ -88,7 +38,6 @@ const LoginForm: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <Row
         style={{
           height: '40vh',

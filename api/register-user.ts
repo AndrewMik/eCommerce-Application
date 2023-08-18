@@ -42,9 +42,11 @@ async function registerUser(formData: FormData) {
   const client = new Client().clientCredentialsClient;
 
   try {
-    return await client.customers().post({ body: customerDraft }).execute();
+    const respose = await client.customers().post({ body: customerDraft }).execute();
+    return { statusCode: respose.statusCode, customer: respose.body.customer };
   } catch (error) {
-    throw error;
+    const errorResponse = JSON.parse(JSON.stringify(error));
+    return { statusCode: errorResponse.code };
   }
 }
 

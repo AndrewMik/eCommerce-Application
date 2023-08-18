@@ -2,6 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import MainHeader from '../components/header/header';
 import '@testing-library/jest-dom/extend-expect';
 
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+  usePathname: jest.fn(),
+}));
+
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props: JSX.IntrinsicElements['img'] & { priority?: boolean }) => {

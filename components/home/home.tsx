@@ -1,14 +1,17 @@
 'use client';
 
 import { Col, List, Row } from 'antd';
-import { navigationMainPage } from '@/utils/route-links';
+import { useContext } from 'react';
+import { navigationMainPage, navigationMainPageForAuthorizedUser } from '@/utils/route-links';
+import { AuthContext } from '../../context/authorization-context';
 
 const Home = (): JSX.Element => {
+  const { isLoggedIn } = useContext(AuthContext);
   return (
     <>
       <List
         bordered
-        dataSource={navigationMainPage}
+        dataSource={isLoggedIn ? navigationMainPageForAuthorizedUser : navigationMainPage}
         renderItem={(item) => (
           <List.Item>
             <Row justify="start" gutter={8}>

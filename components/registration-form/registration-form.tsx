@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
+import { useRouter } from 'next/navigation';
 import registerUser from '@/api/register-user';
 import Footer from './fields/footer';
 import { Paths } from '../../utils/route-links';
 import AddressSection from './sections/address-section';
 import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
-import { AddressSuffix, AddressFieldsName } from './helpers/registration.types';
+import { AddressSuffix, AddressFieldsName, FormData } from './helpers/registration.types';
+import { AuthContext } from '../../context/authorization-context';
 
 interface CountryOptionsProps {
   countries: string[];
@@ -17,7 +19,22 @@ interface CountryOptionsProps {
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [useBillingAddress, setUseBillingAddress] = useState(false);
+  const router = useRouter();
+  const { setIsRegistered, setToggleNotificationForRegistration, setRegistrationStatusCode, saveLogInState } =
+    useContext(AuthContext);
 
+  const handleRegisterUser = async (formData: FormData) => {
+    const { statusCode, customer } = await registerUser(formData);
+    if (statusCode === 201) {
+      router.replace(`/`);
+      if (customer) {
+        setIsRegistered(true);
+        saveLogInState(customer.id);
+      }
+    }
+    setRegistrationStatusCode(statusCode);
+    setToggleNotificationForRegistration((prevState) => !prevState);
+  };
   return (
     <Layout>
       <Layout.Content>
@@ -35,7 +52,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 }}
                 autoComplete="on"
                 layout="vertical"
-                onFinish={registerUser}
+                onFinish={handleRegisterUser}
               >
                 <PersonalSection></PersonalSection>
                 <AddressSection
