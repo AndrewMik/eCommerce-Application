@@ -7,6 +7,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import Token from './token';
 
 class Client {
   private projectKey: string;
@@ -20,6 +21,8 @@ class Client {
   private apiUrl: string;
 
   private scopes: string[];
+
+  static token: Token = new Token();
 
   private cachedClients: {
     clientCredentials?: ByProjectKeyRequestBuilder;
@@ -83,6 +86,7 @@ class Client {
             password,
           },
         },
+        tokenCache: Client.token,
         fetch,
       };
 
