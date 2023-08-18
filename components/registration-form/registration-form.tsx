@@ -35,7 +35,6 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
     setRegistrationStatusCode(statusCode);
     setToggleNotificationForRegistration((prevState) => !prevState);
   };
-
   return (
     <Layout>
       <Layout.Content>
