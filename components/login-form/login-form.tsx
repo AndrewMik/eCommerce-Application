@@ -1,11 +1,9 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useContext } from 'react';
+import loginUser from '../../pages/api/login-user';
 import { AuthContext } from '../../context/authorization-context';
-import loginUser from '../../api/login-user';
 import validatePasswordRegExp from '../../utils/input-validation';
 import { FieldType, Placeholders, ValidationMessages } from './types.login';
 
@@ -13,22 +11,25 @@ const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn } = useContext(AuthContext);
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken } =
+    useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const { statusCode, customer } = await loginUser(email, password);
+    const { statusCode, token } = await loginUser(email, password);
     if (statusCode) {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
-        if (customer) {
+        if (token) {
+          setUserToken(token);
+          saveLogInState(token);
           setIsLoggedIn(true);
-          saveLogInState(customer.id);
           router.push(`/`);
         } else {
           setIsLoggedIn(false);
         }
       }
     }
+    setToggleNotificationForLogIn((prevState) => !prevState);
   };
 
   const iconStyle = {
@@ -107,7 +108,11 @@ const LoginForm: React.FC = () => {
               </div>
 
               <Form.Item
-                wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 14, offset: 10 }, md: { span: 13, offset: 11 } }}
+                wrapperCol={{
+                  xs: { span: 24, offset: 0 },
+                  sm: { span: 14, offset: 10 },
+                  md: { span: 13, offset: 11 },
+                }}
               >
                 <Button type="primary" htmlType="submit">
                   Sign in

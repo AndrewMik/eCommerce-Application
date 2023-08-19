@@ -1,8 +1,8 @@
 import { CustomerDraft } from '@commercetools/platform-sdk';
 import { getCode } from 'country-list';
 import Client from './client';
-import { AddressFieldsName, FormData } from '../components/registration-form/helpers/registration.types';
-import { getSalutation, getBirthDate } from '../components/registration-form/helpers/helper-functions';
+import { AddressFieldsName, FormData } from '../../components/registration-form/helpers/registration.types';
+import { getSalutation, getBirthDate } from '../../components/registration-form/helpers/helper-functions';
 
 const getDefaultBillingAddress = (formData: FormData) => {
   if (formData.useAsBillingAddress) {
@@ -43,7 +43,8 @@ async function registerUser(formData: FormData) {
 
   try {
     const respose = await client.customers().post({ body: customerDraft }).execute();
-    return { statusCode: respose.statusCode, customer: respose.body.customer };
+    const token = await Client.token.get();
+    return { statusCode: respose.statusCode, token: token.token };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error));
     return { statusCode: errorResponse.code };

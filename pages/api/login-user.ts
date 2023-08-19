@@ -10,7 +10,8 @@ async function loginUser(email: string, password: string) {
 
   try {
     const response = await client.login().post({ body }).execute();
-    return { statusCode: response.statusCode, customer: response.body.customer };
+    const token = Client.token.get();
+    return { statusCode: response.statusCode, token: token.token };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
     return { statusCode: errorResponse.body.statusCode };

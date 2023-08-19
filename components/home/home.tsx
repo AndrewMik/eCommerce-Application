@@ -1,5 +1,3 @@
-'use client';
-
 import { Col, List, Row } from 'antd';
 import { useContext } from 'react';
 import { navigationMainPage, navigationMainPageForAuthorizedUser } from '@/utils/route-links';

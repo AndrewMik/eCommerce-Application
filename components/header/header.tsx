@@ -9,7 +9,7 @@ import {
   ShoppingCartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,14 +23,7 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const {
-    isLoggedIn,
-    removeLogInState,
-    setToggleNotificationForLogIn,
-    setToggleNotificationForRegistration,
-    isRegistered,
-    setLogInStatusCode,
-  } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
@@ -40,16 +33,10 @@ const MainHeader = () => {
     setVisible(false);
   };
 
-  useEffect(() => {
-    setToggleNotificationForLogIn((prevState) => !prevState);
-    setToggleNotificationForRegistration((prevState) => !prevState);
-  }, [isLoggedIn, isRegistered]);
-
-  // eslint-disable-next-line no-console
-  console.log('isLoggedIn', isLoggedIn);
   const handleSignOutButtonClick = () => {
     removeLogInState();
     setLogInStatusCode(null);
+    setRegistrationStatusCode(null);
     router.push(Paths.LOGIN);
   };
 

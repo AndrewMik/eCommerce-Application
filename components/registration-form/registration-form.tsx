@@ -3,7 +3,7 @@
 import { useState, useContext } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
 import { useRouter } from 'next/navigation';
-import registerUser from '@/api/register-user';
+import registerUser from '@/pages/api/register-user';
 import Footer from './fields/footer';
 import { Paths } from '../../utils/route-links';
 import AddressSection from './sections/address-section';
@@ -20,16 +20,24 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [useBillingAddress, setUseBillingAddress] = useState(false);
   const router = useRouter();
-  const { setIsRegistered, setToggleNotificationForRegistration, setRegistrationStatusCode, saveLogInState } =
-    useContext(AuthContext);
+  const {
+    setToggleNotificationForRegistration,
+    setRegistrationStatusCode,
+    saveLogInState,
+    setUserToken,
+    setIsLoggedIn,
+  } = useContext(AuthContext);
 
   const handleRegisterUser = async (formData: FormData) => {
-    const { statusCode, customer } = await registerUser(formData);
+    const { statusCode, token } = await registerUser(formData);
     if (statusCode === 201) {
-      router.replace(`/`);
-      if (customer) {
-        setIsRegistered(true);
-        saveLogInState(customer.id);
+      if (token) {
+        setUserToken(token);
+        saveLogInState(token);
+        setIsLoggedIn(true);
+        router.push(`/`);
+      } else {
+        setIsLoggedIn(false);
       }
     }
     setRegistrationStatusCode(statusCode);
