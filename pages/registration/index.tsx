@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react';
-import RegistrationForm from '@/components/registration-form/registration-form';
-import getCountries from '../api/get-countries';
-import { useRouter } from 'next/router';
-import { AuthContext } from '@/context/authorization-context';
 import { Spin } from 'antd';
+import { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
+import RegistrationForm from '@/components/registration-form/registration-form';
+import { AuthContext } from '@/context/authorization-context';
+import getCountries from '../api/get-countries';
 
 const Page = (): JSX.Element => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -13,15 +13,21 @@ const Page = (): JSX.Element => {
   const [showRegistrationForm, setShowRegistrationForm] = useState<boolean>(false);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | number;
+
     if (isLoggedIn) {
       router.push('/');
     } else {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setShowRegistrationForm(true);
       }, 200);
-
-      return () => clearTimeout(timer);
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [isLoggedIn, router]);
 
   useEffect(() => {

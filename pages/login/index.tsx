@@ -1,8 +1,8 @@
-import LoginForm from '@/components/login-form/login-form';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/authorization-context';
-import { useRouter } from 'next/router';
 import { Spin } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import LoginForm from '@/components/login-form/login-form';
+import { AuthContext } from '../../context/authorization-context';
 
 const Page = (): JSX.Element => {
   const [showRegistrationForm, setShowRegistrationForm] = useState<boolean>(false);
@@ -10,15 +10,21 @@ const Page = (): JSX.Element => {
   const router = useRouter();
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | number;
+
     if (isLoggedIn) {
       router.push('/');
     } else {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setShowRegistrationForm(true);
       }, 200);
-
-      return () => clearTimeout(timer);
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [isLoggedIn, router]);
 
   if (isLoggedIn) {

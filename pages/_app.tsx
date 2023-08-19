@@ -1,9 +1,9 @@
 import type { AppProps } from 'next/app';
 import { ConfigProvider, Layout, Space, Spin } from 'antd';
+import { useState, useEffect } from 'react';
 import MainFooter from '@/components/footer/footer';
 import MainHeader from '@/components/header/header';
 import { AuthProvider } from '@/context/authorization-context';
-import { useState, useEffect } from 'react';
 
 const { Content } = Layout;
 
