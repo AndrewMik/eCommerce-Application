@@ -50,17 +50,24 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
+
   useEffect(() => {
-    sessionStorage.removeItem('userToken');
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      setIsLoggedIn(true);
+      setUserToken(token);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
   const saveLogInState = (token: string) => {
-    sessionStorage.setItem('userToken', token);
+    localStorage.setItem('userToken', token);
     setIsLoggedIn(true);
   };
 
   const removeLogInState = () => {
-    sessionStorage.removeItem('userToken');
+    localStorage.removeItem('userToken');
     setIsLoggedIn(false);
   };
 
