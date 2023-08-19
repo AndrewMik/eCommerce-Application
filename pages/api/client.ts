@@ -55,6 +55,7 @@ class Client {
           clientId: this.clientId,
           clientSecret: this.clientSecret,
         },
+        tokenCache: Client.token,
         scopes: this.scopes,
         fetch,
       };
