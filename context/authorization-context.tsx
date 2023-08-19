@@ -8,8 +8,9 @@ interface AuthContextType {
   registrationStatusCode: number | null;
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
-  userId: string | null;
+  userToken: string | null;
   isRegistered: boolean;
+  setUserToken: (token: string | null) => void;
   setIsRegistered: (isRegistered: boolean) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   saveLogInState: (id: string) => void;
@@ -26,10 +27,11 @@ const AuthContext = createContext<AuthContextType>({
   toggleNotificationForLogIn: false,
   toggleNotificationForRegistration: false,
   isLoggedIn: null,
-  userId: null,
+  userToken: null,
   isRegistered: false,
   setIsLoggedIn: () => {},
   setIsRegistered: () => {},
+  setUserToken: () => {},
   saveLogInState: () => {
     throw new Error('saveLogInState function must be overridden');
   },
@@ -46,36 +48,30 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [toggleNotificationForLogIn, setToggleNotificationForLogIn] = useState<boolean>(false);
   const [toggleNotificationForRegistration, setToggleNotificationForRegistration] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [userToken, setUserToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setIsLoggedIn(true);
-      setUserId(storedUserId);
-    }
+    sessionStorage.removeItem('userToken');
   }, []);
 
-  const saveLogInState = (id: string) => {
-    localStorage.setItem('userId', id);
+  const saveLogInState = (token: string) => {
+    sessionStorage.setItem('userToken', token);
     setIsLoggedIn(true);
-    setUserId(id);
   };
 
   const removeLogInState = () => {
-    localStorage.removeItem('userId');
+    sessionStorage.removeItem('userToken');
     setIsLoggedIn(false);
-    setUserId(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
-        userId,
+        userToken,
         saveLogInState,
         removeLogInState,
         isRegistered,
@@ -89,6 +85,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         logInStatusCode,
         setLogInStatusCode,
         setIsLoggedIn,
+        setUserToken,
       }}
     >
       {children}

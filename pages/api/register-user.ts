@@ -43,7 +43,8 @@ async function registerUser(formData: FormData) {
 
   try {
     const respose = await client.customers().post({ body: customerDraft }).execute();
-    return { statusCode: respose.statusCode, customer: respose.body.customer };
+    const token = Client.token.get();
+    return { statusCode: respose.statusCode, token: token.token };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error));
     return { statusCode: errorResponse.code };

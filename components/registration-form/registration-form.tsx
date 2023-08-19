@@ -20,16 +20,23 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [useBillingAddress, setUseBillingAddress] = useState(false);
   const router = useRouter();
-  const { setIsRegistered, setToggleNotificationForRegistration, setRegistrationStatusCode, saveLogInState } =
-    useContext(AuthContext);
+  const {
+    setToggleNotificationForRegistration,
+    setRegistrationStatusCode,
+    saveLogInState,
+    setUserToken,
+    setIsLoggedIn,
+  } = useContext(AuthContext);
 
   const handleRegisterUser = async (formData: FormData) => {
-    const { statusCode, customer } = await registerUser(formData);
+    const { statusCode, token } = await registerUser(formData);
     if (statusCode === 201) {
-      router.replace(`/`);
-      if (customer) {
-        setIsRegistered(true);
-        saveLogInState(customer.id);
+      if (token) {
+        setUserToken(token);
+        saveLogInState(token);
+        router.push(`/`);
+      } else {
+        setIsLoggedIn(false);
       }
     }
     setRegistrationStatusCode(statusCode);
