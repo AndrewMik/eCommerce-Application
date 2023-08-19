@@ -1,5 +1,3 @@
-'use client';
-
 import { createContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
@@ -52,7 +50,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
-
   useEffect(() => {
     sessionStorage.removeItem('userToken');
   }, []);

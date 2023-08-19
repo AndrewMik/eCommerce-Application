@@ -22,6 +22,7 @@ const LoginForm: React.FC = () => {
         if (token) {
           setUserToken(token);
           saveLogInState(token);
+          setIsLoggedIn(true);
           router.push(`/`);
         } else {
           setIsLoggedIn(false);

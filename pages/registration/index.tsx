@@ -1,14 +1,9 @@
-'use client';
-
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import RegistrationForm from '@/components/registration-form/registration-form';
-import Home from '@/components/home/home';
-import { AuthContext } from '../../context/authorization-context';
 import getCountries from '../api/get-countries';
 
 const Page = (): JSX.Element => {
   const [countries, setCountries] = useState<string[]>([]);
-  const { isLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     async function fetchCountries() {
@@ -18,7 +13,7 @@ const Page = (): JSX.Element => {
     fetchCountries();
   }, []);
 
-  return <>{isLoggedIn ? <Home /> : <RegistrationForm countries={countries} />};</>;
+  return <RegistrationForm countries={countries} />;
 };
 
 export default Page;

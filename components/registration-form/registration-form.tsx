@@ -34,6 +34,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
       if (token) {
         setUserToken(token);
         saveLogInState(token);
+        setIsLoggedIn(true);
         router.push(`/`);
       } else {
         setIsLoggedIn(false);
