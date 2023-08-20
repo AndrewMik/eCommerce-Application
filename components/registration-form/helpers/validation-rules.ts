@@ -4,7 +4,7 @@ import postalCodes from 'postal-codes-js';
 import { getCode } from 'country-list';
 
 import hasSpecialCharacters from '../../../utils/inputs-validation/checkSpecialChars';
-import hasNoSpaces from '../../../utils/inputs-validation/checkNoSpaces';
+import hasNoTrailingSpaces from '../../../utils/inputs-validation/checkNoTrailingSpaces';
 import hasMinimumNumbers from '../../../utils/inputs-validation/checkNumbersCount';
 import hasMinimumUppercase from '../../../utils/inputs-validation/checkUppercaseCount';
 import hasMinimumLowercase from '../../../utils/inputs-validation/checkLowerCaseCount';
@@ -100,8 +100,8 @@ const getPasswordRules = (): Rule[] => [
       if (!value) {
         return Promise.reject(new Error('Please enter your password'));
       }
-      if (!hasNoSpaces(value)) {
-        return Promise.reject(new Error('Password must not contain whitespaces'));
+      if (!hasNoTrailingSpaces(value)) {
+        return Promise.reject(new Error('Password must not contain leading or trailing whitespaces'));
       }
       if (!checkLength(value, 8)) {
         return Promise.reject(new Error('Password must have at least 8 characters'));

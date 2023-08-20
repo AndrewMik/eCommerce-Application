@@ -45,6 +45,7 @@ export type FormData = {
   [ShippingFieldsName.APARTMENT]: string;
   [ShippingFieldsName.POSTAL_CODE]: string;
   [BillingFieldsName.COUNTRY]: string;
+  [BillingFieldsName.CITY]: string;
   [BillingFieldsName.STREET]: string;
   [BillingFieldsName.BUILDING]: string;
   [BillingFieldsName.APARTMENT]: string;
