@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { useRouter } from 'next/navigation';
-import mockMatchMedia from '../../utils/mock';
-import LoginForm from '../../components/login-form/login-form';
+import mockMatchMedia from '../../../utils/mock';
+import LoginForm from '../../../components/login-form/login-form';
 import {
   Placeholders,
   EmailValidationMessages,
   PasswordValidationMessages,
-} from '../../components/login-form/types.login';
+} from '../../../components/login-form/types.login';
 
 jest.mock('next/navigation');
 

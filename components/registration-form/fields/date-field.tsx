@@ -20,4 +20,5 @@ const DateField: React.FC<DateFieldProps> = ({ label, name, placeholder, rules }
   </Form.Item>
 );
 
+export type { DateFieldProps };
 export default DateField;
