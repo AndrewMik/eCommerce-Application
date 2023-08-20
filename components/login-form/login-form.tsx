@@ -4,8 +4,8 @@ import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@a
 import { useContext } from 'react';
 import loginUser from '../../pages/api/login-user';
 import { AuthContext } from '../../context/authorization-context';
-import validatePasswordRegExp from '../../utils/input-validation';
-import { FieldType, Placeholders, ValidationMessages } from './types.login';
+import { FieldType, Placeholders } from './types.login';
+import { getEmailRules, getPasswordRules } from '../registration-form/helpers/validation-rules';
 
 const { Link } = Typography;
 
@@ -67,28 +67,11 @@ const LoginForm: React.FC = () => {
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
               <div>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    { required: true, message: ValidationMessages.EmailRequired },
-                    { type: 'email', message: ValidationMessages.EmailInvalid },
-                  ]}
-                >
+                <Form.Item label="Email" name="email" rules={getEmailRules()}>
                   <Input prefix={<MailOutlined style={iconStyle} />} placeholder={Placeholders.Email} />
                 </Form.Item>
 
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
-                    { required: true, message: ValidationMessages.PasswordRequired },
-                    {
-                      pattern: validatePasswordRegExp,
-                      message: ValidationMessages.PasswordPattern,
-                    },
-                  ]}
-                >
+                <Form.Item label="Password" name="password" rules={getPasswordRules()}>
                   <Input.Password
                     prefix={<LockOutlined style={iconStyle} />}
                     placeholder={Placeholders.Password}

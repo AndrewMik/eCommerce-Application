@@ -1,12 +1,4 @@
-import {
-  HomeOutlined,
-  LoginOutlined,
-  UserOutlined,
-  ShoppingOutlined,
-  ShoppingCartOutlined,
-  LogoutOutlined,
-} from '@ant-design/icons';
-import { Button } from 'antd';
+import { HomeOutlined, LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 export enum Paths {

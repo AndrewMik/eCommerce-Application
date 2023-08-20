@@ -43,4 +43,4 @@ describe('MainHeader Component', () => {
       });
     });
   });
-}); // Add this line
+});

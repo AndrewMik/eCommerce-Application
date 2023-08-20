@@ -1,15 +1,12 @@
 import { Col, List, Row } from 'antd';
-import { useContext } from 'react';
-import { navigationMainPage, navigationMainPageForAuthorizedUser } from '@/utils/route-links';
-import { AuthContext } from '../../context/authorization-context';
+import { navigationMainPage } from '@/utils/route-links';
 
 const Home = (): JSX.Element => {
-  const { isLoggedIn } = useContext(AuthContext);
   return (
     <>
       <List
         bordered
-        dataSource={isLoggedIn ? navigationMainPageForAuthorizedUser : navigationMainPage}
+        dataSource={navigationMainPage}
         renderItem={(item) => (
           <List.Item>
             <Row justify="start" gutter={8}>

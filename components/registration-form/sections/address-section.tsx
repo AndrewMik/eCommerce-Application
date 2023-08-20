@@ -7,7 +7,7 @@ import SelectField from '../fields/select-field';
 import SwitchField from '../fields/switch-field';
 import DividerText from '../fields/divider-field';
 
-import { getStreetRules, getCountryRules, getPostalCodeRules } from '../helpers/validation-rules';
+import { getStreetRules, getCountryRules, getPostalCodeRules, getCityRules } from '../helpers/validation-rules';
 import fieldDefinitions from '../helpers/field-definitions';
 import { AddressFieldsName, ShippingFieldsName } from '../helpers/registration.types';
 
@@ -28,8 +28,9 @@ const AddressSection: React.FC<AddressSectionProps> = ({
   showCheckbox = false,
   onUseBillingAddressChange,
 }) => {
-  const streetFieldName = `${AddressFieldsName.STREET_NAME}${nameSuffix}`;
-  const houseFieldName = `${AddressFieldsName.STREET_NUMBER}${nameSuffix}`;
+  const streetFieldName = `${AddressFieldsName.STREET}${nameSuffix}`;
+  const cityFieldName = `${AddressFieldsName.CITY}${nameSuffix}`;
+  const buildingFieldName = `${AddressFieldsName.BUILDING}${nameSuffix}`;
   const flatFieldName = `${AddressFieldsName.APARTMENT}${nameSuffix}`;
   const countryFieldName = `${AddressFieldsName.COUNTRY}${nameSuffix}`;
   const postalCodeFieldName = `${AddressFieldsName.POSTAL_CODE}${nameSuffix}`;
@@ -39,17 +40,19 @@ const AddressSection: React.FC<AddressSectionProps> = ({
   const handleUseBillingAddressChange = (e: CheckboxChangeEvent) => {
     if (onUseBillingAddressChange) {
       const shippingAddressValues = form.getFieldsValue([
-        ShippingFieldsName.STREET_NAME,
-        ShippingFieldsName.STREET_NUMBER,
+        ShippingFieldsName.STREET,
+        ShippingFieldsName.BUILDING,
         ShippingFieldsName.APARTMENT,
         ShippingFieldsName.COUNTRY,
+        ShippingFieldsName.CITY,
         ShippingFieldsName.POSTAL_CODE,
       ]);
 
       form.setFieldsValue({
-        street_billing: shippingAddressValues[ShippingFieldsName.STREET_NAME],
-        house_billing: shippingAddressValues[ShippingFieldsName.STREET_NUMBER],
-        flat_billing: shippingAddressValues[ShippingFieldsName.APARTMENT],
+        city_billing: shippingAddressValues[ShippingFieldsName.CITY],
+        street_billing: shippingAddressValues[ShippingFieldsName.STREET],
+        building_billing: shippingAddressValues[ShippingFieldsName.BUILDING],
+        apartment_billing: shippingAddressValues[ShippingFieldsName.APARTMENT],
         country_billing: shippingAddressValues[ShippingFieldsName.COUNTRY],
         postalCode_billing: shippingAddressValues[ShippingFieldsName.POSTAL_CODE],
       });
@@ -62,16 +65,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
   return (
     <>
       <DividerText text={title} />
-
-      <InputField {...fieldDefinitions.street} name={streetFieldName} required={true} rules={getStreetRules()} />
-
       <Row gutter={16}>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.streetNumber} name={houseFieldName} rules={[]}></InputField>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.apartment} name={flatFieldName} rules={[]}></InputField>
-        </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SelectField
             {...fieldDefinitions.country}
@@ -91,13 +85,22 @@ const AddressSection: React.FC<AddressSectionProps> = ({
             required={true}
           ></InputField>
         </Col>
-      </Row>
-
-      <Row>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <Form.Item valuePropName="checked">
-            <SwitchField name={setAsDefault} {...fieldDefinitions.defaultAddress}></SwitchField>
-          </Form.Item>
+          <InputField {...fieldDefinitions.city} name={cityFieldName} required={true} rules={getCityRules()} />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <InputField {...fieldDefinitions.street} name={streetFieldName} required={true} rules={getStreetRules()} />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <InputField {...fieldDefinitions.building} name={buildingFieldName} rules={[]}></InputField>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <InputField {...fieldDefinitions.apartment} name={flatFieldName} rules={[]}></InputField>
+        </Col>
+      </Row>
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+          <SwitchField name={setAsDefault} {...fieldDefinitions.defaultAddress}></SwitchField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           {showCheckbox && (
