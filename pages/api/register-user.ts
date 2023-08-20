@@ -14,8 +14,9 @@ const getDefaultBillingAddress = (formData: FormData) => {
 
 const createAddress = (formData: FormData, type: 'shipping' | 'billing') => ({
   country: getCode(formData[`${AddressFieldsName.COUNTRY}_${type}`]) as string,
-  streetName: formData[`${AddressFieldsName.STREET_NAME}_${type}`],
-  streetNumber: formData[`${AddressFieldsName.STREET_NUMBER}_${type}`],
+  city: formData[`${AddressFieldsName.CITY}_${type}`],
+  streetName: formData[`${AddressFieldsName.STREET}_${type}`],
+  building: formData[`${AddressFieldsName.BUILDING}_${type}`],
   apartment: formData[`${AddressFieldsName.APARTMENT}_${type}`],
   postalCode: formData[`${AddressFieldsName.POSTAL_CODE}_${type}`],
 });

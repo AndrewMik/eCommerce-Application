@@ -1,4 +1,4 @@
-import { Form, Switch, Row, Col } from 'antd';
+import { Form, Switch } from 'antd';
 
 interface SwitchFieldProps {
   name: string;
@@ -7,14 +7,12 @@ interface SwitchFieldProps {
 }
 
 const SwitchField: React.FC<SwitchFieldProps> = ({ name, label }) => (
-  <Row align="middle">
-    <Col>
-      <Form.Item name={name} valuePropName="checked">
-        <Switch defaultChecked />
-      </Form.Item>
-    </Col>
-    <Col>{label && <span style={{ marginLeft: '8px' }}>{label}</span>}</Col>
-  </Row>
+  <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+    <Form.Item name={name} valuePropName="checked" style={{ marginBlock: 'auto' }}>
+      <Switch defaultChecked />
+    </Form.Item>
+    <span style={{ marginLeft: '8px' }}>{label}</span>
+  </div>
 );
 
 export default SwitchField;

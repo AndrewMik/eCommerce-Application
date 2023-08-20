@@ -14,7 +14,7 @@ interface PasswordFieldProps {
 const PasswordField: React.FC<PasswordFieldProps> = ({
   label = 'Password',
   name,
-  placeholder = 'securePassword1',
+  placeholder = 'securePassword1!',
   rules,
   iconStyle,
   hasFeedback = false,

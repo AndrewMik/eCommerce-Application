@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import MainHeader from '../components/header/header';
+import MainHeader from '../../components/header/header';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('next/navigation', () => ({
@@ -43,4 +43,4 @@ describe('MainHeader Component', () => {
       });
     });
   });
-}); // Add this line
+});

@@ -21,14 +21,19 @@ const fieldDefinitions = {
     name: 'gender',
     placeholder: 'Select Gender',
   },
+  city: {
+    label: 'City',
+    name: `${AddressFieldsName.CITY}`,
+    placeholder: 'New York',
+  },
   street: {
     label: 'Street',
-    name: `${AddressFieldsName.STREET_NAME}`,
+    name: `${AddressFieldsName.STREET}`,
     placeholder: 'Park Avenue',
   },
-  streetNumber: {
-    label: 'Street Number',
-    name: `${AddressFieldsName.STREET_NUMBER}`,
+  building: {
+    label: 'Building',
+    name: `${AddressFieldsName.BUILDING}`,
     placeholder: '34',
   },
   apartment: {

@@ -13,8 +13,8 @@ const PersonalSection: React.FC = () => {
     <>
       <DividerText text="Personal" />
 
-      <InputField {...fieldDefinitions.name} rules={getNameRules()} />
-      <InputField {...fieldDefinitions.surname} rules={getSurnameRules()} />
+      <InputField {...fieldDefinitions.name} required={true} rules={getNameRules()} />
+      <InputField {...fieldDefinitions.surname} required={true} rules={getSurnameRules()} />
 
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
