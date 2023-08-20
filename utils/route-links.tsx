@@ -34,8 +34,6 @@ export const navigationLinks = [
   },
 ];
 
-export const navigationMainPage = [...navigationLinks].splice(1);
-
 export const navigationMainPageForAuthorizedUser = [
   {
     key: Paths.PROFILE,

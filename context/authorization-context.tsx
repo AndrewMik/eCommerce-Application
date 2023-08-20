@@ -7,6 +7,8 @@ interface AuthContextType {
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
   userToken: string | null;
+  toggleInactiveLinks: boolean | null;
+  setToggleInactiveLinks: (state: boolean | null | ((prevState: boolean | null) => boolean | null)) => void;
   setUserToken: (token: string | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   saveLogInState: (id: string) => void;
@@ -22,6 +24,8 @@ const AuthContext = createContext<AuthContextType>({
   registrationStatusCode: null,
   toggleNotificationForLogIn: false,
   toggleNotificationForRegistration: false,
+  toggleInactiveLinks: null,
+  setToggleInactiveLinks: () => {},
   isLoggedIn: null,
   userToken: null,
   setIsLoggedIn: () => {},
@@ -45,6 +49,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [userToken, setUserToken] = useState<string | null>(null);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
+  const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -69,6 +74,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <AuthContext.Provider
       value={{
+        toggleInactiveLinks,
+        setToggleInactiveLinks,
         isLoggedIn,
         userToken,
         saveLogInState,

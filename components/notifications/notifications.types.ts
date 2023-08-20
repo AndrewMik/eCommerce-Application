@@ -28,4 +28,5 @@ export enum NotificationDescription {
   CUSTOMER_ACCOUNT_UNKNOWN_ERROR = 'Something went wrong. Try again later.',
   CUSTOMER_ACCOUNT_REGISTERED = "Registration successful! You're now logged in.",
   CUSTOMER_ACCOUNT_EXISTS = 'Account with this email address already exists. Please log in or try a different email.',
+  CUSTOMER_LOGGED_IN_ALREADY = 'You are signed in. To register or switch accounts, please sign out first.',
 }
