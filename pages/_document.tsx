@@ -5,7 +5,9 @@ import type { DocumentContext } from 'next/document';
 
 const MyDocument = () => (
   <Html lang="en">
-    <Head />
+    <Head>
+      <link rel="icon" href="/images/favicon.ico" />
+    </Head>
     <body style={{ margin: 0, minHeight: '100vh' }}>
       <Main />
       <NextScript />
