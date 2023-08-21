@@ -7,9 +7,9 @@ interface AuthContextType {
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
   userToken: string | null;
-  isRegistered: boolean;
+  toggleInactiveLinks: boolean | null;
+  setToggleInactiveLinks: (state: boolean | null | ((prevState: boolean | null) => boolean | null)) => void;
   setUserToken: (token: string | null) => void;
-  setIsRegistered: (isRegistered: boolean) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   saveLogInState: (id: string) => void;
   removeLogInState: () => void;
@@ -24,11 +24,11 @@ const AuthContext = createContext<AuthContextType>({
   registrationStatusCode: null,
   toggleNotificationForLogIn: false,
   toggleNotificationForRegistration: false,
+  toggleInactiveLinks: null,
+  setToggleInactiveLinks: () => {},
   isLoggedIn: null,
   userToken: null,
-  isRegistered: false,
   setIsLoggedIn: () => {},
-  setIsRegistered: () => {},
   setUserToken: () => {},
   saveLogInState: () => {
     throw new Error('saveLogInState function must be overridden');
@@ -47,9 +47,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [toggleNotificationForRegistration, setToggleNotificationForRegistration] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userToken, setUserToken] = useState<string | null>(null);
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
+  const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -74,12 +74,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <AuthContext.Provider
       value={{
+        toggleInactiveLinks,
+        setToggleInactiveLinks,
         isLoggedIn,
         userToken,
         saveLogInState,
         removeLogInState,
-        isRegistered,
-        setIsRegistered,
         toggleNotificationForLogIn,
         setToggleNotificationForLogIn,
         toggleNotificationForRegistration,

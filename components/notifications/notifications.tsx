@@ -12,8 +12,14 @@ import { AuthContext } from '../../context/authorization-context';
 
 const Notifications = () => {
   const [api, contextHolder] = notification.useNotification();
-  const { toggleNotificationForLogIn, logInStatusCode, registrationStatusCode, toggleNotificationForRegistration } =
-    useContext(AuthContext);
+  const {
+    toggleNotificationForLogIn,
+    logInStatusCode,
+    registrationStatusCode,
+    toggleNotificationForRegistration,
+    toggleInactiveLinks,
+    isLoggedIn,
+  } = useContext(AuthContext);
 
   const openNotificationWithIcon = (
     type: NotificationType,
@@ -81,6 +87,18 @@ const Notifications = () => {
       }
     }
   }, [toggleNotificationForRegistration]);
+
+  useEffect(() => {
+    if (toggleInactiveLinks == null) return;
+    if (isLoggedIn) {
+      openNotificationWithIcon(
+        NotificationType.INFO,
+        NotificationMessage.AUTENTICATED,
+        NotificationDescription.CUSTOMER_LOGGED_IN_ALREADY,
+        NotificationPlacement.BOTTOM,
+      );
+    }
+  }, [toggleInactiveLinks]);
 
   return <>{contextHolder}</>;
 };

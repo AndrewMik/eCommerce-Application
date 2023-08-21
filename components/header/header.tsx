@@ -104,7 +104,11 @@ const MainHeader = () => {
           </Col>
         </Row>
         <Drawer title="Menu" placement="right" onClick={onClose} onClose={onClose} open={visible}>
-          <Menu mode="vertical" selectedKeys={[`${pathname}`]} items={navigationLinks} />
+          <Menu
+            mode="vertical"
+            selectedKeys={[`${pathname}`]}
+            items={isLoggedIn ? navigationLinksForAuthorizedUser : navigationLinks}
+          />
         </Drawer>
       </Header>
     </>
