@@ -30,7 +30,7 @@ const CatalogPage = (): JSX.Element => {
         <Card
           key={product.key}
           hoverable
-          style={{ width: 240, height: 240 }}
+          style={{ width: 240 }}
           cover={
             <div
               style={{
