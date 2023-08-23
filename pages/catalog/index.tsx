@@ -5,13 +5,17 @@ import getProducts from '../api/get-products';
 
 const { Meta } = Card;
 
-const Page = (): JSX.Element => {
+const CatalogPage = (): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[] | null>(null);
 
   const handleProductFetch = async () => {
     const { response } = await getProducts();
     setProducts(response);
   };
+
+  useEffect(() => {
+    handleProductFetch();
+  }, []);
 
   const productCards =
     products &&
@@ -37,11 +41,9 @@ const Page = (): JSX.Element => {
                 alignItems: 'center',
               }}
             >
-              <img
-                style={{ height: 240 }}
-                alt={`${product.name}`}
-                src={product.masterVariant.images && product.masterVariant.images[0].url}
-              />
+              {product.masterVariant.images && product.masterVariant.images.length > 0 && (
+                <img style={{ height: 240 }} alt={product.name.en} src={product.masterVariant.images[0].url} />
+              )}
             </div>
           }
         >
@@ -54,10 +56,6 @@ const Page = (): JSX.Element => {
       </Col>
     ));
 
-  useEffect(() => {
-    handleProductFetch();
-  }, []);
-
   return (
     <Space direction="vertical" size="middle" style={{ display: 'flex', padding: 50 }}>
       <Row gutter={[16, 16]}>{products && productCards}</Row>
@@ -65,4 +63,4 @@ const Page = (): JSX.Element => {
   );
 };
 
-export default Page;
+export default CatalogPage;
