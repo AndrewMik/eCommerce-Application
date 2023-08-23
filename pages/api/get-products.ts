@@ -1,6 +1,6 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import Client from './client';
 import { ErrorResponse } from '@commercetools/platform-sdk';
+import Client from './client';
 
 async function getAllProducts() {
   const client = new Client().clientCredentialsClient;
