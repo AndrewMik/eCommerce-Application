@@ -10,7 +10,12 @@ const CatalogPage = (): JSX.Element => {
 
   const handleProductFetch = async () => {
     const { response } = await getProducts();
-    setProducts(response);
+    if (typeof response === 'number') {
+      setProducts(null);
+      throw new Error('Error fetching products');
+    } else {
+      setProducts(response);
+    }
   };
 
   useEffect(() => {
