@@ -8,7 +8,7 @@ const { Meta } = Card;
 const CatalogPage = (): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[] | null>(null);
 
-  const handleProductFetch = async () => {
+  const getProductsInfo = async () => {
     const { response } = await getProducts();
     if (typeof response === 'number') {
       setProducts(null);
@@ -19,7 +19,7 @@ const CatalogPage = (): JSX.Element => {
   };
 
   useEffect(() => {
-    handleProductFetch();
+    getProductsInfo();
   }, []);
 
   const productCards =
