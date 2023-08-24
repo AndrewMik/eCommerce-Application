@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import CatalogPage from '../../pages/catalog/index';
 import getAllProducts from '../../pages/api/get-products';
+import { mockResponse } from '../../__mocks__/dataMock';
 
 jest.mock('../../pages/api/get-products');
 
@@ -28,18 +29,6 @@ describe('<CatralogPage />', () => {
   });
 
   it('should fetch products on mount', async () => {
-    const mockResponse = {
-      response: [
-        {
-          id: '1',
-          key: 'key1',
-          name: { en: 'Test Product' },
-          description: { en: 'Test Description' },
-          masterVariant: { images: [{ url: 'test-image.jpg' }] },
-        },
-      ],
-    };
-
     (getAllProducts as jest.Mock).mockResolvedValueOnce(mockResponse);
 
     render(<CatalogPage />);
@@ -50,18 +39,6 @@ describe('<CatralogPage />', () => {
   });
 
   it('should display fetched products', async () => {
-    const mockResponse = {
-      response: [
-        {
-          id: '1',
-          key: 'key1',
-          name: { en: 'Test Product' },
-          description: { en: 'Test Description' },
-          masterVariant: { images: [{ url: 'test-image.jpg' }] },
-        },
-      ],
-    };
-
     (getAllProducts as jest.Mock).mockResolvedValueOnce(mockResponse);
 
     render(<CatalogPage />);
@@ -77,29 +54,26 @@ describe('<CatralogPage />', () => {
   });
 
   it('should handle products without images gracefully', async () => {
-    const mockResponse = {
+    const modifiedResponse = {
+      ...mockResponse,
       response: [
         {
-          id: '1',
-          key: 'key1',
-          name: { en: 'Test Product' },
-          description: { en: 'Test Description' },
+          ...mockResponse.response[0],
           masterVariant: { images: [] },
         },
       ],
     };
 
-    (getAllProducts as jest.Mock).mockResolvedValueOnce(mockResponse);
+    (getAllProducts as jest.Mock).mockResolvedValueOnce(modifiedResponse);
 
     render(<CatalogPage />);
 
-    // Wait for products to be displayed
-    await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
-      expect(screen.getByText('Test Description')).toBeInTheDocument();
-    });
+    const productText = await screen.findByText('Test Product');
+    expect(productText).toBeInTheDocument();
 
-    // Image shouldn't be there as it's not in the mock data
+    const descriptionText = await screen.findByText('Test Description');
+    expect(descriptionText).toBeInTheDocument();
+
     expect(screen.queryByAltText('Test Product')).not.toBeInTheDocument();
   });
 });
