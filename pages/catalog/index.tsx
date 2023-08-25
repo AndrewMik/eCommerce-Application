@@ -1,9 +1,10 @@
 import { Card, Col, Row, Space } from 'antd';
 import { useState, useEffect } from 'react';
-import { calculateDiscountPercentage, transformCentToDollar } from '../../utils/price';
+import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
 
 import getProducts from '../api/get-products';
+import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 
 const { Meta } = Card;
 
@@ -12,6 +13,7 @@ const CatalogPage = (): JSX.Element => {
 
   const getProductsInfo = async () => {
     const { response } = await getProducts();
+
     if (!response) {
       setProducts(null);
       return;
@@ -23,6 +25,10 @@ const CatalogPage = (): JSX.Element => {
       const transformedResponse = response.reduce<Product[]>((acc, product) => {
         if (!processedKeys.has(product.key)) {
           processedKeys.add(product.key);
+
+          const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
+            ?.value as ProductDiscountValueRelative;
+
           acc.push({
             key: product.key || '',
             description: product.description || { en: '' },
@@ -30,6 +36,7 @@ const CatalogPage = (): JSX.Element => {
             images: product.masterVariant.images || [],
             prices: product.masterVariant.prices || [],
             name: product.name,
+            discount: discountValue?.permyriad ?? undefined,
           });
         }
         return acc;
@@ -70,6 +77,8 @@ const CatalogPage = (): JSX.Element => {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
+                  borderTopLeftRadius: '5px',
+                  borderTopRightRadius: '5px',
                 }}
               >
                 {product.images && product.images.length > 0 && (
@@ -81,9 +90,20 @@ const CatalogPage = (): JSX.Element => {
             <Row>
               {discountedPrice && (
                 <Col
-                  style={{ position: 'absolute', top: 0, right: 2, fontSize: '16px', color: 'red', fontWeight: 'bold' }}
+                  style={{
+                    position: 'absolute',
+                    top: -10,
+                    right: -15,
+                    fontSize: '16px',
+                    color: 'red',
+                    fontWeight: 'bold',
+                    backgroundColor: 'white',
+                    borderRadius: '5px',
+                    padding: '5px 10px',
+                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
                 >
-                  - {regularPrice && calculateDiscountPercentage(regularPrice, discountedPrice)}%
+                  - {product.discount && permyriadToPercentage(product.discount)}%
                 </Col>
               )}
             </Row>

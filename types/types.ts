@@ -1,29 +1,9 @@
-import { Attribute, LocalizedString, Image, Price } from '@commercetools/platform-sdk';
+import { Attribute, LocalizedString, Image, Price, ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 
-interface ProductAttribute {
-  name: string;
-  value: string;
+export interface Discount {
+  permyriad: number;
+  type: string;
 }
-
-interface ProductImage {
-  url: string;
-  dimensions: {
-    w: number;
-    h: number;
-  };
-}
-
-interface ProductPrice {
-  id: string;
-  value: {
-    type: string;
-    currencyCode: string;
-    centAmount: number;
-    fractionDigits: number;
-  };
-  key?: string;
-}
-
 export interface Product {
   key: string;
   description: LocalizedString | undefined;
@@ -31,4 +11,5 @@ export interface Product {
   images: Image[] | undefined;
   prices: Price[] | undefined;
   name: LocalizedString;
+  discount: number | undefined;
 }
