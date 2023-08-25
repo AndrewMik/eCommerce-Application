@@ -61,7 +61,7 @@ const CatalogPage = (): JSX.Element => {
           <Card
             key={product.key}
             hoverable
-            style={{ width: 240, position: 'relative' }}
+            style={{ width: 240, position: 'relative', textAlign: 'center' }}
             cover={
               <div
                 style={{
@@ -90,17 +90,17 @@ const CatalogPage = (): JSX.Element => {
             <Meta
               title={
                 <Row>
-                  <Col span={24} style={{ fontSize: 18 }}>
+                  <Col span={24} style={{ fontSize: 16, textAlign: 'center' }}>
                     {product.name && product.name.en}
                   </Col>
-                  <Col style={{ marginRight: '5px', fontSize: '16px' }}>price:</Col>
-                  <Col>
+                  <Col span={24}>
                     {discountedPrice ? (
                       <Row>
                         <Col
+                          span={6}
+                          offset={6}
                           style={{
                             display: 'flex',
-                            marginRight: '5px',
                             fontWeight: 'normal',
                             textDecoration: 'line-through',
                             alignItems: 'center',
@@ -109,11 +109,15 @@ const CatalogPage = (): JSX.Element => {
                         >
                           ${regularPrice && transformCentToDollar(regularPrice)}
                         </Col>
-                        <Col style={{ fontSize: '16px', color: 'red' }}>${transformCentToDollar(discountedPrice)}</Col>
+                        <Col offset={1} style={{ fontSize: 18, color: 'red' }}>
+                          ${transformCentToDollar(discountedPrice)}
+                        </Col>
                       </Row>
                     ) : (
                       <Row>
-                        <Col style={{ fontSize: 16 }}>${regularPrice && transformCentToDollar(regularPrice)}</Col>
+                        <Col span={24} style={{ fontSize: 18 }}>
+                          ${regularPrice && transformCentToDollar(regularPrice)}
+                        </Col>
                       </Row>
                     )}
                   </Col>
