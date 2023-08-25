@@ -1,5 +1,4 @@
 import { Card, Col, Row, Space } from 'antd';
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { useState, useEffect } from 'react';
 import { calculateDiscountPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
@@ -10,7 +9,7 @@ const { Meta } = Card;
 
 const CatalogPage = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
-  console.log('products', products);
+
   const getProductsInfo = async () => {
     const { response } = await getProducts();
     if (!response) {
@@ -19,7 +18,7 @@ const CatalogPage = (): JSX.Element => {
     }
 
     if (Array.isArray(response)) {
-      let processedKeys = new Set();
+      const processedKeys = new Set();
 
       const transformedResponse = response.reduce<Product[]>((acc, product) => {
         if (!processedKeys.has(product.key)) {
