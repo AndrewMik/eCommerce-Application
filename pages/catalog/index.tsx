@@ -2,24 +2,40 @@ import { Card, Col, Row, Space } from 'antd';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useState, useEffect } from 'react';
 import { calculateDiscountPercentage, transformCentToDollar } from '../../utils/price';
+import { Product } from '../../types/types';
 
 import getProducts from '../api/get-products';
 
 const { Meta } = Card;
 
 const CatalogPage = (): JSX.Element => {
-  const [products, setProducts] = useState<ProductProjection[] | null>(null);
-
+  const [products, setProducts] = useState<Product[] | null>(null);
+  console.log('products', products);
   const getProductsInfo = async () => {
     const { response } = await getProducts();
-
     if (!response) {
       setProducts(null);
       return;
     }
 
     if (Array.isArray(response)) {
-      setProducts(response);
+      let processedKeys = new Set();
+
+      const transformedResponse = response.reduce<Product[]>((acc, product) => {
+        if (!processedKeys.has(product.key)) {
+          processedKeys.add(product.key);
+          acc.push({
+            key: product.key || '',
+            description: product.description || { en: '' },
+            attributes: product.masterVariant.attributes || [],
+            images: product.masterVariant.images || [],
+            prices: product.masterVariant.prices || [],
+            name: product.name,
+          });
+        }
+        return acc;
+      }, []);
+      setProducts(transformedResponse);
     } else if (typeof response === 'number') {
       setProducts(null);
       throw new Error('Error fetching products');
@@ -33,11 +49,11 @@ const CatalogPage = (): JSX.Element => {
   const productCards =
     products &&
     products.map((product) => {
-      const regularPrice = product.masterVariant.prices?.[0].value.centAmount;
-      const discountedPrice = product.masterVariant.prices?.[0].discounted?.value.centAmount;
+      const regularPrice = product.prices?.[0].value.centAmount;
+      const discountedPrice = product.prices?.[0].discounted?.value.centAmount;
       return (
         <Col
-          key={product.id}
+          key={product.key}
           xs={{ span: 24 }}
           sm={{ span: 12 }}
           md={{ span: 12 }}
@@ -57,8 +73,8 @@ const CatalogPage = (): JSX.Element => {
                   alignItems: 'center',
                 }}
               >
-                {product.masterVariant.images && product.masterVariant.images.length > 0 && (
-                  <img style={{ height: 240 }} alt={product.name.en} src={product.masterVariant.images[0].url} />
+                {product.images && product.images.length > 0 && (
+                  <img style={{ height: 240 }} alt={product.name.en} src={product.images[0].url} />
                 )}
               </div>
             }
