@@ -1,10 +1,9 @@
 import { Card, Col, Row, Space } from 'antd';
 import { useState, useEffect } from 'react';
+import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
-
 import getProducts from '../api/get-products';
-import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 
 const { Meta } = Card;
 
