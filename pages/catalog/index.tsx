@@ -19,27 +19,24 @@ const CatalogPage = (): JSX.Element => {
     }
 
     if (Array.isArray(response)) {
-      const processedKeys = new Set();
+      const transformedResponse = response.map((product) => {
+        const { key, description, masterVariant } = product;
+        const { attributes, images, prices } = masterVariant;
 
-      const transformedResponse = response.reduce<Product[]>((acc, product) => {
-        if (!processedKeys.has(product.key)) {
-          processedKeys.add(product.key);
+        const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
+          ?.value as ProductDiscountValueRelative;
 
-          const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
-            ?.value as ProductDiscountValueRelative;
+        return {
+          key: key ?? '',
+          description: description ?? { en: '' },
+          attributes: attributes ?? [],
+          images: images ?? [],
+          prices: prices ?? [],
+          name: product.name,
+          discount: discountValue?.permyriad ?? 0,
+        };
+      });
 
-          acc.push({
-            key: product.key || '',
-            description: product.description || { en: '' },
-            attributes: product.masterVariant.attributes || [],
-            images: product.masterVariant.images || [],
-            prices: product.masterVariant.prices || [],
-            name: product.name,
-            discount: discountValue?.permyriad ?? undefined,
-          });
-        }
-        return acc;
-      }, []);
       setProducts(transformedResponse);
     } else if (typeof response === 'number') {
       setProducts(null);
