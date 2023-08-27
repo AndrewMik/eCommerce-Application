@@ -11,16 +11,20 @@ import AddressSection from '../registration-form/sections/address-section';
 import DividerText from '../registration-form/fields/divider-field';
 import setFormData from './helpers/set-form-data';
 import { CountryOptionsProps } from '../registration-form/helpers/interface';
+import EmailField from '../registration-form/fields/email-field';
+import fieldDefinitions from '../registration-form/helpers/field-definitions';
+import { getEmailRules } from '../registration-form/helpers/validation-rules';
+import InputField from '../registration-form/fields/input-field';
 
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
-
+  const [customerData, setCustomerData] = useState({});
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const customer = await getClient();
-
+      await setCustomerData(customer);
       setFormData(form, customer as Customer);
     };
 
@@ -33,7 +37,16 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         <Row justify="center" align="middle">
           <Col xs={22} sm={20} md={18} lg={14} xl={12}>
             <Card bordered style={{ borderRadius: 15, marginBlock: 40 }}>
-              <Checkbox checked={!componentDisabled} onChange={(e) => setComponentDisabled(!e.target.checked)}>
+              <Checkbox
+                checked={!componentDisabled}
+                onChange={(e) => {
+                  const isEditMode = e.target.checked;
+                  if (!isEditMode) {
+                    setFormData(form, customerData as Customer);
+                  }
+                  setComponentDisabled(!isEditMode);
+                }}
+              >
                 Edit
               </Checkbox>
               <Form
@@ -47,6 +60,15 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                 disabled={componentDisabled}
               >
                 <PersonalSection componentDisabled={componentDisabled} form={form}></PersonalSection>
+                {!componentDisabled && <EmailField {...fieldDefinitions.email} rules={getEmailRules()} />}
+                {componentDisabled && (
+                  <InputField
+                    {...fieldDefinitions.email}
+                    componentDisabled={componentDisabled}
+                    required={true}
+                    rules={getEmailRules()}
+                  />
+                )}
                 <AddressSection
                   countries={countries}
                   form={form}

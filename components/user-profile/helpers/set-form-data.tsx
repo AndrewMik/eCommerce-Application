@@ -39,6 +39,7 @@ export default function setFormData(form: FormInstance, customer: Customer) {
     dateOfBirth: dayjs(customer.dateOfBirth),
     dateOfBirthProfile: customer.dateOfBirth,
     gender: getGender(customer.salutation),
+    email: customer.email,
   });
 
   getAddressDetails(
