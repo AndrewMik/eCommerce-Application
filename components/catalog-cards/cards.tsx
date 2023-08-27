@@ -22,8 +22,8 @@ const CatalogCards = (): JSX.Element => {
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
-        const maxLengthOfDescription = 105;
-        let descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
+        const maxLengthOfDescription = 115;
+        let descriptionPreview = metaDescription && metaDescription.en;
         if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
           descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
         }
