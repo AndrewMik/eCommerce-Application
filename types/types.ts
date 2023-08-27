@@ -6,6 +6,7 @@ export interface Discount {
 }
 export interface Product {
   key: string;
+  id: string;
   description: LocalizedString | undefined;
   descriptionPreview: string | undefined;
   attributes: Attribute[] | undefined;

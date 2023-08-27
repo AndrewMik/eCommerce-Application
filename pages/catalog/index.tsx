@@ -1,5 +1,6 @@
 import { Card, Col, Row, Space } from 'antd';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
@@ -9,7 +10,6 @@ const { Meta } = Card;
 
 const CatalogPage = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
-
   const getProductsInfo = async () => {
     const { response } = await getProducts();
 
@@ -20,7 +20,7 @@ const CatalogPage = (): JSX.Element => {
 
     if (Array.isArray(response)) {
       const transformedResponse = response.map((product) => {
-        const { key, metaDescription, masterVariant } = product;
+        const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
         const descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
 
@@ -29,6 +29,7 @@ const CatalogPage = (): JSX.Element => {
 
         return {
           key: key ?? '',
+          id: id ?? '',
           description: metaDescription ?? { en: '' },
           descriptionPreview: descriptionPreview ?? '',
           attributes: attributes ?? [],
@@ -168,6 +169,9 @@ const CatalogPage = (): JSX.Element => {
               description={
                 <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
                   {product.descriptionPreview && product.descriptionPreview}
+                  <div style={{ marginTop: '5px' }}>
+                    <Link href={`/catalog/${encodeURIComponent(product.id)}`}>see more details..</Link>
+                  </div>
                 </div>
               }
             />
