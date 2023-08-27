@@ -116,7 +116,7 @@ const CatalogPage = (): JSX.Element => {
                       style={{
                         display: 'inline-block',
                         whiteSpace: 'normal',
-                        color: '#3F2305',
+                        color: 'rgba(33, 41, 62, 1)',
                         textTransform: 'uppercase',
                         lineHeight: '1',
                         paddingBottom: '10px',
@@ -133,6 +133,7 @@ const CatalogPage = (): JSX.Element => {
                           span={6}
                           offset={6}
                           style={{
+                            color: '#243763',
                             display: 'flex',
                             fontWeight: 'normal',
                             textDecoration: 'line-through',
@@ -157,6 +158,7 @@ const CatalogPage = (): JSX.Element => {
                             borderTop: '1px solid rgba(55, 34, 11, 0.11)',
                             paddingTop: '10px',
                             fontWeight: 'bolder',
+                            color: '#243763',
                           }}
                         >
                           ${regularPrice && transformCentToDollar(regularPrice)}
