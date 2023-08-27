@@ -1,4 +1,4 @@
-import { Card, Col, Row, Space } from 'antd';
+import { Button, Card, Col, Row, Space } from 'antd';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
@@ -173,7 +173,9 @@ const CatalogCards = (): JSX.Element => {
                   <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
                     {product.descriptionPreview && product.descriptionPreview}
                     <div style={{ marginTop: '5px' }}>
-                      <Link href={`/catalog/${encodeURIComponent(product.id)}`}>see more details..</Link>
+                      <Button type="link" style={{ fontSize: '13px' }}>
+                        see more details..
+                      </Button>
                     </div>
                   </div>
                 }
