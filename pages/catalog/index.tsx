@@ -78,7 +78,7 @@ const CatalogPage = (): JSX.Element => {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderTopLeftRadius: '5px',
+                  borderRadius: '5px',
                   borderTopRightRadius: '5px',
                 }}
               >
@@ -111,7 +111,7 @@ const CatalogPage = (): JSX.Element => {
             <Meta
               title={
                 <Row>
-                  <Col span={24} style={{ fontSize: 16, textAlign: 'center' }}>
+                  <Col span={24} style={{ fontSize: 16, textAlign: 'center', height: 40 }}>
                     <span
                       style={{
                         display: 'inline-block',
