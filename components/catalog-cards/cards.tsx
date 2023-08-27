@@ -67,10 +67,10 @@ const CatalogCards = (): JSX.Element => {
         >
           <Link href={`/catalog/${encodeURIComponent(product.id)}`}>
             <Card
-              bodyStyle={{ paddingInline: '3px' }}
+              bodyStyle={{ padding: '3px', paddingTop: '20px' }}
               key={product.key}
               hoverable
-              style={{ width: 240, position: 'relative', textAlign: 'center' }}
+              style={{ width: 260, position: 'relative', textAlign: 'center', height: '450px' }}
               cover={
                 <div
                   style={{
@@ -171,9 +171,11 @@ const CatalogCards = (): JSX.Element => {
                 }
                 description={
                   <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
-                    {product.descriptionPreview && product.descriptionPreview}
-                    <div style={{ marginTop: '5px' }}>
-                      <Button type="link" style={{ fontSize: '13px' }}>
+                    {product.descriptionPreview && (
+                      <div style={{ height: 50, overflow: 'scroll' }}>{product.descriptionPreview}</div>
+                    )}
+                    <div>
+                      <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
                         see more details..
                       </Button>
                     </div>
