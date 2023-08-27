@@ -63,6 +63,7 @@ const CatalogPage = (): JSX.Element => {
           style={{ display: 'flex', justifyContent: 'center' }}
         >
           <Card
+            bodyStyle={{ paddingInline: '3px' }}
             key={product.key}
             hoverable
             style={{ width: 240, position: 'relative', textAlign: 'center' }}
@@ -79,7 +80,7 @@ const CatalogPage = (): JSX.Element => {
                 }}
               >
                 {product.images && product.images.length > 0 && (
-                  <img style={{ height: 240 }} alt={product.name.en} src={product.images[0].url} />
+                  <img style={{ width: '100%' }} alt={product.name.en} src={product.images[0].url} />
                 )}
               </div>
             }
@@ -96,7 +97,7 @@ const CatalogPage = (): JSX.Element => {
                     fontWeight: 'bold',
                     backgroundColor: 'white',
                     borderRadius: '5px',
-                    padding: '5px 10px',
+                    padding: '5px 0',
                     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                   }}
                 >
@@ -108,7 +109,18 @@ const CatalogPage = (): JSX.Element => {
               title={
                 <Row>
                   <Col span={24} style={{ fontSize: 16, textAlign: 'center' }}>
-                    {product.name && product.name.en}
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        whiteSpace: 'normal',
+                        color: '#3F2305',
+                        textTransform: 'uppercase',
+                        lineHeight: '1',
+                        paddingBottom: '10px',
+                      }}
+                    >
+                      {product.name && product.name.en}
+                    </span>
                   </Col>
                   <Col span={24}>
                     {discountedPrice ? (
@@ -122,6 +134,8 @@ const CatalogPage = (): JSX.Element => {
                             textDecoration: 'line-through',
                             alignItems: 'center',
                             fontSize: '16px',
+                            paddingTop: '10px',
+                            borderTop: '1px solid #C08261',
                           }}
                         >
                           ${regularPrice && transformCentToDollar(regularPrice)}
@@ -132,7 +146,15 @@ const CatalogPage = (): JSX.Element => {
                       </Row>
                     ) : (
                       <Row>
-                        <Col span={24} style={{ fontSize: 18 }}>
+                        <Col
+                          span={24}
+                          style={{
+                            fontSize: 18,
+                            borderTop: '1px solid rgba(55, 34, 11, 0.11)',
+                            paddingTop: '10px',
+                            fontWeight: 'bolder',
+                          }}
+                        >
                           ${regularPrice && transformCentToDollar(regularPrice)}
                         </Col>
                       </Row>
