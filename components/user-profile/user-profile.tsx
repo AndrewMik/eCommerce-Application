@@ -10,12 +10,12 @@ import { AddressSuffix } from '../registration-form/helpers/registration.types';
 import AddressSection from '../registration-form/sections/address-section';
 import DividerText from '../registration-form/fields/divider-field';
 import setFormData from './helpers/set-form-data';
-import CountryOptionsProps from '../registration-form/helpers/interface';
+import { CountryOptionsProps } from '../registration-form/helpers/interface';
 
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
+  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +33,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         <Row justify="center" align="middle">
           <Col xs={22} sm={20} md={18} lg={14} xl={12}>
             <Card bordered style={{ borderRadius: 15, marginBlock: 40 }}>
-              <Checkbox checked={componentDisabled} onChange={(e) => setComponentDisabled(e.target.checked)}>
+              <Checkbox checked={!componentDisabled} onChange={(e) => setComponentDisabled(!e.target.checked)}>
                 Edit
               </Checkbox>
               <Form
@@ -44,7 +44,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                 }}
                 autoComplete="on"
                 layout="vertical"
-                disabled={!componentDisabled}
+                disabled={componentDisabled}
               >
                 <PersonalSection componentDisabled={componentDisabled} form={form}></PersonalSection>
                 <AddressSection

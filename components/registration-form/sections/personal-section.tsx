@@ -9,7 +9,7 @@ import DividerText from '../fields/divider-field';
 
 import { getNameRules, getSurnameRules, getBirthDateRules } from '../helpers/validation-rules';
 import fieldDefinitions from '../helpers/field-definitions';
-import SectionProps from './section-interface';
+import { SectionProps } from '../helpers/interface';
 
 const PersonalSection: React.FC<SectionProps> = ({ componentDisabled, form }) => {
   const isProfilePage = window.location.href.match('profile');
@@ -34,10 +34,10 @@ const PersonalSection: React.FC<SectionProps> = ({ componentDisabled, form }) =>
 
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          {(isRegistrationPage || (isProfilePage && componentDisabled)) && (
+          {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
             <DateField {...fieldDefinitions.birthDate} form={form as FormInstance} rules={getBirthDateRules()} />
           )}
-          {isProfilePage && !componentDisabled && (
+          {isProfilePage && componentDisabled && (
             <InputField
               {...fieldDefinitions.birthDateOnUserProfile}
               componentDisabled={componentDisabled}
@@ -48,7 +48,7 @@ const PersonalSection: React.FC<SectionProps> = ({ componentDisabled, form }) =>
         </Col>
 
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          {(isRegistrationPage || (isProfilePage && componentDisabled)) && (
+          {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
             <SelectField
               {...fieldDefinitions.gender}
               options={[
@@ -59,7 +59,7 @@ const PersonalSection: React.FC<SectionProps> = ({ componentDisabled, form }) =>
               rules={[]}
             />
           )}
-          {isProfilePage && !componentDisabled && (
+          {isProfilePage && componentDisabled && (
             <InputField {...fieldDefinitions.gender} componentDisabled={componentDisabled} rules={[]} />
           )}
         </Col>

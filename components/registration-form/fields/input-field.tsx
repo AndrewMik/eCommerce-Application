@@ -29,8 +29,8 @@ const InputField: React.FC<InputFieldProps> = ({
         placeholder={pagePlaceholder}
         style={
           componentDisabled
-            ? {}
-            : { backgroundColor: 'transparent', color: '#6d7eac', cursor: 'default', border: 'none' }
+            ? { backgroundColor: 'transparent', color: '#6d7eac', cursor: 'default', border: 'none' }
+            : {}
         }
       />
     </Form.Item>

@@ -10,7 +10,7 @@ import DividerText from '../fields/divider-field';
 import { getStreetRules, getCountryRules, getPostalCodeRules, getCityRules } from '../helpers/validation-rules';
 import fieldDefinitions from '../helpers/field-definitions';
 import { AddressFieldsName, ShippingFieldsName } from '../helpers/registration.types';
-import SectionProps from './section-interface';
+import { SectionProps } from '../helpers/interface';
 
 interface AddressSectionProps {
   countries: string[];
@@ -72,7 +72,7 @@ const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
       <DividerText text={title} />
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          {(isRegistrationPage || (isProfilePage && componentDisabled)) && (
+          {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
             <SelectField
               {...fieldDefinitions.country}
               name={countryFieldName}
@@ -82,7 +82,7 @@ const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
               onChange={() => form.validateFields([postalCodeFieldName])}
             />
           )}
-          {isProfilePage && !componentDisabled && (
+          {isProfilePage && componentDisabled && (
             <InputField
               {...fieldDefinitions.country}
               name={countryFieldName}

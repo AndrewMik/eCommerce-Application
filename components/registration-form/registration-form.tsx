@@ -11,7 +11,7 @@ import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
 import { AddressSuffix, AddressFieldsName, FormData } from './helpers/registration.types';
 import { AuthContext } from '../../context/authorization-context';
-import CountryOptionsProps from './helpers/interface';
+import { CountryOptionsProps } from './helpers/interface';
 
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
@@ -63,7 +63,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 layout="vertical"
                 onFinish={handleRegisterUser}
               >
-                <PersonalSection componentDisabled={true}></PersonalSection>
+                <PersonalSection></PersonalSection>
                 <AddressSection
                   countries={countries}
                   form={form}
@@ -71,7 +71,6 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                   nameSuffix={AddressSuffix.SHIPPING}
                   showCheckbox={true}
                   onUseBillingAddressChange={setUseBillingAddress}
-                  componentDisabled={true}
                 />
                 {!useBillingAddress && (
                   <AddressSection
@@ -79,7 +78,6 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                     form={form}
                     title="Billing Address"
                     nameSuffix={AddressSuffix.BILLING}
-                    componentDisabled={true}
                   />
                 )}{' '}
                 <CredentialsSection></CredentialsSection>
