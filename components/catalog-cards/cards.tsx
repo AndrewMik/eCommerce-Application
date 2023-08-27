@@ -22,7 +22,7 @@ const CatalogCards = (): JSX.Element => {
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
-        const maxLengthOfDescription = 100;
+        const maxLengthOfDescription = 105;
         let descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
         if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
           descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
@@ -88,7 +88,7 @@ const CatalogCards = (): JSX.Element => {
                   }}
                 >
                   {product.images && product.images.length > 0 && (
-                    <img style={{ width: '100%', height: '100%' }} alt={product.name.en} src={product.images[0].url} />
+                    <img style={{ width: '100%' }} alt={product.name.en} src={product.images[0].url} />
                   )}
                 </div>
               }
