@@ -55,10 +55,11 @@ const CatalogPage = (): JSX.Element => {
       const discountedPrice = product.prices?.[0].discounted?.value.centAmount;
       return (
         <Col
-          key={product.key}
+          key={product.name.en}
           xs={{ span: 24 }}
-          sm={{ span: 12 }}
           md={{ span: 12 }}
+          lg={{ span: 8 }}
+          xl={{ span: 6 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
           <Card
