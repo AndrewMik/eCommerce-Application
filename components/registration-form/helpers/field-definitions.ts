@@ -16,6 +16,11 @@ const fieldDefinitions = {
     name: 'dateOfBirth',
     placeholder: '1990-03-20',
   },
+  birthDateOnUserProfile: {
+    label: 'Date of Birth',
+    name: 'dateOfBirthProfile',
+    placeholder: '1990-03-20',
+  },
   gender: {
     label: 'Gender',
     name: 'gender',

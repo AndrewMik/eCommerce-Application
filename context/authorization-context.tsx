@@ -7,12 +7,15 @@ interface AuthContextType {
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
   userToken: string | null;
+  customerId: string | null;
   toggleInactiveLinks: boolean | null;
   setToggleInactiveLinks: (state: boolean | null | ((prevState: boolean | null) => boolean | null)) => void;
   setUserToken: (token: string | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   saveLogInState: (id: string) => void;
+  saveCustomerId: (id: string) => void;
   removeLogInState: () => void;
+  removeCustomerId: () => void;
   setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setRegistrationStatusCode: (statusCode: number | null) => void;
@@ -28,13 +31,18 @@ const AuthContext = createContext<AuthContextType>({
   setToggleInactiveLinks: () => {},
   isLoggedIn: null,
   userToken: null,
+  customerId: null,
   setIsLoggedIn: () => {},
   setUserToken: () => {},
+  saveCustomerId: () => {},
   saveLogInState: () => {
     throw new Error('saveLogInState function must be overridden');
   },
   removeLogInState: () => {
     throw new Error('removeLogInState function must be overridden');
+  },
+  removeCustomerId: () => {
+    throw new Error('removeCustomerId function must be overridden');
   },
   setToggleNotificationForLogIn: () => {},
   setToggleNotificationForRegistration: () => {},
@@ -50,12 +58,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
   const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
+  const [customerId, setCustomerId] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
+    const customerID = localStorage.getItem('customerId');
     if (token) {
       setIsLoggedIn(true);
       setUserToken(token);
+      setCustomerId(customerID);
     } else {
       setIsLoggedIn(false);
     }
@@ -69,6 +80,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const removeLogInState = () => {
     localStorage.removeItem('userToken');
     setIsLoggedIn(false);
+  };
+
+  const removeCustomerId = () => {
+    localStorage.removeItem('customerId');
+  };
+
+  const saveCustomerId = (id: string) => {
+    localStorage.setItem('customerId', id);
+    setIsLoggedIn(true);
   };
 
   return (
@@ -90,6 +110,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setLogInStatusCode,
         setIsLoggedIn,
         setUserToken,
+        customerId,
+        saveCustomerId,
+        removeCustomerId,
       }}
     >
       {children}
