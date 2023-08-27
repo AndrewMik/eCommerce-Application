@@ -23,7 +23,8 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, removeCustomerId, setLogInStatusCode, setRegistrationStatusCode } =
+    useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
@@ -35,6 +36,7 @@ const MainHeader = () => {
 
   const handleSignOutButtonClick = () => {
     removeLogInState();
+    removeCustomerId();
     setLogInStatusCode(null);
     setRegistrationStatusCode(null);
     router.push(Paths.LOGIN);

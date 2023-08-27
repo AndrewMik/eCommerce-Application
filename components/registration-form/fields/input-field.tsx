@@ -7,12 +7,34 @@ interface InputFieldProps {
   placeholder: string;
   rules: Rule[];
   required?: boolean;
+  componentDisabled?: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, name, placeholder, rules, required = false }) => (
-  <Form.Item label={label} name={name} rules={rules} required={required}>
-    <Input type="text" placeholder={placeholder} />
-  </Form.Item>
-);
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  name,
+  placeholder,
+  rules,
+  required = false,
+  componentDisabled,
+}) => {
+  let pagePlaceholder = placeholder;
+  if (window.location.href.match('profile')) {
+    pagePlaceholder = '';
+  }
+  return (
+    <Form.Item label={label} name={name} rules={rules} required={required}>
+      <Input
+        type="text"
+        placeholder={pagePlaceholder}
+        style={
+          componentDisabled
+            ? {}
+            : { backgroundColor: 'transparent', color: '#6d7eac', cursor: 'default', border: 'none' }
+        }
+      />
+    </Form.Item>
+  );
+};
 
 export default InputField;

@@ -12,17 +12,17 @@ describe('Utilities', () => {
 
   describe('getSalutation', () => {
     it('should return "Mr." for male', () => {
-      const result = getSalutation('male');
+      const result = getSalutation('Male');
       expect(result).toBe('Mr.');
     });
 
     it('should return "Ms." for female', () => {
-      const result = getSalutation('female');
+      const result = getSalutation('Female');
       expect(result).toBe('Ms.');
     });
 
     it('should return an empty string for any other value', () => {
-      const result = getSalutation('other');
+      const result = getSalutation('Other');
       expect(result).toBe('');
     });
   });

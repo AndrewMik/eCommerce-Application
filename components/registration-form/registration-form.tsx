@@ -11,10 +11,7 @@ import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
 import { AddressSuffix, AddressFieldsName, FormData } from './helpers/registration.types';
 import { AuthContext } from '../../context/authorization-context';
-
-interface CountryOptionsProps {
-  countries: string[];
-}
+import CountryOptionsProps from './helpers/interface';
 
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
@@ -24,13 +21,17 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
     setToggleNotificationForRegistration,
     setRegistrationStatusCode,
     saveLogInState,
+    saveCustomerId,
     setUserToken,
     setIsLoggedIn,
   } = useContext(AuthContext);
 
   const handleRegisterUser = async (formData: FormData) => {
-    const { statusCode, token } = await registerUser(formData);
+    const { statusCode, token, customerID } = await registerUser(formData);
     if (statusCode === 201) {
+      if (customerID) {
+        saveCustomerId(customerID);
+      }
       if (token) {
         setUserToken(token);
         saveLogInState(token);
@@ -62,7 +63,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 layout="vertical"
                 onFinish={handleRegisterUser}
               >
-                <PersonalSection></PersonalSection>
+                <PersonalSection componentDisabled={false}></PersonalSection>
                 <AddressSection
                   countries={countries}
                   form={form}
@@ -70,6 +71,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                   nameSuffix={AddressSuffix.SHIPPING}
                   showCheckbox={true}
                   onUseBillingAddressChange={setUseBillingAddress}
+                  componentDisabled={false}
                 />
                 {!useBillingAddress && (
                   <AddressSection
@@ -77,6 +79,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                     form={form}
                     title="Billing Address"
                     nameSuffix={AddressSuffix.BILLING}
+                    componentDisabled={false}
                   />
                 )}{' '}
                 <CredentialsSection></CredentialsSection>

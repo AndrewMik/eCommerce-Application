@@ -14,10 +14,21 @@ window.matchMedia =
     };
   };
 
+// eslint-disable-next-line no-global-assign
+window = Object.create(window);
+const url = 'http://localhost/registration';
+
+Object.defineProperty(window, 'location', {
+  value: {
+    href: url,
+  },
+  writable: true,
+});
+
 describe('PersonalSection', () => {
   const WrappedPersonalSection = () => (
     <Form>
-      <PersonalSection />
+      <PersonalSection componentDisabled={false} />
     </Form>
   );
 

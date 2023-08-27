@@ -11,14 +11,23 @@ const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken } =
-    useContext(AuthContext);
+  const {
+    saveLogInState,
+    setLogInStatusCode,
+    setIsLoggedIn,
+    setToggleNotificationForLogIn,
+    setUserToken,
+    saveCustomerId,
+  } = useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const { statusCode, token } = await loginUser(email, password);
+    const { statusCode, token, customerID } = await loginUser(email, password);
     if (statusCode) {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
+        if (customerID) {
+          saveCustomerId(customerID);
+        }
         if (token) {
           setUserToken(token);
           saveLogInState(token);
