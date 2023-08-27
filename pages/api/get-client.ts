@@ -4,7 +4,7 @@ import getCustomerId from '@/utils/get-customer-id';
 import Client from './client';
 
 async function getClient() {
-  const client = new Client().clientCredentialsClient;
+  const client = new Client().anonymousClient;
 
   try {
     let response;
