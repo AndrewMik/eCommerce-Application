@@ -63,7 +63,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 layout="vertical"
                 onFinish={handleRegisterUser}
               >
-                <PersonalSection></PersonalSection>
+                <PersonalSection componentDisabled={false}></PersonalSection>
                 <AddressSection
                   countries={countries}
                   form={form}
@@ -71,6 +71,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                   nameSuffix={AddressSuffix.SHIPPING}
                   showCheckbox={true}
                   onUseBillingAddressChange={setUseBillingAddress}
+                  componentDisabled={false}
                 />
                 {!useBillingAddress && (
                   <AddressSection
@@ -78,6 +79,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                     form={form}
                     title="Billing Address"
                     nameSuffix={AddressSuffix.BILLING}
+                    componentDisabled={false}
                   />
                 )}{' '}
                 <CredentialsSection></CredentialsSection>
