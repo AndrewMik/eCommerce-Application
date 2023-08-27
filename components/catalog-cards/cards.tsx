@@ -22,7 +22,11 @@ const CatalogCards = (): JSX.Element => {
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
-        const descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
+        const maxLengthOfDescription = 100;
+        let descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
+        if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
+          descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
+        }
 
         const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
           ?.value as ProductDiscountValueRelative;
@@ -171,12 +175,10 @@ const CatalogCards = (): JSX.Element => {
                 }
                 description={
                   <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
-                    {product.descriptionPreview && (
-                      <div style={{ height: 50, overflow: 'scroll' }}>{product.descriptionPreview}</div>
-                    )}
+                    {product.descriptionPreview && <div style={{ height: 30 }}>{product.descriptionPreview}</div>}
                     <div>
                       <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
-                        see more details..
+                        see more details
                       </Button>
                     </div>
                   </div>
