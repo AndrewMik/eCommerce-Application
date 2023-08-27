@@ -20,15 +20,17 @@ const CatalogPage = (): JSX.Element => {
 
     if (Array.isArray(response)) {
       const transformedResponse = response.map((product) => {
-        const { key, description, masterVariant } = product;
+        const { key, metaDescription, masterVariant } = product;
         const { attributes, images, prices } = masterVariant;
+        const descriptionPreview = metaDescription && metaDescription.en.split(/[!.]+/)[0];
 
         const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
           ?.value as ProductDiscountValueRelative;
 
         return {
           key: key ?? '',
-          description: description ?? { en: '' },
+          description: metaDescription ?? { en: '' },
+          descriptionPreview: descriptionPreview ?? '',
           attributes: attributes ?? [],
           images: images ?? [],
           prices: prices ?? [],
@@ -80,7 +82,7 @@ const CatalogPage = (): JSX.Element => {
                 }}
               >
                 {product.images && product.images.length > 0 && (
-                  <img style={{ width: '100%' }} alt={product.name.en} src={product.images[0].url} />
+                  <img style={{ width: '100%', height: '100%' }} alt={product.name.en} src={product.images[0].url} />
                 )}
               </div>
             }
@@ -117,6 +119,7 @@ const CatalogPage = (): JSX.Element => {
                         textTransform: 'uppercase',
                         lineHeight: '1',
                         paddingBottom: '10px',
+                        fontSize: '14px',
                       }}
                     >
                       {product.name && product.name.en}
@@ -162,7 +165,11 @@ const CatalogPage = (): JSX.Element => {
                   </Col>
                 </Row>
               }
-              description={product.description && product.description.en}
+              description={
+                <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
+                  {product.descriptionPreview && product.descriptionPreview}
+                </div>
+              }
             />
           </Card>
         </Col>
