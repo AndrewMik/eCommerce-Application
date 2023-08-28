@@ -8,7 +8,12 @@ async function getAllProducts() {
   try {
     const response = await client
       .productProjections()
-      .get({ queryArgs: { expand: ['masterVariant.prices[*].discounted.discount'] } })
+      .get({
+        queryArgs: {
+          limit: 200,
+          expand: ['masterVariant.prices[*].discounted.discount'],
+        },
+      })
       .execute();
     return { response: response.body.results };
   } catch (error) {
