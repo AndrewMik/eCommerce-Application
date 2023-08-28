@@ -80,17 +80,12 @@ const CatalogCards = (): JSX.Element => {
                   style={{
                     height: 240,
                     overflow: 'hidden',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: '5px',
-                    borderTopRightRadius: '5px',
+                    borderRadius: '5px 5px 0 0',
+                    backgroundImage: `url(${product.images && product.images.length > 0 ? product.images[0].url : ''})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                   }}
-                >
-                  {product.images && product.images.length > 0 && (
-                    <img style={{ width: '100%' }} alt={product.name.en} src={product.images[0].url} />
-                  )}
-                </div>
+                ></div>
               }
             >
               <Row>
