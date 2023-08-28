@@ -20,9 +20,11 @@ const DateField: React.FC<DateFieldProps> = ({ label, name, placeholder, rules, 
       placeholder={placeholder}
       disabledDate={(current) => current && current > moment().endOf('day')}
       onChange={() => {
-        form.setFieldsValue({
-          dateOfBirthProfile: dayjs(form.getFieldValue('dateOfBirth')).format('YYYY-MM-DD'),
-        });
+        if (form) {
+          form.setFieldsValue({
+            dateOfBirthProfile: dayjs(form.getFieldValue('dateOfBirth')).format('YYYY-MM-DD'),
+          });
+        }
       }}
     />
   </Form.Item>
