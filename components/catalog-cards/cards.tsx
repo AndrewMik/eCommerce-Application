@@ -69,7 +69,7 @@ const CatalogCards = (): JSX.Element => {
           xl={{ span: 6 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          <Link href={`/catalog/${encodeURIComponent(product.id)}`}>
+          <Link href={`/catalog/${encodeURIComponent(product.key)}`}>
             <Card
               bodyStyle={{ padding: '3px', paddingTop: '20px' }}
               key={product.key}
@@ -93,14 +93,14 @@ const CatalogCards = (): JSX.Element => {
                   <Col
                     style={{
                       position: 'absolute',
-                      top: -10,
-                      right: -15,
+                      top: -5,
+                      right: -5,
                       fontSize: '16px',
                       color: 'red',
                       fontWeight: 'bold',
                       backgroundColor: 'white',
                       borderRadius: '5px',
-                      padding: '5px 0',
+                      padding: '3px 5px',
                       boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                     }}
                   >
@@ -128,7 +128,7 @@ const CatalogCards = (): JSX.Element => {
                     </Col>
                     <Col span={24}>
                       {discountedPrice ? (
-                        <Row>
+                        <Row style={{ borderTop: '1px solid rgba(55, 34, 11, 0.11)' }}>
                           <Col
                             span={6}
                             offset={6}
@@ -140,12 +140,11 @@ const CatalogCards = (): JSX.Element => {
                               alignItems: 'center',
                               fontSize: '16px',
                               paddingTop: '10px',
-                              borderTop: '1px solid #C08261',
                             }}
                           >
                             ${regularPrice && transformCentToDollar(regularPrice)}
                           </Col>
-                          <Col offset={1} style={{ fontSize: 18, color: 'red' }}>
+                          <Col style={{ fontSize: 18, color: 'red', paddingTop: '9px', fontWeight: 'bolder' }}>
                             ${transformCentToDollar(discountedPrice)}
                           </Col>
                         </Row>
