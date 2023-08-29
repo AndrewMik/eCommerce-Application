@@ -1,0 +1,28 @@
+key,externalId,name.en,slug.en,parentId,orderHint
+c1,1,Magnetic boards,magnetic-boards,,0.0001
+c2,2,Boards,magnetic-boards-boards,1,0.001
+c3,3,Board accessories,magnetic-boards-board-accessories,1,0.0011
+c4,4,Toys,toys,,0.0002
+c5,5,Mobile toys,toys-mobile-toys,4,0.002
+c6,6,Soft toys,toys-soft-toys,4,0.0021
+c7,7,Wooden toys,toys-wooden-toys,4,0.0022
+c8,8,Educational toys,toys-educational-toys,4,0.0023
+c9,9,Musical toys,toys-musical-toys,4,0.0024
+c10,10,Dolls,toys-dolls,4,0.0025
+c11,11,Balls,toys-balls,4,0.0026
+c12,12,Games,games,,0.0003
+c13,13,Board games,games-board-games,12,0.003
+c14,14,Card games,games-card-games,12,0.0031
+c15,15,Educational games,games-educational-games,12,0.0032
+c16,16,Railways,games-railways,12,0.0033
+c17,17,Books,books,,0.0004
+c18,18,Hard-covered books,books-hard-covered-books,17,0.004
+c19,19,Soft books,books-soft-books,17,0.0041
+c20,20,Stationery,stationery,,0.0005
+c21,21,Coloring books,stationery-coloring-books,20,0.005
+c22,22,Pens and markers,stationery-pens-and-markers,20,0.0051
+c23,23,Posters,stationery-posters,20,0.0052
+c24,24,Stickers,stationery-stickers,20,0.0053
+c25,25,Vehicles,vehicles,,0.0006
+c26,26,Bikes,vehicles-bikes,25,0.006
+c27,27,Cars,vehicles-cars,25,0.0061
