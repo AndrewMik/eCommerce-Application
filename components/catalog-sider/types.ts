@@ -1,6 +1,6 @@
 export enum Filter {
-  Brand = 'Brand',
-  Age = 'Age',
+  Brand = 'brand',
+  Age = 'age-range',
 }
 
 export interface AttributeValue {

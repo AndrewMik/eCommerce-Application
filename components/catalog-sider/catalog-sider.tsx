@@ -1,5 +1,7 @@
 import { Layout, Menu, MenuProps } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Attribute } from '@commercetools/platform-sdk';
+import getFilteredProducts from '@/pages/api/filter-products';
 import { Filter, AttributeValue, CatalogSiderProps } from './types';
 
 const { Sider } = Layout;
@@ -12,13 +14,32 @@ const CatalogSider = (props: CatalogSiderProps) => {
     [Filter.Brand]: 'all brands',
     [Filter.Age]: 'all ages',
   });
+  const [filterKey, setFilterKey] = useState<Attribute | null>(null);
 
-  const handleSelect = (parentKey: string, selectedKey: string) => {
+  const handleSelect = (parentKey: string, selectedKey: string, key: string) => {
+    const attribute = {
+      name: parentKey,
+      value: {
+        key,
+        label: selectedKey,
+      },
+    };
+
+    setFilterKey(attribute);
     setSelected({
       ...selected,
       [parentKey]: selectedKey,
     });
   };
+
+  const getFilteredProductsInfo = async () => {
+    if (!filterKey) return;
+    await getFilteredProducts(filterKey.name, filterKey.value);
+  };
+
+  useEffect(() => {
+    getFilteredProductsInfo();
+  }, [filterKey]);
 
   const items: MenuProps['items'] = filters.map((option) => {
     const key = String(option);
@@ -31,7 +52,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           childrenItems = brands.map((brand) => ({
             key: `${brand.label}`,
             label: `${brand.label}`,
-            onClick: () => handleSelect(key, brand.label),
+            onClick: () => handleSelect(key, brand.label, brand.key),
             style: { paddingLeft: '14px', height: '20px', lineHeight: '20px' },
           }));
         }
@@ -41,7 +62,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           childrenItems = ageRange.map((age) => ({
             key: `${age.label}`,
             label: `${age.label}`,
-            onClick: () => handleSelect(key, age.label),
+            onClick: () => handleSelect(key, age.label, age.key),
             style: { paddingLeft: '14px', height: '20px' },
           }));
         }

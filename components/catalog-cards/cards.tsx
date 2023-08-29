@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
-import { Product } from '../../types/types';
 import getProducts from '../../pages/api/get-products';
+import { Product } from '../../types/types';
 import { UniqueAges, UniqueBrands, AttributeValue } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 
@@ -32,6 +32,7 @@ const CatalogCards = (): JSX.Element => {
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
+
         const maxLengthOfDescription = 115;
         let descriptionPreview = metaDescription && metaDescription.en;
 
