@@ -22,26 +22,29 @@ const CatalogSider = (props: CatalogSiderProps) => {
 
     let childrenItems: AttributeValue[] = [];
 
-    if (key === Filter.Brand && brands) {
-      childrenItems = brands.map((brand) => {
-        const subKey = brand.label;
-        return {
-          key: `sub${subKey}`,
-          label: `${subKey}`,
-          onClick: () => handleSelect(key, brand.label),
-        };
-      });
-    } else if (key === Filter.Age && ageRange) {
-      childrenItems = ageRange.map((age) => {
-        const subKey = age.label;
-        return {
-          key: `sub${subKey}`,
-          label: `${subKey}`,
-          onClick: () => handleSelect(key, age.label),
-        };
-      });
+    switch (key) {
+      case Filter.Brand:
+        if (brands) {
+          childrenItems = brands.map((brand) => ({
+            key: `sub${brand.label}`,
+            label: `${brand.label}`,
+            onClick: () => handleSelect(key, brand.label),
+          }));
+        }
+        break;
+      case Filter.Age:
+        if (ageRange) {
+          childrenItems = ageRange.map((age) => ({
+            key: `sub${age.label}`,
+            label: `${age.label}`,
+            onClick: () => handleSelect(key, age.label),
+          }));
+        }
+        break;
+      default:
+        childrenItems = [{ key: 'default', label: 'Unknown', onClick: () => {} }];
+        break;
     }
-
     const selectedLabel = selected[key] ? `: ${selected[key]}` : '';
 
     return {
