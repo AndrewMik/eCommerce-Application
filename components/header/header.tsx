@@ -75,7 +75,15 @@ const MainHeader = () => {
   return (
     <>
       <Notifications />
-      <Header style={{ padding: 0 }}>
+      <Header
+        style={{
+          padding: 0,
+          zIndex: 10000,
+          position: 'sticky',
+          top: 0,
+          width: '100%',
+        }}
+      >
         <Row>
           <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
             <Link href={'/'} style={{ marginLeft: 10 }}>

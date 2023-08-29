@@ -1,12 +1,33 @@
-import { Button, Card, Col, Row, Space } from 'antd';
-import { useState, useEffect } from 'react';
+import { Button, Card, Col, Layout, Menu, MenuProps, Row, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
+import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
 import getProducts from '../../pages/api/get-products';
 
+const { Content, Sider } = Layout;
+
 const { Meta } = Card;
+
+const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
+  const key = String(index + 1);
+
+  return {
+    key: `sub${key}`,
+    icon: React.createElement(icon),
+    label: `subnav ${key}`,
+
+    children: new Array(4).fill(null).map((_, j) => {
+      const subKey = index * 4 + j + 1;
+      return {
+        key: subKey,
+        label: `option${subKey}`,
+      };
+    }),
+  };
+});
 
 const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
@@ -66,7 +87,8 @@ const CatalogCards = (): JSX.Element => {
           xs={{ span: 24 }}
           md={{ span: 12 }}
           lg={{ span: 8 }}
-          xl={{ span: 6 }}
+          xl={{ span: 8 }}
+          xxl={{ span: 6 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
           <Link href={`/catalog/${encodeURIComponent(product.key)}`}>
@@ -185,9 +207,35 @@ const CatalogCards = (): JSX.Element => {
     });
 
   return (
-    <Space direction="vertical" size="middle" style={{ display: 'flex', padding: 50 }}>
-      <Row gutter={[16, 16]}>{products && productCards}</Row>
-    </Space>
+    <Layout hasSider>
+      <Sider
+        style={{
+          marginTop: '60px',
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          backgroundColor: 'white',
+        }}
+      >
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px' }}
+          items={items2}
+        />
+      </Sider>
+      <Layout className="site-layout" style={{ marginLeft: 200 }}>
+        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+            <Row gutter={[16, 16]}>{products && productCards}</Row>
+          </Space>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
