@@ -7,15 +7,14 @@ interface AuthContextType {
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
   userToken: string | null;
-  customerId: string | null;
+  userRefreshToken: string | null;
   toggleInactiveLinks: boolean | null;
   setToggleInactiveLinks: (state: boolean | null | ((prevState: boolean | null) => boolean | null)) => void;
   setUserToken: (token: string | null) => void;
+  setUserRefreshToken: (token: string | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  saveLogInState: (id: string) => void;
-  saveCustomerId: (id: string) => void;
+  saveLogInState: (token: string, refreshToken: string) => void;
   removeLogInState: () => void;
-  removeCustomerId: () => void;
   setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setRegistrationStatusCode: (statusCode: number | null) => void;
@@ -31,18 +30,15 @@ const AuthContext = createContext<AuthContextType>({
   setToggleInactiveLinks: () => {},
   isLoggedIn: null,
   userToken: null,
-  customerId: null,
+  userRefreshToken: null,
   setIsLoggedIn: () => {},
   setUserToken: () => {},
-  saveCustomerId: () => {},
+  setUserRefreshToken: () => {},
   saveLogInState: () => {
     throw new Error('saveLogInState function must be overridden');
   },
   removeLogInState: () => {
     throw new Error('removeLogInState function must be overridden');
-  },
-  removeCustomerId: () => {
-    throw new Error('removeCustomerId function must be overridden');
   },
   setToggleNotificationForLogIn: () => {},
   setToggleNotificationForRegistration: () => {},
@@ -55,40 +51,33 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [toggleNotificationForRegistration, setToggleNotificationForRegistration] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userToken, setUserToken] = useState<string | null>(null);
+  const [userRefreshToken, setUserRefreshToken] = useState<string | null>(null);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
   const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
-  const [customerId, setCustomerId] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
-    const customerID = localStorage.getItem('customerId');
-    if (token) {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (token && refreshToken) {
       setIsLoggedIn(true);
       setUserToken(token);
-      setCustomerId(customerID);
+      setUserRefreshToken(refreshToken);
     } else {
       setIsLoggedIn(false);
     }
   }, []);
 
-  const saveLogInState = (token: string) => {
+  const saveLogInState = (token: string, refreshToken: string) => {
     localStorage.setItem('userToken', token);
+    localStorage.setItem('refreshToken', refreshToken);
     setIsLoggedIn(true);
   };
 
   const removeLogInState = () => {
     localStorage.removeItem('userToken');
+    localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
-  };
-
-  const removeCustomerId = () => {
-    localStorage.removeItem('customerId');
-  };
-
-  const saveCustomerId = (id: string) => {
-    localStorage.setItem('customerId', id);
-    setIsLoggedIn(true);
   };
 
   return (
@@ -98,6 +87,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setToggleInactiveLinks,
         isLoggedIn,
         userToken,
+        userRefreshToken,
         saveLogInState,
         removeLogInState,
         toggleNotificationForLogIn,
@@ -110,9 +100,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setLogInStatusCode,
         setIsLoggedIn,
         setUserToken,
-        customerId,
-        saveCustomerId,
-        removeCustomerId,
+        setUserRefreshToken,
       }}
     >
       {children}

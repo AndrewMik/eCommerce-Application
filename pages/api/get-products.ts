@@ -3,7 +3,7 @@ import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
 async function getAllProducts() {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
 
   try {
     const response = await client.productProjections().get().execute();

@@ -13,6 +13,7 @@ import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import Client from '../../pages/api/client';
 import { AuthContext } from '../../context/authorization-context';
 import Notifications from '../notifications/notifications';
 import { Paths, navigationLinks } from '../../utils/route-links';
@@ -23,8 +24,7 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, removeCustomerId, setLogInStatusCode, setRegistrationStatusCode } =
-    useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible(true);
@@ -35,8 +35,9 @@ const MainHeader = () => {
   };
 
   const handleSignOutButtonClick = () => {
+    Client.getInstance().clearApiRoot();
+    Client.token.clear();
     removeLogInState();
-    removeCustomerId();
     setLogInStatusCode(null);
     setRegistrationStatusCode(null);
     router.push(Paths.LOGIN);

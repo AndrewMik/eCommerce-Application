@@ -21,20 +21,18 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
     setToggleNotificationForRegistration,
     setRegistrationStatusCode,
     saveLogInState,
-    saveCustomerId,
     setUserToken,
+    setUserRefreshToken,
     setIsLoggedIn,
   } = useContext(AuthContext);
 
   const handleRegisterUser = async (formData: FormData) => {
-    const { statusCode, token, customerID } = await registerUser(formData);
-    if (statusCode === 201) {
-      if (customerID) {
-        saveCustomerId(customerID);
-      }
+    const { statusCode, token } = await registerUser(formData);
+    if (statusCode === 200) {
       if (token) {
-        setUserToken(token);
-        saveLogInState(token);
+        setUserToken(token.token);
+        setUserRefreshToken(token.refreshToken as string);
+        saveLogInState(token.token, token.refreshToken as string);
         setIsLoggedIn(true);
         router.push(`/`);
       } else {

@@ -3,6 +3,7 @@ import { getCode } from 'country-list';
 import Client from './client';
 import { AddressFieldsName, FormData } from '../../components/registration-form/helpers/registration.types';
 import { getSalutation, getBirthDate } from '../../components/registration-form/helpers/helper-functions';
+import loginUser from './login-user';
 
 const getDefaultBillingAddress = (formData: FormData) => {
   if (formData.useAsBillingAddress) {
@@ -40,12 +41,21 @@ async function registerUser(formData: FormData) {
     customerDraft.addresses?.push(createAddress(formData, 'billing'));
   }
 
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
 
   try {
     const response = await client.customers().post({ body: customerDraft }).execute();
-    const token = await Client.token.get();
-    return { statusCode: response.statusCode, token: token.token, customerID: response.body.customer.id };
+
+    let token;
+    let loginStatusCode;
+
+    if (response.statusCode === 201) {
+      Client.token.clear();
+      const loginResponse = await loginUser(customerDraft.email, customerDraft.password as string);
+      token = await Client.token.get();
+      loginStatusCode = loginResponse.statusCode;
+    }
+    return { statusCode: loginStatusCode, token };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error));
     return { statusCode: errorResponse.code };

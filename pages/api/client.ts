@@ -4,12 +4,15 @@ import {
   type HttpMiddlewareOptions,
   type PasswordAuthMiddlewareOptions,
   type AnonymousAuthMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Token from './token';
 
 class Client {
+  private static instance: Client;
+
   private projectKey: string;
 
   private clientSecret: string;
@@ -28,6 +31,7 @@ class Client {
     clientCredentials?: ByProjectKeyRequestBuilder;
     passwordFlow?: ByProjectKeyRequestBuilder;
     anonymous?: ByProjectKeyRequestBuilder;
+    existingTokenClient?: ByProjectKeyRequestBuilder;
   } = {};
 
   constructor() {
@@ -44,6 +48,13 @@ class Client {
       host: this.apiUrl,
       fetch,
     };
+  }
+
+  public static getInstance(): Client {
+    if (!Client.instance) {
+      Client.instance = new Client();
+    }
+    return Client.instance;
   }
 
   get clientCredentialsClient() {
@@ -131,8 +142,36 @@ class Client {
     return this.cachedClients.anonymous;
   }
 
+  clientWithRefreshTokenFlow(token: string) {
+    if (!this.cachedClients.existingTokenClient) {
+      const options: RefreshAuthMiddlewareOptions = {
+        refreshToken: token,
+        host: this.authUrl,
+        projectKey: this.projectKey,
+        credentials: {
+          clientId: this.clientId,
+          clientSecret: this.clientSecret,
+        },
+        tokenCache: Client.token,
+        fetch,
+      };
+
+      const client = new ClientBuilder()
+        .withHttpMiddleware(this.httpMiddlewareOptions)
+        .withRefreshTokenFlow(options)
+        .build();
+
+      this.cachedClients.existingTokenClient = createApiBuilderFromCtpClient(client).withProjectKey({
+        projectKey: this.projectKey,
+      });
+      return this.cachedClients.existingTokenClient;
+    }
+
+    return this.cachedClients.existingTokenClient;
+  }
+
   clearApiRoot() {
-    this.cachedClients = {};
+    this.cachedClients = { ...this.cachedClients, passwordFlow: undefined, existingTokenClient: undefined };
   }
 }
 
