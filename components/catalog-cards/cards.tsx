@@ -2,35 +2,21 @@ import { Button, Card, Col, Layout, Menu, MenuProps, Row, Space } from 'antd';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
 import getProducts from '../../pages/api/get-products';
+import { UniqueAges, UniqueBrands, AttributeValue, Filter } from './types';
 
 const { Content, Sider } = Layout;
 
 const { Meta } = Card;
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
-
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
-});
-
 const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
+  const [brands, setBrands] = useState<AttributeValue[] | null>(null);
+  const [ageRange, setAgeRange] = useState<AttributeValue[] | null>(null);
+  const [filters] = useState<string[]>([Filter.Brand, Filter.Age]);
+  const [selected, setSelected] = useState<{ [key: string]: string }>({});
   const getProductsInfo = async () => {
     const { response } = await getProducts();
 
@@ -40,6 +26,9 @@ const CatalogCards = (): JSX.Element => {
     }
 
     if (Array.isArray(response)) {
+      const uniqueBrands: UniqueBrands = {};
+      const uniqueAges: UniqueAges = {};
+
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
@@ -47,6 +36,16 @@ const CatalogCards = (): JSX.Element => {
         let descriptionPreview = metaDescription && metaDescription.en;
         if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
           descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
+        }
+
+        if (attributes) {
+          attributes.forEach((attr) => {
+            if (attr.name === 'brand') {
+              uniqueBrands[attr.value.key] = attr.value;
+            } else if (attr.name === 'age-range') {
+              uniqueAges[attr.value.key] = attr.value;
+            }
+          });
         }
 
         const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
@@ -65,6 +64,9 @@ const CatalogCards = (): JSX.Element => {
         };
       });
 
+      setBrands(Object.values(uniqueBrands));
+      setAgeRange(Object.values(uniqueAges));
+
       setProducts(transformedResponse);
     } else if (typeof response === 'number') {
       setProducts(null);
@@ -75,6 +77,47 @@ const CatalogCards = (): JSX.Element => {
   useEffect(() => {
     getProductsInfo();
   }, []);
+
+  const handleSelect = (parentKey: string, selectedKey: string) => {
+    setSelected({
+      ...selected,
+      [parentKey]: selectedKey,
+    });
+  };
+
+  const items2: MenuProps['items'] = filters.map((option) => {
+    const key = String(option);
+
+    let childrenItems: AttributeValue[] = [];
+
+    if (key === Filter.Brand && brands) {
+      childrenItems = brands.map((brand) => {
+        const subKey = brand.label;
+        return {
+          key: `sub${subKey}`,
+          label: `${subKey}`,
+          onClick: () => handleSelect(key, brand.label),
+        };
+      });
+    } else if (key === Filter.Age && ageRange) {
+      childrenItems = ageRange.map((age) => {
+        const subKey = age.label;
+        return {
+          key: `sub${subKey}`,
+          label: `${subKey}`,
+          onClick: () => handleSelect(key, age.label),
+        };
+      });
+    }
+
+    const selectedLabel = selected[key] ? `: ${selected[key]}` : '';
+
+    return {
+      key,
+      label: `${key}${selectedLabel}`,
+      children: childrenItems,
+    };
+  });
 
   const productCards =
     products &&
