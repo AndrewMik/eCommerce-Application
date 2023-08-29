@@ -1,0 +1,80 @@
+import { Layout, Menu, MenuProps } from 'antd';
+import { useState } from 'react';
+import { Filter, AttributeValue, CatalogSiderProps } from './types';
+
+const { Sider } = Layout;
+
+const CatalogSider = (props: CatalogSiderProps) => {
+  const { brands, ageRange } = props;
+
+  const [filters] = useState<string[]>([Filter.Brand, Filter.Age]);
+  const [selected, setSelected] = useState<{ [key: string]: string }>({});
+
+  const handleSelect = (parentKey: string, selectedKey: string) => {
+    setSelected({
+      ...selected,
+      [parentKey]: selectedKey,
+    });
+  };
+
+  const items2: MenuProps['items'] = filters.map((option) => {
+    const key = String(option);
+
+    let childrenItems: AttributeValue[] = [];
+
+    if (key === Filter.Brand && brands) {
+      childrenItems = brands.map((brand) => {
+        const subKey = brand.label;
+        return {
+          key: `sub${subKey}`,
+          label: `${subKey}`,
+          onClick: () => handleSelect(key, brand.label),
+        };
+      });
+    } else if (key === Filter.Age && ageRange) {
+      childrenItems = ageRange.map((age) => {
+        const subKey = age.label;
+        return {
+          key: `sub${subKey}`,
+          label: `${subKey}`,
+          onClick: () => handleSelect(key, age.label),
+        };
+      });
+    }
+
+    const selectedLabel = selected[key] ? `: ${selected[key]}` : '';
+
+    return {
+      key,
+      label: `${key}${selectedLabel}`,
+      children: childrenItems,
+    };
+  });
+
+  return (
+    <>
+      <Sider
+        style={{
+          marginTop: '60px',
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          backgroundColor: 'white',
+        }}
+      >
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px' }}
+          items={items2}
+        />
+      </Sider>
+    </>
+  );
+};
+
+export default CatalogSider;

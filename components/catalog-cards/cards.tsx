@@ -1,13 +1,14 @@
-import { Button, Card, Col, Layout, Menu, MenuProps, Row, Space } from 'antd';
+import { Button, Card, Col, Layout, Row, Space } from 'antd';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import { Product } from '../../types/types';
 import getProducts from '../../pages/api/get-products';
-import { UniqueAges, UniqueBrands, AttributeValue, Filter } from './types';
+import { UniqueAges, UniqueBrands, AttributeValue } from './types';
+import CatalogSider from '../catalog-sider/catalog-sider';
 
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 
 const { Meta } = Card;
 
@@ -15,8 +16,7 @@ const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [brands, setBrands] = useState<AttributeValue[] | null>(null);
   const [ageRange, setAgeRange] = useState<AttributeValue[] | null>(null);
-  const [filters] = useState<string[]>([Filter.Brand, Filter.Age]);
-  const [selected, setSelected] = useState<{ [key: string]: string }>({});
+
   const getProductsInfo = async () => {
     const { response } = await getProducts();
 
@@ -77,47 +77,6 @@ const CatalogCards = (): JSX.Element => {
   useEffect(() => {
     getProductsInfo();
   }, []);
-
-  const handleSelect = (parentKey: string, selectedKey: string) => {
-    setSelected({
-      ...selected,
-      [parentKey]: selectedKey,
-    });
-  };
-
-  const items2: MenuProps['items'] = filters.map((option) => {
-    const key = String(option);
-
-    let childrenItems: AttributeValue[] = [];
-
-    if (key === Filter.Brand && brands) {
-      childrenItems = brands.map((brand) => {
-        const subKey = brand.label;
-        return {
-          key: `sub${subKey}`,
-          label: `${subKey}`,
-          onClick: () => handleSelect(key, brand.label),
-        };
-      });
-    } else if (key === Filter.Age && ageRange) {
-      childrenItems = ageRange.map((age) => {
-        const subKey = age.label;
-        return {
-          key: `sub${subKey}`,
-          label: `${subKey}`,
-          onClick: () => handleSelect(key, age.label),
-        };
-      });
-    }
-
-    const selectedLabel = selected[key] ? `: ${selected[key]}` : '';
-
-    return {
-      key,
-      label: `${key}${selectedLabel}`,
-      children: childrenItems,
-    };
-  });
 
   const productCards =
     products &&
@@ -251,26 +210,7 @@ const CatalogCards = (): JSX.Element => {
 
   return (
     <Layout hasSider>
-      <Sider
-        style={{
-          marginTop: '60px',
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          backgroundColor: 'white',
-        }}
-      >
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px' }}
-          items={items2}
-        />
-      </Sider>
+      <CatalogSider brands={brands} ageRange={ageRange} />
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
