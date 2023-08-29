@@ -26,14 +26,15 @@ const CatalogCards = (): JSX.Element => {
     }
 
     if (Array.isArray(response)) {
-      const uniqueBrands: UniqueBrands = {};
-      const uniqueAges: UniqueAges = {};
+      const uniqueBrands: UniqueBrands = { allBreads: { key: 'allBrands', label: 'all brands' } };
+      const uniqueAges: UniqueAges = { allAges: { key: 'allAges', label: 'all ages' } };
 
       const transformedResponse = response.map((product) => {
         const { key, metaDescription, masterVariant, id } = product;
         const { attributes, images, prices } = masterVariant;
         const maxLengthOfDescription = 115;
         let descriptionPreview = metaDescription && metaDescription.en;
+
         if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
           descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
         }
@@ -47,7 +48,6 @@ const CatalogCards = (): JSX.Element => {
             }
           });
         }
-
         const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
           ?.value as ProductDiscountValueRelative;
 

@@ -8,7 +8,10 @@ const CatalogSider = (props: CatalogSiderProps) => {
   const { brands, ageRange } = props;
 
   const [filters] = useState<string[]>([Filter.Brand, Filter.Age]);
-  const [selected, setSelected] = useState<{ [key: string]: string }>({});
+  const [selected, setSelected] = useState<{ [key: string]: string }>({
+    [Filter.Brand]: 'all brands',
+    [Filter.Age]: 'all ages',
+  });
 
   const handleSelect = (parentKey: string, selectedKey: string) => {
     setSelected({
@@ -17,7 +20,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
     });
   };
 
-  const items2: MenuProps['items'] = filters.map((option) => {
+  const items: MenuProps['items'] = filters.map((option) => {
     const key = String(option);
 
     let childrenItems: AttributeValue[] = [];
@@ -26,18 +29,20 @@ const CatalogSider = (props: CatalogSiderProps) => {
       case Filter.Brand:
         if (brands) {
           childrenItems = brands.map((brand) => ({
-            key: `sub${brand.label}`,
+            key: `${brand.label}`,
             label: `${brand.label}`,
             onClick: () => handleSelect(key, brand.label),
+            style: { paddingLeft: '14px', height: '20px', lineHeight: '20px' },
           }));
         }
         break;
       case Filter.Age:
         if (ageRange) {
           childrenItems = ageRange.map((age) => ({
-            key: `sub${age.label}`,
+            key: `${age.label}`,
             label: `${age.label}`,
             onClick: () => handleSelect(key, age.label),
+            style: { paddingLeft: '14px', height: '20px' },
           }));
         }
         break;
@@ -51,6 +56,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
       key,
       label: `${key}${selectedLabel}`,
       children: childrenItems,
+      style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
     };
   });
 
@@ -70,10 +76,8 @@ const CatalogSider = (props: CatalogSiderProps) => {
       >
         <Menu
           mode="inline"
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px' }}
-          items={items2}
+          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px', overflowY: 'scroll' }}
+          items={items}
         />
       </Sider>
     </>
