@@ -16,7 +16,7 @@ export enum NotificationType {
 
 export enum NotificationMessage {
   INVALID_CREDENTIALS = 'Invalid credentials',
-  AUTENTICATED = 'Authenticated',
+  AUTHENTICATED = 'Authenticated',
   UNKNOWN_ERROR = 'Unknown error',
   REGISTERED = 'Registered',
   ACCOUNT_EXISTS = 'Account exists',
