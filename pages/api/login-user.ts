@@ -9,6 +9,7 @@ async function loginUser(email: string, password: string) {
   };
 
   try {
+    Client.token.clear();
     const response = await client.login().post({ body }).execute();
     const token = Client.token.get();
     return { statusCode: response.statusCode, token };

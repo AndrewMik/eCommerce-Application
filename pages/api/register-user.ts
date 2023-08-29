@@ -46,16 +46,17 @@ async function registerUser(formData: FormData) {
   try {
     const response = await client.customers().post({ body: customerDraft }).execute();
 
-    let token;
-    let loginStatusCode;
+    let loginResponse;
 
     if (response.statusCode === 201) {
-      Client.token.clear();
-      const loginResponse = await loginUser(customerDraft.email, customerDraft.password as string);
-      token = await Client.token.get();
-      loginStatusCode = loginResponse.statusCode;
+      loginResponse = await loginUser(customerDraft.email, customerDraft.password as string);
     }
-    return { statusCode: loginStatusCode, token };
+
+    if (loginResponse === undefined) {
+      throw new Error('unable to login');
+    }
+
+    return { statusCode: loginResponse.statusCode, token: loginResponse.token };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error));
     return { statusCode: errorResponse.code };
