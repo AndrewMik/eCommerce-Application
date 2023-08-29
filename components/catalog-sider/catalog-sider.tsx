@@ -7,7 +7,7 @@ import { Filter, AttributeValue, CatalogSiderProps } from './types';
 const { Sider } = Layout;
 
 const CatalogSider = (props: CatalogSiderProps) => {
-  const { brands, ageRange } = props;
+  const { brands, ageRange, getUpdatedProductCards } = props;
 
   const [filters] = useState<string[]>([Filter.Brand, Filter.Age]);
   const [selected, setSelected] = useState<{ [key: string]: string }>({
@@ -34,7 +34,10 @@ const CatalogSider = (props: CatalogSiderProps) => {
 
   const getFilteredProductsInfo = async () => {
     if (!filterKey) return;
-    await getFilteredProducts(filterKey.name, filterKey.value);
+    const filtered = await getFilteredProducts(filterKey.name, filterKey.value);
+    if (filtered.response) {
+      getUpdatedProductCards(filtered.response);
+    }
   };
 
   useEffect(() => {

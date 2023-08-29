@@ -1,7 +1,7 @@
 import { Button, Card, Col, Layout, Row, Space } from 'antd';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ProductDiscountValueRelative } from '@commercetools/platform-sdk';
+import { ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
 import { Product } from '../../types/types';
@@ -16,6 +16,11 @@ const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [brands, setBrands] = useState<AttributeValue[] | null>(null);
   const [ageRange, setAgeRange] = useState<AttributeValue[] | null>(null);
+
+  const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
+    // eslint-disable-next-line no-console
+    console.log(cards);
+  };
 
   const getProductsInfo = async () => {
     const { response } = await getProducts();
@@ -211,7 +216,7 @@ const CatalogCards = (): JSX.Element => {
 
   return (
     <Layout hasSider>
-      <CatalogSider brands={brands} ageRange={ageRange} />
+      <CatalogSider brands={brands} ageRange={ageRange} getUpdatedProductCards={getUpdatedProductCards} />
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
