@@ -16,11 +16,13 @@ const CatalogSider = (props: CatalogSiderProps) => {
     const items: MenuProps['items'] = filterNames.map((name) => {
       const label = getCapitalizedFirstLabel(name);
       const childrenData = Object.values(attributes[name]);
-      const title = allSelectedKeys.find((key) => key[1] === name);
+
+      const title = allSelectedKeys.filter((key) => key[1] === name);
+      const titleLabel = title.map((key) => attributes[name][key[0]].label);
 
       return {
         key: name,
-        label: `${label}: ${title && name === title[1] ? attributes[name][title[0]].label : ''}`,
+        label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
         style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
 
         children: childrenData.map((data) => {
@@ -38,6 +40,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
+
     setFilterNames(attributeNames);
   }, [attributeData]);
 
@@ -46,17 +49,16 @@ const CatalogSider = (props: CatalogSiderProps) => {
 
     setSelectedKey(keyPath);
     setAllSelectedKeys((prevValue) => {
-      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[1] !== keyPath[1]);
-      return [...filtered, keyPath];
+      return [...prevValue, keyPath];
     });
   };
 
   const handleDeselect = (menuProps: MenuKeyProps) => {
     const { keyPath } = menuProps;
-    setSelectedKey([]);
 
+    setSelectedKey([]);
     setAllSelectedKeys((prevValue) => {
-      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[1] !== keyPath[1]);
+      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[0] !== keyPath[0]);
       return filtered;
     });
   };
@@ -83,7 +85,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           mode="inline"
           style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px', overflowY: 'scroll' }}
           items={filters}
-          selectedKeys={selectedKey}
+          selectedKeys={allSelectedKeys.map((key) => key[0])}
           onSelect={({ keyPath }) => handleSelect({ keyPath })}
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
         />
