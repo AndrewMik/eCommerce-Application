@@ -1,4 +1,4 @@
-import { Layout, Menu, MenuProps } from 'antd';
+import { Button, Layout, Menu, MenuProps } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import { CatalogSiderProps, MenuKeyProps } from './types';
@@ -81,6 +81,26 @@ const CatalogSider = (props: CatalogSiderProps) => {
           backgroundColor: 'white',
         }}
       >
+        <Button
+          type="primary"
+          shape="round"
+          size="small"
+          style={{
+            backgroundColor: 'transparent',
+            marginLeft: '110px',
+            marginTop: '5px',
+            color: '#243763',
+            fontSize: '10px',
+            lineHeight: '1',
+            height: '15px',
+          }}
+          onClick={() => {
+            setAllSelectedKeys([]);
+            setSelectedKey([]);
+          }}
+        >
+          reset filters
+        </Button>
         <Menu
           mode="inline"
           style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px', overflowY: 'scroll' }}
