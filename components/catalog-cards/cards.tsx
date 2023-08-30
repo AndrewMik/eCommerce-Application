@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
-import { Product } from '../../types/types';
-import { UniqueAges, UniqueBrands, AttributeValue } from './types';
+import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 
 const { Content } = Layout;
@@ -13,9 +12,8 @@ const { Content } = Layout;
 const { Meta } = Card;
 
 const CatalogCards = (): JSX.Element => {
-  const [products, setProducts] = useState<Product[] | null>(null);
-  const [brands, setBrands] = useState<AttributeValue[] | null>(null);
-  const [ageRange, setAgeRange] = useState<AttributeValue[] | null>(null);
+  const [products, setProducts] = useState<ProductProjection[] | null>(null);
+  const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
 
   const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
     // eslint-disable-next-line no-console
@@ -31,49 +29,27 @@ const CatalogCards = (): JSX.Element => {
     }
 
     if (Array.isArray(response)) {
-      const uniqueBrands: UniqueBrands = { allBreads: { key: 'allBrands', label: 'all brands' } };
-      const uniqueAges: UniqueAges = { allAges: { key: 'allAges', label: 'all ages' } };
+      const newAttributeData: AttributeData = {};
 
-      const transformedResponse = response.map((product) => {
-        const { key, metaDescription, masterVariant, id } = product;
-        const { attributes, images, prices } = masterVariant;
-
-        const maxLengthOfDescription = 115;
-        let descriptionPreview = metaDescription && metaDescription.en;
-
-        if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
-          descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
-        }
+      response.forEach((product) => {
+        const { attributes } = product.masterVariant;
 
         if (attributes) {
           attributes.forEach((attr) => {
-            if (attr.name === 'brand') {
-              uniqueBrands[attr.value.key] = attr.value;
-            } else if (attr.name === 'age-range') {
-              uniqueAges[attr.value.key] = attr.value;
+            const { name, value } = attr;
+
+            if (!newAttributeData[name]) {
+              newAttributeData[name] = {};
             }
+
+            newAttributeData[name][value.key] = value;
           });
         }
-        const discountValue = product.masterVariant.prices?.[0]?.discounted?.discount?.obj
-          ?.value as ProductDiscountValueRelative;
-
-        return {
-          key: key ?? '',
-          id: id ?? '',
-          description: metaDescription ?? { en: '' },
-          descriptionPreview: descriptionPreview ?? '',
-          attributes: attributes ?? [],
-          images: images ?? [],
-          prices: prices ?? [],
-          name: product.name,
-          discount: discountValue?.permyriad ?? 0,
-        };
       });
 
-      setBrands(Object.values(uniqueBrands));
-      setAgeRange(Object.values(uniqueAges));
+      setAttributeData(newAttributeData);
 
-      setProducts(transformedResponse);
+      setProducts(response);
     } else if (typeof response === 'number') {
       setProducts(null);
       throw new Error('Error fetching products');
@@ -87,8 +63,45 @@ const CatalogCards = (): JSX.Element => {
   const productCards =
     products &&
     products.map((product) => {
-      const regularPrice = product.prices?.[0].value.centAmount;
-      const discountedPrice = product.prices?.[0].discounted?.value.centAmount;
+      const { key, masterVariant, id, metaDescription } = product;
+      const { attributes, images, prices } = masterVariant;
+
+      if (!attributes) throw new Error('No attributes found');
+      if (!images) throw new Error('No images found');
+      if (!id) throw new Error('No id found');
+      if (!key) throw new Error('No key found');
+
+      const maxLengthOfDescription = 115;
+      let descriptionPreview = metaDescription && metaDescription.en;
+
+      if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
+        descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
+      }
+
+      if (!prices) throw new Error('No prices found');
+      const { discounted, value } = prices[0];
+      const regularPrice = value.centAmount;
+
+      let discountAmount: number | null = null;
+      let discountedPrice: number | null = null;
+
+      if (!discounted) {
+        discountAmount = null;
+        discountedPrice = null;
+      } else {
+        const { discount } = discounted;
+
+        if (!discount) throw new Error('No discount found');
+        const { obj } = discount;
+
+        if (!obj) throw new Error('No obj found');
+        const { value: discountValue } = obj;
+
+        const { permyriad } = discountValue as ProductDiscountValueRelative;
+        discountAmount = permyriadToPercentage(permyriad);
+        discountedPrice = discounted.value.centAmount;
+      }
+
       return (
         <Col
           key={product.name.en}
@@ -99,10 +112,10 @@ const CatalogCards = (): JSX.Element => {
           xxl={{ span: 6 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          <Link href={`/catalog/${encodeURIComponent(product.key)}`}>
+          <Link href={`/catalog/${encodeURIComponent(key)}`}>
             <Card
               bodyStyle={{ padding: '3px', paddingTop: '20px' }}
-              key={product.key}
+              key={key}
               hoverable
               style={{ width: 260, position: 'relative', textAlign: 'center', height: '450px' }}
               cover={
@@ -111,7 +124,7 @@ const CatalogCards = (): JSX.Element => {
                     height: 240,
                     overflow: 'hidden',
                     borderRadius: '5px 5px 0 0',
-                    backgroundImage: `url(${product.images && product.images.length > 0 ? product.images[0].url : ''})`,
+                    backgroundImage: `url(${images[0].url})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
@@ -134,7 +147,7 @@ const CatalogCards = (): JSX.Element => {
                       boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                     }}
                   >
-                    - {product.discount && permyriadToPercentage(product.discount)}%
+                    - {discountAmount}%
                   </Col>
                 )}
               </Row>
@@ -199,7 +212,7 @@ const CatalogCards = (): JSX.Element => {
                 }
                 description={
                   <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
-                    {product.descriptionPreview && <div style={{ height: 30 }}>{product.descriptionPreview}</div>}
+                    {descriptionPreview && <div style={{ height: 30 }}>{descriptionPreview}</div>}
                     <div>
                       <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
                         see more details
@@ -216,7 +229,7 @@ const CatalogCards = (): JSX.Element => {
 
   return (
     <Layout hasSider>
-      <CatalogSider brands={brands} ageRange={ageRange} getUpdatedProductCards={getUpdatedProductCards} />
+      <CatalogSider attributeData={attributeData} getUpdatedProductCards={getUpdatedProductCards} />
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
