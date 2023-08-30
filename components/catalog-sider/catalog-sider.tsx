@@ -29,7 +29,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           return {
             key: data.key,
             label: `${data.label}`,
-            style: { paddingLeft: '20px', height: '20px' },
+            style: { paddingLeft: '20px', height: '20px', color: '#243763' },
           };
         }),
       };
