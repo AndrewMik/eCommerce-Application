@@ -16,7 +16,6 @@ const CatalogCards = (): JSX.Element => {
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
 
   const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
-    // eslint-disable-next-line no-console
     if (cards) {
       setProducts(cards as ProductProjection[]);
     }
