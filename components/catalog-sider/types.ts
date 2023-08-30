@@ -20,3 +20,7 @@ export interface CatalogSiderProps {
   attributeData: AttributeData | null;
   getUpdatedProductCards: (cards: ProductProjection[] | number) => void;
 }
+
+export interface MenuKeyProps {
+  keyPath: string[];
+}

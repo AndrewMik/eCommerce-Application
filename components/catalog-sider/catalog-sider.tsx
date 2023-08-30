@@ -1,7 +1,7 @@
 import { Layout, Menu, MenuProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
-import { CatalogSiderProps } from './types';
+import { CatalogSiderProps, MenuKeyProps } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
 const { Sider } = Layout;
@@ -9,15 +9,18 @@ const { Sider } = Layout;
 const CatalogSider = (props: CatalogSiderProps) => {
   const { attributeData } = props;
   const [filterNames, setFilterNames] = useState<string[]>([]);
-  const [filters, setFilters] = useState<MenuProps['items'] | undefined>(undefined);
+  const [selectedKey, setSelectedKey] = useState<string[]>([]);
+  const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
 
   const displayFilteres = (attributes: AttributeData): MenuProps['items'] => {
-    const items2: MenuProps['items'] = filterNames.map((name) => {
+    const items: MenuProps['items'] = filterNames.map((name) => {
       const label = getCapitalizedFirstLabel(name);
       const childrenData = Object.values(attributes[name]);
+      const title = allSelectedKeys.find((key) => key[1] === name);
+
       return {
         key: name,
-        label: `${label}`,
+        label: `${label}: ${title && name === title[1] ? attributes[name][title[0]].label : ''}`,
         style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
 
         children: childrenData.map((data) => {
@@ -29,16 +32,28 @@ const CatalogSider = (props: CatalogSiderProps) => {
         }),
       };
     });
-    return items2;
+    return items;
   };
 
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
     setFilterNames(attributeNames);
-    const items = displayFilteres(attributeData);
-    setFilters(items);
   }, [attributeData]);
+
+  const handleSelect = (menuProps: MenuKeyProps) => {
+    const { keyPath } = menuProps;
+
+    setSelectedKey(keyPath);
+    setAllSelectedKeys((prevValue) => {
+      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[1] !== keyPath[1]);
+      return [...filtered, keyPath];
+    });
+  };
+
+  const filters = useMemo(() => {
+    return attributeData ? displayFilteres(attributeData) : [];
+  }, [attributeData, selectedKey]);
 
   return (
     <>
@@ -58,6 +73,8 @@ const CatalogSider = (props: CatalogSiderProps) => {
           mode="inline"
           style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px', overflowY: 'scroll' }}
           items={filters}
+          selectedKeys={selectedKey}
+          onSelect={({ keyPath }) => handleSelect({ keyPath })}
         />
       </Sider>
     </>
