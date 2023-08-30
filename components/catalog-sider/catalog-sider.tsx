@@ -51,6 +51,16 @@ const CatalogSider = (props: CatalogSiderProps) => {
     });
   };
 
+  const handleDeselect = (menuProps: MenuKeyProps) => {
+    const { keyPath } = menuProps;
+    setSelectedKey([]);
+
+    setAllSelectedKeys((prevValue) => {
+      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[1] !== keyPath[1]);
+      return filtered;
+    });
+  };
+
   const filters = useMemo(() => {
     return attributeData ? displayFilteres(attributeData) : [];
   }, [attributeData, selectedKey]);
@@ -75,6 +85,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           items={filters}
           selectedKeys={selectedKey}
           onSelect={({ keyPath }) => handleSelect({ keyPath })}
+          onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
         />
       </Sider>
     </>
