@@ -1,11 +1,26 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
-import { AttributeValue } from '../../components/catalog-sider/types';
 
-async function getFilteredProducts(name: string, value: AttributeValue) {
+async function getFilteredProducts(filters: string[][]) {
+  const groupedFilters: { [key: string]: string[] } = {};
+
+  filters.forEach((filter) => {
+    const key = filter[1];
+    const value = filter[0];
+    if (groupedFilters[key]) {
+      groupedFilters[key].push(value);
+    } else {
+      groupedFilters[key] = [value];
+    }
+  });
+
+  const filterStrings = Object.entries(groupedFilters).map(([key, values]) => {
+    const valueStrings = values.map((value) => `"${value}"`).join(', ');
+    return `variants.attributes.${key}.key:${valueStrings}`;
+  });
+
   const client = new Client().clientCredentialsClient;
-  const filterStr = `variants.attributes.${name}.key:"${value.key}"`;
 
   try {
     const response = await client
@@ -15,7 +30,7 @@ async function getFilteredProducts(name: string, value: AttributeValue) {
         queryArgs: {
           limit: 200,
           expand: ['masterVariant.prices[*].discounted.discount'],
-          filter: filterStr,
+          filter: filterStrings,
         },
       })
       .execute();

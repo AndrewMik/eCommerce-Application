@@ -17,7 +17,9 @@ const CatalogCards = (): JSX.Element => {
 
   const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
     // eslint-disable-next-line no-console
-    console.log(cards);
+    if (cards) {
+      setProducts(cards as ProductProjection[]);
+    }
   };
 
   const getProductsInfo = async () => {

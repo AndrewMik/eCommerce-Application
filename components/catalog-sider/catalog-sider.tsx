@@ -1,13 +1,14 @@
 import { Button, Layout, Menu, MenuProps } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
+import getFilteredProducts from '@/pages/api/filter-products';
 import { CatalogSiderProps, MenuKeyProps } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
 const { Sider } = Layout;
 
 const CatalogSider = (props: CatalogSiderProps) => {
-  const { attributeData } = props;
+  const { attributeData, getUpdatedProductCards } = props;
   const [filterNames, setFilterNames] = useState<string[]>([]);
   const [selectedKey, setSelectedKey] = useState<string[]>([]);
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
@@ -43,6 +44,17 @@ const CatalogSider = (props: CatalogSiderProps) => {
 
     setFilterNames(attributeNames);
   }, [attributeData]);
+
+  useEffect(() => {
+    const getFilteredProductsInfo = async () => {
+      if (!allSelectedKeys) return;
+      const filtered = await getFilteredProducts(allSelectedKeys);
+      if (filtered.response) {
+        getUpdatedProductCards(filtered.response);
+      }
+    };
+    getFilteredProductsInfo();
+  }, [allSelectedKeys]);
 
   const handleSelect = (menuProps: MenuKeyProps) => {
     const { keyPath } = menuProps;
