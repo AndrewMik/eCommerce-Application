@@ -38,6 +38,7 @@ const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
   const postalCodeFieldName = `${AddressFieldsName.POSTAL_CODE}${nameSuffix}`;
   const setAsDefault = `${AddressFieldsName.SET_AS_DEFAULT}${nameSuffix}`;
   const useAsBillingAddress = AddressFieldsName.USE_AS_BILLING_ADDRESS;
+  const addressId = `${AddressFieldsName.ADDRESS_ID}${nameSuffix}`;
 
   const isProfilePage = window.location.href.match('profile');
   const isRegistrationPage = window.location.href.match('registration');
@@ -73,14 +74,25 @@ const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
-            <SelectField
-              {...fieldDefinitions.country}
-              name={countryFieldName}
-              options={countries.map((country) => ({ value: country, label: country }))}
-              rules={getCountryRules()}
-              required={true}
-              onChange={() => form.validateFields([postalCodeFieldName])}
-            />
+            <>
+              {/* you should add hidden={true} to hide the addressId field used for indication; this component could be rewritten by simple Input component */}
+              <InputField
+                label={addressId}
+                name={addressId}
+                placeholder=""
+                componentDisabled={componentDisabled}
+                required={true}
+                rules={[]}
+              />
+              <SelectField
+                {...fieldDefinitions.country}
+                name={countryFieldName}
+                options={countries.map((country) => ({ value: country, label: country }))}
+                rules={getCountryRules()}
+                required={true}
+                onChange={() => form.validateFields([postalCodeFieldName])}
+              />
+            </>
           )}
           {isProfilePage && componentDisabled && (
             <InputField

@@ -26,6 +26,7 @@ function getAddressDetails(
           [`${AddressFieldsName.BUILDING}${suffix}`]: address.building,
           [`${AddressFieldsName.APARTMENT}${suffix}`]: address.apartment,
           [`${AddressFieldsName.SET_AS_DEFAULT}${suffix}`]: isDefault,
+          [`${AddressFieldsName.ADDRESS_ID}${suffix}`]: address.id,
         });
       }
     });

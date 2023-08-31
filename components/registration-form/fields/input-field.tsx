@@ -8,6 +8,7 @@ interface InputFieldProps {
   rules: Rule[];
   required?: boolean;
   componentDisabled?: boolean;
+  hidden?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -17,13 +18,14 @@ const InputField: React.FC<InputFieldProps> = ({
   rules,
   required = false,
   componentDisabled,
+  hidden = false,
 }) => {
   let pagePlaceholder = placeholder;
   if (window.location.href.match('profile')) {
     pagePlaceholder = '';
   }
   return (
-    <Form.Item label={label} name={name} rules={rules} required={required}>
+    <Form.Item label={label} name={name} rules={rules} required={required} hidden={hidden}>
       <Input
         type="text"
         placeholder={pagePlaceholder}

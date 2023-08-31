@@ -7,6 +7,7 @@ export enum AddressFieldsName {
   POSTAL_CODE = 'postalCode',
   SET_AS_DEFAULT = 'setAsDefault',
   USE_AS_BILLING_ADDRESS = 'useAsBillingAddress',
+  ADDRESS_ID = 'addressId',
 }
 
 export enum AddressSuffix {
