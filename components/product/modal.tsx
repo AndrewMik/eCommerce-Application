@@ -5,7 +5,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 import SliderModal from './slider-modal';
 
-const { Text } = Typography;
+const { Title } = Typography;
 
 interface ImageModalProps {
   open: boolean;
@@ -51,9 +51,9 @@ const ImageModal: React.FC<ImageModalProps> = ({
         <SliderModal images={images} currentImage={currentImage} name={name} modalCarouselRef={modalCarouselRef} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
           {images.length > 1 && <Button type="default" shape="circle" icon={<LeftOutlined />} onClick={prev} />}
-          <Text style={{ marginInline: 'auto' }} strong>
+          <Title level={5} style={{ marginInline: 'auto' }}>
             {brand} {name.en}
-          </Text>
+          </Title>
           {images.length > 1 && <Button type="default" shape="circle" icon={<RightOutlined />} onClick={next} />}
         </div>
       </Modal>

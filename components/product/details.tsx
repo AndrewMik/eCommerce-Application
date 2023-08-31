@@ -15,7 +15,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ name, brand, regularPri
   return (
     <div>
       <Title>{name}</Title>
-      <Text strong>{brand}</Text>
+      <Title level={5}>{brand}</Title>
       <div style={{ display: 'flex', alignItems: 'baseline', marginTop: 8, marginBottom: 16 }}>
         {discountedPrice ? (
           <>

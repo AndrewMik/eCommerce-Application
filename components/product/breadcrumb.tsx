@@ -16,7 +16,7 @@ enum BreadcrumbPathNames {
 
 const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ name }) => {
   return (
-    <Breadcrumb>
+    <Breadcrumb style={{ paddingBlock: 12 }}>
       <Breadcrumb.Item>
         <Link href={Paths.CATALOG}>{BreadcrumbPathNames.CATALOG}</Link>
       </Breadcrumb.Item>

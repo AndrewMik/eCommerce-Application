@@ -15,6 +15,25 @@ enum AttributesKeys {
   MATERIAL = 'material',
 }
 
+const containerMediaStyles = `
+  .container {
+    padding-block: 32px;
+    padding-inline: 32px;
+    margin-inline: auto;
+    min-height: 82vh;
+    max-width: 1600px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  @media (max-width: 576px) {
+    .container {
+      padding-block: 12px;
+      padding-inline: 12px;
+    }
+  }`;
+
 const Product = ({ product }: { product: ProductProjection }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [open, setOpen] = useState(false);
@@ -117,58 +136,50 @@ const Product = ({ product }: { product: ProductProjection }) => {
   }
 
   return (
-    <div
-      style={{
-        paddingBlock: '32px',
-        paddingInline: '32px',
-        marginInline: 'auto',
-        minHeight: '82vh',
-        maxWidth: '1600px',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-      }}
-    >
-      <Row gutter={32}>
-        <Col xs={24} sm={24} md={24} lg={10} xl={10}>
-          <Slider
-            images={images}
-            handleImageClick={handleImageClick}
-            handleThumbnailClick={handleThumbnailClick}
-            carouselRef={carouselRef}
-            name={name}
-          ></Slider>
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={14} xl={14}>
-          <div>
+    <>
+      <div className="container">
+        <Row gutter={32}>
+          <Col xs={24} sm={24} md={24} lg={10} xl={10}>
             <ProductBreadcrumb name={name.en}></ProductBreadcrumb>
-            <ProductDetails
-              name={name.en}
-              brand={brand}
-              regularPrice={regularPrice}
-              discountedPrice={discountedPrice}
-            ></ProductDetails>
-            <Attributes
-              description={metaDescription}
-              ageRange={ageRange}
-              gender={gender}
-              material={material}
-            ></Attributes>
-          </div>
-        </Col>
-      </Row>
-      <ImageModal
-        open={open}
-        handleCancel={handleCancel}
-        images={images}
-        currentImage={currentImage}
-        next={next}
-        prev={prev}
-        name={name}
-        brand={brand}
-        modalCarouselRef={modalCarouselRef}
-      ></ImageModal>
-    </div>
+            <Slider
+              images={images}
+              handleImageClick={handleImageClick}
+              handleThumbnailClick={handleThumbnailClick}
+              carouselRef={carouselRef}
+              name={name}
+            ></Slider>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={14} xl={14}>
+            <div style={{ marginTop: 36 }}>
+              <ProductDetails
+                name={name.en}
+                brand={brand}
+                regularPrice={regularPrice}
+                discountedPrice={discountedPrice}
+              ></ProductDetails>
+              <Attributes
+                description={metaDescription}
+                ageRange={ageRange}
+                gender={gender}
+                material={material}
+              ></Attributes>
+            </div>
+          </Col>
+        </Row>
+        <ImageModal
+          open={open}
+          handleCancel={handleCancel}
+          images={images}
+          currentImage={currentImage}
+          next={next}
+          prev={prev}
+          name={name}
+          brand={brand}
+          modalCarouselRef={modalCarouselRef}
+        ></ImageModal>
+      </div>
+      <style>{containerMediaStyles}</style>
+    </>
   );
 };
 
