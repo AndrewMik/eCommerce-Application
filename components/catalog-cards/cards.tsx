@@ -69,7 +69,7 @@ const CatalogCards = (): JSX.Element => {
           xl={{ span: 6 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          <Link href={`/catalog/${encodeURIComponent(product.id)}`}>
+          <Link href={`/catalog/${encodeURIComponent(product.key)}`}>
             <Card
               bodyStyle={{ padding: '3px', paddingTop: '20px' }}
               key={product.key}
