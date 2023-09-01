@@ -26,7 +26,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
       const menuKey = category.mainCategory.id;
       const childrenData = category.subCategory;
 
-      const title = allSelectedKeys.filter((key) => key[1] === menuKey);
+      const title = allSelectedKeys.filter((key) => key[1].split('category-').join('') === menuKey);
 
       const titleLabel = title.map((key) => {
         const titleSubcategory = category.subCategory.filter((subCategory) => subCategory.id === key[0]);
@@ -34,7 +34,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
       });
 
       return {
-        key: menuKey,
+        key: `category-${menuKey}`,
         label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
         style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
 

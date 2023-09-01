@@ -16,7 +16,15 @@ async function getFilteredProducts(filters: string[][]) {
   });
 
   const filterStrings = Object.entries(groupedFilters).map(([key, values]) => {
+    const keyVariat = key.split('-');
+
     const valueStrings = values.map((value) => `"${value}"`).join(', ');
+
+    if (keyVariat[0] === 'category') {
+      const keyToPass = keyVariat.slice(1).join('-');
+      return `categories.id:"${keyToPass}"`;
+    }
+
     return `variants.attributes.${key}.key:${valueStrings}`;
   });
 
