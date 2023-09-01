@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Breadcrumb } from 'antd';
 
 import { Paths } from '../../utils/route-links';
+import FontColors from './product.data';
 
 interface ProductBreadcrumbProps {
   name: string;
@@ -16,7 +17,7 @@ enum BreadcrumbPathNames {
 
 const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ name }) => {
   return (
-    <Breadcrumb style={{ paddingBlock: 12 }}>
+    <Breadcrumb style={{ paddingBlock: 12, color: FontColors.BASE }}>
       <Breadcrumb.Item>
         <Link href={Paths.CATALOG}>{BreadcrumbPathNames.CATALOG}</Link>
       </Breadcrumb.Item>

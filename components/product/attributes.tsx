@@ -1,5 +1,7 @@
 import { Collapse, Typography } from 'antd';
 
+import FontColors from './product.data';
+
 const { Panel } = Collapse;
 const { Text } = Typography;
 
@@ -17,20 +19,19 @@ enum AttributesListHeaders {
   MATERIAL = 'Material',
 }
 
-const CollapseHeaderColor = '#353535';
-
 const Attributes: React.FC<ProductAttributesProps> = ({ description, ageRange, gender, material }) => {
   return (
     <Collapse defaultActiveKey={['1']} bordered={false}>
       <Panel
         header={
-          <Text strong style={{ color: CollapseHeaderColor }}>
+          <Text strong style={{ color: FontColors.BASE_BRIGHT }}>
             {AttributesListHeaders.DESCRIPTION}
           </Text>
         }
         key="1"
       >
         <div
+          style={{ color: FontColors.BASE }}
           dangerouslySetInnerHTML={{
             __html: description ? description.replace(/\n/g, '<br />') : '',
           }}
@@ -38,33 +39,33 @@ const Attributes: React.FC<ProductAttributesProps> = ({ description, ageRange, g
       </Panel>
       <Panel
         header={
-          <Text strong style={{ color: CollapseHeaderColor }}>
+          <Text strong style={{ color: FontColors.BASE_BRIGHT }}>
             {AttributesListHeaders.AGE_RANGE}
           </Text>
         }
         key="2"
       >
-        <Text>{ageRange}</Text>
+        <Text style={{ color: FontColors.BASE }}>{ageRange}</Text>
       </Panel>
       <Panel
         header={
-          <Text strong style={{ color: CollapseHeaderColor }}>
+          <Text strong style={{ color: FontColors.BASE_BRIGHT }}>
             {AttributesListHeaders.GENDER}
           </Text>
         }
         key="3"
       >
-        <Text>{gender}</Text>
+        <Text style={{ color: FontColors.BASE }}>{gender}</Text>
       </Panel>
       <Panel
         header={
-          <Text strong style={{ color: CollapseHeaderColor }}>
+          <Text strong style={{ color: FontColors.BASE_BRIGHT }}>
             {AttributesListHeaders.MATERIAL}
           </Text>
         }
         key="4"
       >
-        <Text>{material}</Text>
+        <Text style={{ color: FontColors.BASE }}>{material}</Text>
       </Panel>
     </Collapse>
   );

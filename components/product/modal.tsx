@@ -4,6 +4,7 @@ import { Modal, Button, Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 import SliderModal from './slider-modal';
+import FontColors from './product.data';
 
 const { Title } = Typography;
 
@@ -58,7 +59,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
           }}
         >
           {images.length > 1 && <Button type="default" shape="circle" icon={<LeftOutlined />} onClick={prev} />}
-          <Title level={5} style={{ marginInline: 0 }}>
+          <Title level={5} style={{ marginInline: 0, color: FontColors.BASE }}>
             {brand} {name.en}
           </Title>
           {images.length > 1 && <Button type="default" shape="circle" icon={<RightOutlined />} onClick={next} />}
