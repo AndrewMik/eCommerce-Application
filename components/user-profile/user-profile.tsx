@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Layout, Card, Checkbox } from 'antd';
+import { Form, Button, Row, Col, Layout, Card, Switch } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
 import updateCustomer from '@/pages/api/update-customer';
 import getClient from '@/pages/api/get-client';
@@ -50,18 +50,16 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         <Row justify="center" align="middle">
           <Col xs={22} sm={20} md={18} lg={14} xl={12}>
             <Card bordered style={{ borderRadius: 15, marginBlock: 40 }}>
-              <Checkbox
+              <Switch
                 checked={!componentDisabled}
-                onChange={(e) => {
-                  const isEditMode = e.target.checked;
-                  if (!isEditMode) {
+                onChange={(checked) => {
+                  if (!checked) {
                     setFormData(form, customerData as Customer);
                   }
-                  setComponentDisabled(!isEditMode);
+                  setComponentDisabled(!checked);
                 }}
-              >
-                Edit
-              </Checkbox>
+              ></Switch>
+              <span style={{ marginLeft: 8 }}>Edit mode</span>
               <Form
                 form={form}
                 name="user-profile-form"
@@ -155,9 +153,11 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                           key={key}
                         />
                       ))}
-                      <Form.Item>
-                        <Button onClick={() => add()}>Add Shipping Address</Button>
-                      </Form.Item>
+                      {!componentDisabled && (
+                        <Form.Item>
+                          <Button onClick={() => add()}>Add Shipping Address</Button>
+                        </Form.Item>
+                      )}
                     </>
                   )}
                 </Form.List>
@@ -186,9 +186,11 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                           key={key}
                         />
                       ))}
-                      <Form.Item>
-                        <Button onClick={() => add()}>Add Billing Address</Button>
-                      </Form.Item>
+                      {!componentDisabled && (
+                        <Form.Item>
+                          <Button onClick={() => add()}>Add Billing Address</Button>
+                        </Form.Item>
+                      )}
                     </>
                   )}
                 </Form.List>

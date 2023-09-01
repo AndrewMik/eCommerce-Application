@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
             wrapperCol={{ span: 16 }}
             name="login-form"
             initialValues={{ remember: true }}
-            autoComplete="off"
+            autoComplete="on"
             onFinish={onFinish}
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
