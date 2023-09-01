@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 
-import { transformCentToDollar } from '@/utils/price';
+import { transformCentToDollar } from '../../utils/price';
 
 const { Text, Title } = Typography;
 

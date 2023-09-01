@@ -49,9 +49,16 @@ const ImageModal: React.FC<ImageModalProps> = ({
         footer={null}
       >
         <SliderModal images={images} currentImage={currentImage} name={name} modalCarouselRef={modalCarouselRef} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            marginTop: '10px',
+          }}
+        >
           {images.length > 1 && <Button type="default" shape="circle" icon={<LeftOutlined />} onClick={prev} />}
-          <Title level={5} style={{ marginInline: 'auto' }}>
+          <Title level={5} style={{ marginInline: 0 }}>
             {brand} {name.en}
           </Title>
           {images.length > 1 && <Button type="default" shape="circle" icon={<RightOutlined />} onClick={next} />}
