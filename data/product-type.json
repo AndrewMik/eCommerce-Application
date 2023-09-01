@@ -1,0 +1,217 @@
+[
+  {
+    "name": "main",
+    "key": "main",
+    "description": "Sunrise Product Data Set Structure",
+    "attributes": [
+      {
+        "name": "brand",
+        "label": {
+          "en": "Brand"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "enum",
+          "values": [
+            {
+              "key": "baghera",
+              "label": "Baghera"
+            },
+            {
+              "key": "brioworld",
+              "label": "Brio World"
+            },
+            {
+              "key": "crealign",
+              "label": "Créa Lign"
+            },
+            {
+              "key": "doudous",
+              "label": "Doudous"
+            },
+            {
+              "key": "editionsamaterra",
+              "label": "Editions Amaterra"
+            },
+            {
+              "key": "ferflex",
+              "label": "Ferflex"
+            },
+            {
+              "key": "lesdeglingos",
+              "label": "Les Déglingos"
+            },
+            {
+              "key": "lesdrolesdebouilles",
+              "label": "Les Drôles de Bouilles"
+            },
+            {
+              "key": "lesminimondes",
+              "label": "Les Mini Mondes"
+            },
+            {
+              "key": "leoetlea",
+              "label": "Leo et Lea"
+            },
+            {
+              "key": "louiseetgabrielclemence",
+              "label": "Louise et Gabriel Clémence"
+            },
+            {
+              "key": "maisonpatate",
+              "label": "Maison Patate"
+            },
+            {
+              "key": "maisonpetitjour",
+              "label": "Maison Petit Jour"
+            },
+            {
+              "key": "monzoli",
+              "label": "Mon Zoli"
+            },
+            {
+              "key": "morphee",
+              "label": "Morphee"
+            },
+            {
+              "key": "moulinroty",
+              "label": "Moulin Roty"
+            },
+            {
+              "key": "mykiddyshop",
+              "label": "My Kiddy Shop"
+            },
+            {
+              "key": "omy",
+              "label": "OMY"
+            },
+            {
+              "key": "plico",
+              "label": "Plico"
+            },
+            {
+              "key": "poppik",
+              "label": "POPPIK"
+            },
+            {
+              "key": "rainette",
+              "label": "Rainette"
+            },
+            {
+              "key": "trousselier",
+              "label": "Trousselier"
+            }
+          ]
+        },
+        "attributeConstraint": "SameForAll",
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "displayGroup": "Other"
+      },
+      {
+        "name": "age-range",
+        "label": {
+          "en": "Age Range"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "enum",
+          "values": [
+            {
+              "key": "0-3",
+              "label": "0-3 y.o."
+            },
+            {
+              "key": "3-6",
+              "label": "3-6 y.o."
+            },
+            {
+              "key": "6-12",
+              "label": "6-12 y.o."
+            }
+          ]
+        },
+        "attributeConstraint": "SameForAll",
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "displayGroup": "Other"
+      },
+      {
+        "name": "gender",
+        "label": {
+          "en": "Gender"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "enum",
+          "values": [
+            {
+              "key": "boy",
+              "label": "Boy"
+            },
+            {
+              "key": "girl",
+              "label": "Girl"
+            },
+            {
+              "key": "unisex",
+              "label": "Unisex"
+            }
+          ]
+        },
+        "attributeConstraint": "SameForAll",
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "displayGroup": "Other"
+      },
+      {
+        "name": "material",
+        "label": {
+          "en": "Material"
+        },
+        "isRequired": true,
+        "type": {
+          "name": "enum",
+          "values": [
+            {
+              "key": "plastic",
+              "label": "Plastic"
+            },
+            {
+              "key": "wood",
+              "label": "Wood"
+            },
+            {
+              "key": "fabric",
+              "label": "Fabric"
+            },
+            {
+              "key": "paper",
+              "label": "Paper"
+            },
+            {
+              "key": "plastic-fabric",
+              "label": "Plastic/fabric"
+            },
+            {
+              "key": "plastic-metal",
+              "label": "Plastic/metal"
+            },
+            {
+              "key": "plastic-paper",
+              "label": "Plastic/paper"
+            },
+            {
+              "key": "plastic-wood",
+              "label": "Plastic/wood"
+            }
+          ]
+        },
+        "attributeConstraint": "SameForAll",
+        "isSearchable": true,
+        "inputHint": "SingleLine",
+        "displayGroup": "Other"
+      }
+    ]
+  }
+]
