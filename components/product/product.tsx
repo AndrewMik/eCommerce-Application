@@ -140,14 +140,14 @@ const Product = ({ product }: { product: ProductProjection }) => {
       <div className="container">
         <Row gutter={32}>
           <Col xs={24} sm={24} md={24} lg={10} xl={10}>
-            <ProductBreadcrumb name={name.en}></ProductBreadcrumb>
+            <ProductBreadcrumb name={name.en} />
             <Slider
               images={images}
               handleImageClick={handleImageClick}
               handleThumbnailClick={handleThumbnailClick}
               carouselRef={carouselRef}
               name={name}
-            ></Slider>
+            />
           </Col>
           <Col xs={24} sm={24} md={24} lg={14} xl={14}>
             <div style={{ marginTop: 36 }}>
@@ -156,13 +156,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
                 brand={brand}
                 regularPrice={regularPrice}
                 discountedPrice={discountedPrice}
-              ></ProductDetails>
-              <Attributes
-                description={metaDescription}
-                ageRange={ageRange}
-                gender={gender}
-                material={material}
-              ></Attributes>
+              />
+              <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
             </div>
           </Col>
         </Row>
@@ -176,7 +171,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
           name={name}
           brand={brand}
           modalCarouselRef={modalCarouselRef}
-        ></ImageModal>
+        />
       </div>
       <style>{containerMediaStyles}</style>
     </>

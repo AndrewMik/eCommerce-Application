@@ -13,7 +13,7 @@ interface ImageCarouselProps {
 const customClassname = 'carousel-dots';
 const customDotsStyles = `
   .carousel-dots li button {
-    background-color: #393939 !important;
+    background-color: #454E63 !important;
     border: 0.5px solid white !important;
     height: 5px !important;
     border-radius: 10px !important;
