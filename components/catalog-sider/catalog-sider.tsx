@@ -19,30 +19,42 @@ const CatalogSider = (props: CatalogSiderProps) => {
   const [filterNames, setFilterNames] = useState<string[]>([]);
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
   const [allCategories, setAllCategories] = useState<AllCategories[] | null>(null);
+  const [category, setCategory] = useState<string[]>([]);
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
-    const items: MenuProps['items'] = categories.map((category) => {
-      const label = category.mainCategory.name.en;
-      const menuKey = category.mainCategory.id;
-      const childrenData = category.subCategory;
-
-      const title = allSelectedKeys.filter((key) => key[1].split('category-').join('') === menuKey);
-
-      const titleLabel = title.map((key) => {
-        const titleSubcategory = category.subCategory.filter((subCategory) => subCategory.id === key[0]);
-        return titleSubcategory[0].name.en;
-      });
-
+    const arr = ['category'];
+    const items: MenuProps['items'] = arr.map((mainCategory) => {
       return {
-        key: `category-${menuKey}`,
-        label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
-        style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
+        key: `${mainCategory}`,
+        label: `Category:`,
+        style: { fontSize: '16px', maxHeight: '500px', overflowY: 'scroll' },
 
-        children: childrenData.map((data) => {
+        children: categories.map((subCat) => {
+          const label = subCat.mainCategory.name.en;
+          const menuKey = subCat.mainCategory.id;
+          const childrenData = subCat.subCategory;
+
+          const title = allSelectedKeys.filter((key) => key[1].split('category-').join('') === menuKey);
+
+          const titleLabel = title.map((key) => {
+            const titleSubcategory = subCat.subCategory.filter(
+              (subCategory) => subCategory.id === key[0].split('subCategory-').join(''),
+            );
+            return titleSubcategory[0].name.en;
+          });
+
           return {
-            key: data.id,
-            label: `${data.name.en}`,
-            style: { paddingLeft: '20px', height: '20px', color: '#243763' },
+            key: `category-${menuKey}`,
+            label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
+            style: { fontSize: '14px', maxHeight: '500px', overflowY: 'scroll' },
+
+            children: childrenData.map((data) => {
+              return {
+                key: `subCategory-${data.id}`,
+                label: `${data.name.en}`,
+                style: { paddingLeft: '20px', height: '20px', color: '#243763' },
+              };
+            }),
           };
         }),
       };
@@ -86,13 +98,13 @@ const CatalogSider = (props: CatalogSiderProps) => {
   useEffect(() => {
     const getFilteredProductsInfo = async () => {
       if (!allSelectedKeys) return;
-      const filtered = await getFilteredProducts(allSelectedKeys);
+      const filtered = await getFilteredProducts(allSelectedKeys, category);
       if (filtered.response && typeof filtered.response !== 'number') {
         getUpdatedProductCards(filtered.response);
       }
     };
     getFilteredProductsInfo();
-  }, [allSelectedKeys]);
+  }, [allSelectedKeys, category]);
 
   const handleSelect = (menuProps: MenuKeyProps) => {
     const { keyPath } = menuProps;
@@ -111,11 +123,11 @@ const CatalogSider = (props: CatalogSiderProps) => {
         const mainCategoriesList: Category[] = [];
         const allCategoriesList: AllCategories[] = [];
 
-        categories.response.forEach((category) => {
-          if (category.ancestors.length !== 0) {
-            subCategoriesList.push(category);
+        categories.response.forEach((categoryValue) => {
+          if (categoryValue.ancestors.length !== 0) {
+            subCategoriesList.push(categoryValue);
           } else {
-            mainCategoriesList.push(category);
+            mainCategoriesList.push(categoryValue);
           }
         });
 
@@ -149,6 +161,11 @@ const CatalogSider = (props: CatalogSiderProps) => {
       const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[0] !== keyPath[0]);
       return filtered;
     });
+  };
+
+  const handleSubMenuClick = (openKeys: string[]) => {
+    if (openKeys.length < 2) return;
+    setCategory([openKeys[openKeys.length - 1]]);
   };
 
   return (
@@ -195,6 +212,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           selectedKeys={allSelectedKeys.map((key) => key[0])}
           onSelect={({ keyPath }) => handleSelect({ keyPath })}
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
+          onOpenChange={(openKeys) => handleSubMenuClick(openKeys)}
         />
       </Sider>
     </>
