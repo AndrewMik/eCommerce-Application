@@ -1,11 +1,16 @@
-import { Button, Card, Col, Layout, Row } from 'antd';
+import { Button, Card, Col, Layout, MenuProps, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import getFilteredProducts from '@/pages/api/filter-products';
+import getAllCategories from '@/pages/api/get-categories';
+import { getCapitalizedFirstLabel } from '@/utils/filter';
+import findMainCategoryById from '@/utils/sub-categorySearch';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
+import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
 
 const { Content } = Layout;
 
@@ -15,10 +20,157 @@ const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[] | null>(null);
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
 
+  const [filterNames, setFilterNames] = useState<string[]>([]);
+
+  const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
+  const [allCategories, setAllCategories] = useState<AllCategories[] | null>(null);
+  const [category, setCategory] = useState<string[]>([]);
+
+  const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
+    const items: MenuProps['items'] = ['category'].map((mainCategory) => {
+      let categoryTitle: Category | null = null;
+
+      if (category.length !== 0) {
+        categoryTitle = findMainCategoryById(categories, category[0]);
+      }
+
+      return {
+        key: `${mainCategory}`,
+        label: `Category: ${categoryTitle ? categoryTitle.name.en : ''}`,
+
+        children: categories.map((subCat) => {
+          const label = subCat.mainCategory.name.en;
+          const menuKey = subCat.mainCategory.id;
+          const childrenData = subCat.subCategory;
+
+          const title = allSelectedKeys.filter((key) => key[1].split('category-').join('') === menuKey);
+
+          const titleLabel = title.map((key) => {
+            const titleSubcategory = subCat.subCategory.filter(
+              (subCategory) => subCategory.id === key[0].split('subCategory-').join(''),
+            );
+            return titleSubcategory[0].name.en;
+          });
+
+          return {
+            key: `category-${menuKey}`,
+            label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
+            children: childrenData.map((data) => {
+              return {
+                key: `subCategory-${data.id}`,
+                label: `${data.name.en}`,
+                style: { color: '#243763' },
+              };
+            }),
+          };
+        }),
+      };
+    });
+    return items;
+  };
+
+  const displayFilteres = (attributes: AttributeData): MenuProps['items'] => {
+    const items: MenuProps['items'] = filterNames.map((name) => {
+      const label = getCapitalizedFirstLabel(name);
+      const childrenData = Object.values(attributes[name]);
+
+      const title = allSelectedKeys.filter((key) => key[1] === name);
+
+      const titleLabel = title.map((key) => attributes[name][key[0]].label);
+
+      return {
+        key: name,
+        label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
+
+        children: childrenData.map((data) => {
+          return {
+            key: data.key,
+            label: `${data.label}`,
+            style: { color: '#243763' },
+          };
+        }),
+      };
+    });
+    return items;
+  };
+
   const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
     if (cards && typeof cards !== 'number') {
       setProducts(cards);
     }
+  };
+
+  useEffect(() => {
+    const getFilteredProductsInfo = async () => {
+      if (!allSelectedKeys) return;
+      const filtered = await getFilteredProducts(allSelectedKeys, category);
+      if (filtered.response && typeof filtered.response !== 'number') {
+        getUpdatedProductCards(filtered.response);
+      }
+    };
+    getFilteredProductsInfo();
+  }, [allSelectedKeys, category]);
+
+  const handleSelect = (menuProps: MenuKeyProps) => {
+    const { keyPath } = menuProps;
+
+    setAllSelectedKeys((prevValue) => {
+      return [...prevValue, keyPath];
+    });
+  };
+
+  const showCategories = () => {
+    const getCategory = async () => {
+      const categories = await getAllCategories();
+
+      if (typeof categories.response !== 'number' && categories.response) {
+        const subCategoriesList: Category[] = [];
+        const mainCategoriesList: Category[] = [];
+        const allCategoriesList: AllCategories[] = [];
+
+        categories.response.forEach((categoryValue) => {
+          if (categoryValue.ancestors.length !== 0) {
+            subCategoriesList.push(categoryValue);
+          } else {
+            mainCategoriesList.push(categoryValue);
+          }
+        });
+
+        mainCategoriesList.forEach((mainCategory) => {
+          const matchingSubCategories = subCategoriesList.filter((subCategory) =>
+            subCategory.ancestors.some((ancestor) => ancestor.id === mainCategory.id && ancestor.typeId === 'category'),
+          );
+
+          if (matchingSubCategories.length > 0) {
+            allCategoriesList.push({
+              mainCategory,
+              subCategory: matchingSubCategories,
+            });
+          }
+        });
+
+        setAllCategories(allCategoriesList);
+      }
+    };
+    getCategory();
+  };
+
+  useEffect(() => {
+    showCategories();
+  }, []);
+
+  const handleDeselect = (menuProps: MenuKeyProps) => {
+    const { keyPath } = menuProps;
+
+    setAllSelectedKeys((prevValue) => {
+      const filtered = prevValue.filter((existingKeyPath) => existingKeyPath[0] !== keyPath[0]);
+      return filtered;
+    });
+  };
+
+  const handleSubMenuClick = (openKeys: string[]) => {
+    if (openKeys.length < 2) return;
+    setCategory([openKeys[openKeys.length - 1]]);
   };
 
   const getProductsInfo = async () => {
@@ -56,6 +208,13 @@ const CatalogCards = (): JSX.Element => {
       throw new Error('Error fetching products');
     }
   };
+
+  useEffect(() => {
+    if (!attributeData) return;
+    const attributeNames = Object.keys(attributeData);
+
+    setFilterNames(attributeNames);
+  }, [attributeData]);
 
   useEffect(() => {
     getProductsInfo();
@@ -229,7 +388,19 @@ const CatalogCards = (): JSX.Element => {
 
   return (
     <Layout hasSider>
-      <CatalogSider attributeData={attributeData} getUpdatedProductCards={getUpdatedProductCards} />
+      <CatalogSider
+        attributeData={attributeData}
+        getUpdatedProductCards={getUpdatedProductCards}
+        allSelectedKeys={allSelectedKeys}
+        setAllSelectedKeys={setAllSelectedKeys}
+        setCategory={setCategory}
+        allCategories={allCategories}
+        displayCategories={displayCategories}
+        displayFilteres={displayFilteres}
+        handleSelect={handleSelect}
+        handleDeselect={handleDeselect}
+        handleSubMenuClick={handleSubMenuClick}
+      />
       <Layout className="site-layout">
         <Content style={{ margin: '24px 16px 0', overflow: 'initial', display: 'flex', justifyContent: 'center' }}>
           <Row

@@ -1,6 +1,5 @@
-import { Category, ProductProjection } from '@commercetools/platform-sdk';
+import { Category } from '@commercetools/platform-sdk';
 import { CSSProperties } from '@ant-design/cssinjs/lib/hooks/useStyleRegister';
-import { AttributeData } from '../catalog-cards/types';
 
 export enum Filter {
   Brand = 'brand',
@@ -14,11 +13,6 @@ export interface AttributeValue {
   label: string;
   onClick?: () => void;
   style: CSSProperties;
-}
-
-export interface CatalogSiderProps {
-  attributeData: AttributeData | null;
-  getUpdatedProductCards: (cards: ProductProjection[] | number) => void;
 }
 
 export interface MenuKeyProps {
