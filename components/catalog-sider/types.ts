@@ -1,4 +1,4 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { Category, ProductProjection } from '@commercetools/platform-sdk';
 import { CSSProperties } from '@ant-design/cssinjs/lib/hooks/useStyleRegister';
 import { AttributeData } from '../catalog-cards/types';
 
@@ -23,4 +23,9 @@ export interface CatalogSiderProps {
 
 export interface MenuKeyProps {
   keyPath: string[];
+}
+
+export interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
 }

@@ -6,15 +6,10 @@ import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import findMainCategoryById from '@/utils/sub-categorySearch';
-import { CatalogSiderProps, MenuKeyProps } from './types';
+import { CatalogSiderProps, MenuKeyProps, AllCategories } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
 const { Sider } = Layout;
-
-interface AllCategories {
-  mainCategory: Category;
-  subCategory: Category[];
-}
 
 const CatalogSider = (props: CatalogSiderProps) => {
   const [collapsed, setCollapsed] = useState(true);

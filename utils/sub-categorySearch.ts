@@ -1,14 +1,14 @@
-export default function findMainCategoryById(mainCategories, targetIdWithPrefix) {
-  // Remove the 'category-' prefix from the target ID
+import { AllCategories } from '../components/catalog-sider/types';
+
+export default function findMainCategoryById(mainCategories: AllCategories[], targetIdWithPrefix: string) {
   const targetId = targetIdWithPrefix.replace('category-', '');
 
-  // Iterate through the main categories
   for (const mainCategoryWrapper of mainCategories) {
     const mainCategory = mainCategoryWrapper.mainCategory;
     if (mainCategory.id === targetId) {
-      return mainCategory; // Return the mainCategory object if ID matches
+      return mainCategory;
     }
   }
 
-  return null; // Return null if no matching mainCategory is found
+  return null;
 }
