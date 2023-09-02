@@ -189,6 +189,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           color: '#243763',
           fontSize: '10px',
           lineHeight: '1',
+          fontWeight: 'bold',
         }}
         onClick={() => {
           setAllSelectedKeys([]);
@@ -203,6 +204,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         onClick={() => setCollapsed(!collapsed)}
         style={{
+          position: 'fixed',
           fontSize: '16px',
           marginLeft: '7px',
           marginTop: '40px',
@@ -225,6 +227,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           top: '100px',
           backgroundColor: 'white',
           zIndex: 100,
+          overflowY: 'scroll',
         }}
       >
         <Menu
