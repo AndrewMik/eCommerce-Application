@@ -173,28 +173,6 @@ const CatalogSider = (props: CatalogSiderProps) => {
   return (
     <>
       <Button
-        type="primary"
-        size="small"
-        style={{
-          position: 'fixed',
-          left: '0px',
-          top: '70px',
-          zIndex: 101,
-          backgroundColor: 'transparent',
-          color: '#243763',
-          fontSize: '10px',
-          lineHeight: '1',
-          fontWeight: 'bold',
-        }}
-        onClick={() => {
-          setAllSelectedKeys([]);
-          setCategory([]);
-        }}
-      >
-        reset filters
-      </Button>
-
-      <Button
         type="text"
         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         onClick={() => setCollapsed(!collapsed)}
@@ -216,15 +194,35 @@ const CatalogSider = (props: CatalogSiderProps) => {
         width={300}
         style={{
           borderRadius: '5px',
-          height: '100vh',
+          height: 'calc(100vh - 100px)',
           position: 'fixed',
           left: 0,
           top: '100px',
           backgroundColor: 'white',
           zIndex: 100,
-          overflowY: 'scroll',
+          overflow: 'auto',
         }}
       >
+        <Button
+          size="small"
+          style={{
+            marginLeft: '120px',
+            left: '0px',
+            top: '25px',
+            zIndex: 101,
+            backgroundColor: 'transparent',
+            color: '#243763',
+            fontSize: '10px',
+            lineHeight: '1',
+            fontWeight: 'bold',
+          }}
+          onClick={() => {
+            setAllSelectedKeys([]);
+            setCategory([]);
+          }}
+        >
+          reset filters
+        </Button>
         <Menu
           mode="inline"
           style={{ borderRight: 0, marginTop: '80px', overflowY: 'scroll', zIndex: 100 }}
