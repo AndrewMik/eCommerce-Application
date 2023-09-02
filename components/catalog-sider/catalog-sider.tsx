@@ -197,6 +197,7 @@ const CatalogSider = (props: CatalogSiderProps) => {
           }}
           onClick={() => {
             setAllSelectedKeys([]);
+            setCategory([]);
           }}
         >
           reset filters
