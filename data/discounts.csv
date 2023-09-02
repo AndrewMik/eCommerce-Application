@@ -1,0 +1,5 @@
+name,key,rank,value type,value,products (SKU)
+20% on chosen items,DISC20,0.2,relative,20,SS2;SS4;GR16;MUT6
+15% on chosen items,DISC15,0.15,relative,15,GR4;SP1;VB2;BHC3
+10% on chosen items,DISC10,0.10,relative,10,WT2;MUT1;TD3;SCB6;MB3
+5% on chosen items,DISC05,0.05,relative,5,MT3;GR37;GR44;VC4;VC1

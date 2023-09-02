@@ -20,8 +20,8 @@ const LoginForm: React.FC = () => {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
         if (token) {
-          setUserToken(token);
-          saveLogInState(token);
+          setUserToken(token.refreshToken as string);
+          saveLogInState(token.token, token.refreshToken as string);
           setIsLoggedIn(true);
           router.push(`/`);
         } else {

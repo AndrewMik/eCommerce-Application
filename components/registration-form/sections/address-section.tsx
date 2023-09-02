@@ -10,6 +10,7 @@ import DividerText from '../fields/divider-field';
 import { getStreetRules, getCountryRules, getPostalCodeRules, getCityRules } from '../helpers/validation-rules';
 import fieldDefinitions from '../helpers/field-definitions';
 import { AddressFieldsName, ShippingFieldsName } from '../helpers/registration.types';
+import { SectionProps } from '../helpers/interface';
 
 interface AddressSectionProps {
   countries: string[];
@@ -20,13 +21,14 @@ interface AddressSectionProps {
   onUseBillingAddressChange?: (checked: boolean) => void;
 }
 
-const AddressSection: React.FC<AddressSectionProps> = ({
+const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
   countries,
   form,
   title,
   nameSuffix = '',
   showCheckbox = false,
   onUseBillingAddressChange,
+  componentDisabled,
 }) => {
   const streetFieldName = `${AddressFieldsName.STREET}${nameSuffix}`;
   const cityFieldName = `${AddressFieldsName.CITY}${nameSuffix}`;
@@ -36,6 +38,9 @@ const AddressSection: React.FC<AddressSectionProps> = ({
   const postalCodeFieldName = `${AddressFieldsName.POSTAL_CODE}${nameSuffix}`;
   const setAsDefault = `${AddressFieldsName.SET_AS_DEFAULT}${nameSuffix}`;
   const useAsBillingAddress = AddressFieldsName.USE_AS_BILLING_ADDRESS;
+
+  const isProfilePage = window.location.href.match('profile');
+  const isRegistrationPage = window.location.href.match('registration');
 
   const handleUseBillingAddressChange = (e: CheckboxChangeEvent) => {
     if (onUseBillingAddressChange) {
@@ -67,35 +72,69 @@ const AddressSection: React.FC<AddressSectionProps> = ({
       <DividerText text={title} />
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <SelectField
-            {...fieldDefinitions.country}
-            name={countryFieldName}
-            options={countries.map((country) => ({ value: country, label: country }))}
-            rules={getCountryRules()}
-            required={true}
-            onChange={() => form.validateFields([postalCodeFieldName])}
-          />
+          {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
+            <SelectField
+              {...fieldDefinitions.country}
+              name={countryFieldName}
+              options={countries.map((country) => ({ value: country, label: country }))}
+              rules={getCountryRules()}
+              required={true}
+              onChange={() => form.validateFields([postalCodeFieldName])}
+            />
+          )}
+          {isProfilePage && componentDisabled && (
+            <InputField
+              {...fieldDefinitions.country}
+              name={countryFieldName}
+              componentDisabled={componentDisabled}
+              required={true}
+              rules={[]}
+            />
+          )}
         </Col>
 
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <InputField
             {...fieldDefinitions.postalCode}
+            componentDisabled={componentDisabled}
             name={postalCodeFieldName}
             rules={getPostalCodeRules(form, countryFieldName)}
             required={true}
           ></InputField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.city} name={cityFieldName} required={true} rules={getCityRules()} />
+          <InputField
+            {...fieldDefinitions.city}
+            componentDisabled={componentDisabled}
+            name={cityFieldName}
+            required={true}
+            rules={getCityRules()}
+          />
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.street} name={streetFieldName} required={true} rules={getStreetRules()} />
+          <InputField
+            {...fieldDefinitions.street}
+            componentDisabled={componentDisabled}
+            name={streetFieldName}
+            required={true}
+            rules={getStreetRules()}
+          />
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.building} name={buildingFieldName} rules={[]}></InputField>
+          <InputField
+            {...fieldDefinitions.building}
+            componentDisabled={componentDisabled}
+            name={buildingFieldName}
+            rules={[]}
+          ></InputField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <InputField {...fieldDefinitions.apartment} name={flatFieldName} rules={[]}></InputField>
+          <InputField
+            {...fieldDefinitions.apartment}
+            componentDisabled={componentDisabled}
+            name={flatFieldName}
+            rules={[]}
+          ></InputField>
         </Col>
       </Row>
       <Row gutter={16}>
@@ -103,7 +142,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({
           <SwitchField name={setAsDefault} {...fieldDefinitions.defaultAddress}></SwitchField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          {showCheckbox && (
+          {isRegistrationPage && showCheckbox && (
             <Form.Item name={useAsBillingAddress} valuePropName="checked">
               <Checkbox onChange={handleUseBillingAddressChange}>Also use as billing address</Checkbox>
             </Form.Item>

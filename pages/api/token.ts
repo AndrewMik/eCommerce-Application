@@ -7,6 +7,7 @@ class Token implements TokenCache {
     this.token = {
       token: '',
       expirationTime: 0,
+      refreshToken: '',
     };
   }
 
@@ -16,6 +17,14 @@ class Token implements TokenCache {
 
   set(cache: TokenStore): void {
     this.token = cache;
+  }
+
+  clear(): void {
+    this.token = {
+      token: '',
+      expirationTime: 0,
+      refreshToken: '',
+    };
   }
 }
 

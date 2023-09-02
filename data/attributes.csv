@@ -1,0 +1,3 @@
+name,type,attributeConstraint,isRequired,isSearchable,inputTip.en,label.en,textInputHint,displayGroup
+brand,text,None,FALSE,TRUE,The manufacturer or brand associated with the product,Brand,SingleLine,Other
+age-range,text,None,FALSE,TRUE,Age recommendation for safe use,Suitable Age Range,SingleLine,Other

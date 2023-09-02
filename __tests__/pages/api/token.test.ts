@@ -8,6 +8,7 @@ describe('Token', () => {
 
     expect(currentToken).toEqual({
       token: '',
+      refreshToken: '',
       expirationTime: 0,
     });
   });

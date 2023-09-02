@@ -63,7 +63,7 @@ const Notifications = () => {
 
   useEffect(() => {
     if (registrationStatusCode) {
-      if (registrationStatusCode === 201) {
+      if (registrationStatusCode === 200 || registrationStatusCode === 201) {
         openNotificationWithIcon(
           NotificationType.SUCCESS,
           NotificationMessage.REGISTERED,

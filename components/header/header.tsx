@@ -13,6 +13,7 @@ import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import Client from '../../pages/api/client';
 import { AuthContext } from '../../context/authorization-context';
 import Notifications from '../notifications/notifications';
 import { Paths, navigationLinks } from '../../utils/route-links';
@@ -34,6 +35,8 @@ const MainHeader = () => {
   };
 
   const handleSignOutButtonClick = () => {
+    Client.getInstance().clearApiRoot();
+    Client.token.clear();
     removeLogInState();
     setLogInStatusCode(null);
     setRegistrationStatusCode(null);

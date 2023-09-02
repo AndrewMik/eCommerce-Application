@@ -11,10 +11,7 @@ import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
 import { AddressSuffix, AddressFieldsName, FormData } from './helpers/registration.types';
 import { AuthContext } from '../../context/authorization-context';
-
-interface CountryOptionsProps {
-  countries: string[];
-}
+import { CountryOptionsProps } from './helpers/interface';
 
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
@@ -25,15 +22,17 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
     setRegistrationStatusCode,
     saveLogInState,
     setUserToken,
+    setUserRefreshToken,
     setIsLoggedIn,
   } = useContext(AuthContext);
 
   const handleRegisterUser = async (formData: FormData) => {
     const { statusCode, token } = await registerUser(formData);
-    if (statusCode === 201) {
+    if (statusCode === 200) {
       if (token) {
-        setUserToken(token);
-        saveLogInState(token);
+        setUserToken(token.token);
+        setUserRefreshToken(token.refreshToken as string);
+        saveLogInState(token.token, token.refreshToken as string);
         setIsLoggedIn(true);
         router.push(`/`);
       } else {

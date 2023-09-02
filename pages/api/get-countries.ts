@@ -2,7 +2,7 @@ import { getName } from 'country-list';
 import Client from './client';
 
 async function getCountries(): Promise<string[]> {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
   const response = await client.zones().get().execute();
 
   if (!response.body?.results) {
