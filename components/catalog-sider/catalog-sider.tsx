@@ -1,10 +1,11 @@
 import { Button, Layout, Menu, MenuProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { Category } from '@commercetools/platform-sdk';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
-import findSubCategoryObject from '@/utils/sub-categorySearch';
+import findMainCategoryById from '@/utils/sub-categorySearch';
 import { CatalogSiderProps, MenuKeyProps } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
@@ -16,6 +17,8 @@ interface AllCategories {
 }
 
 const CatalogSider = (props: CatalogSiderProps) => {
+  const [collapsed, setCollapsed] = useState(true);
+
   const { attributeData, getUpdatedProductCards } = props;
   const [filterNames, setFilterNames] = useState<string[]>([]);
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
@@ -27,13 +30,12 @@ const CatalogSider = (props: CatalogSiderProps) => {
       let categoryTitle: Category | null = null;
 
       if (category.length !== 0) {
-        categoryTitle = findSubCategoryObject(categories, category[0]);
+        categoryTitle = findMainCategoryById(categories, category[0]);
       }
 
       return {
         key: `${mainCategory}`,
         label: `Category: ${categoryTitle ? categoryTitle.name.en : ''}`,
-        style: { fontSize: '16px', maxHeight: '500px', overflowY: 'scroll' },
 
         children: categories.map((subCat) => {
           const label = subCat.mainCategory.name.en;
@@ -52,13 +54,13 @@ const CatalogSider = (props: CatalogSiderProps) => {
           return {
             key: `category-${menuKey}`,
             label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
-            style: { fontSize: '14px', maxHeight: '500px', overflowY: 'scroll' },
+            // style: { fontSize: '14px', maxHeight: '500px', overflowY: 'scroll' },
 
             children: childrenData.map((data) => {
               return {
                 key: `subCategory-${data.id}`,
                 label: `${data.name.en}`,
-                style: { paddingLeft: '20px', height: '20px', color: '#243763' },
+                style: { color: '#243763' },
               };
             }),
           };
@@ -80,13 +82,12 @@ const CatalogSider = (props: CatalogSiderProps) => {
       return {
         key: name,
         label: `${label}: ${title && titleLabel ? titleLabel : ''}`,
-        style: { fontSize: '12px', maxHeight: '500px', overflowY: 'scroll' },
 
         children: childrenData.map((data) => {
           return {
             key: data.key,
             label: `${data.label}`,
-            style: { paddingLeft: '20px', height: '20px', color: '#243763' },
+            style: { color: '#243763' },
           };
         }),
       };
@@ -176,41 +177,59 @@ const CatalogSider = (props: CatalogSiderProps) => {
 
   return (
     <>
-      <Sider
+      <Button
+        type="primary"
+        size="small"
         style={{
-          marginTop: '60px',
-          overflow: 'auto',
+          position: 'fixed',
+          left: '0px',
+          top: '70px',
+          zIndex: 101,
+          backgroundColor: 'transparent',
+          color: '#243763',
+          fontSize: '10px',
+          lineHeight: '1',
+        }}
+        onClick={() => {
+          setAllSelectedKeys([]);
+          setCategory([]);
+        }}
+      >
+        reset filters
+      </Button>
+
+      <Button
+        type="text"
+        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        onClick={() => setCollapsed(!collapsed)}
+        style={{
+          fontSize: '16px',
+          marginLeft: '7px',
+          marginTop: '40px',
+          width: 64,
+          height: 64,
+          zIndex: 101,
+        }}
+      />
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        collapsedWidth="0"
+        width={300}
+        style={{
+          borderRadius: '5px',
           height: '100vh',
           position: 'fixed',
           left: 0,
-          top: 0,
-          bottom: 0,
+          top: '100px',
           backgroundColor: 'white',
+          zIndex: 100,
         }}
       >
-        <Button
-          type="primary"
-          shape="round"
-          size="small"
-          style={{
-            backgroundColor: 'transparent',
-            marginLeft: '110px',
-            marginTop: '5px',
-            color: '#243763',
-            fontSize: '10px',
-            lineHeight: '1',
-            height: '15px',
-          }}
-          onClick={() => {
-            setAllSelectedKeys([]);
-            setCategory([]);
-          }}
-        >
-          reset filters
-        </Button>
         <Menu
           mode="inline"
-          style={{ height: 'calc(100% - 70px)', borderRight: 0, marginTop: '10px', overflowY: 'scroll' }}
+          style={{ borderRight: 0, marginTop: '80px', overflowY: 'scroll', zIndex: 100 }}
           items={
             allCategories && attributeData
               ? [...(displayCategories(allCategories) || []), ...(displayFilteres(attributeData) || [])]

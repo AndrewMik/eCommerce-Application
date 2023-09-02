@@ -1,4 +1,4 @@
-import { Button, Card, Col, Layout, Row, Space } from 'antd';
+import { Button, Card, Col, Layout, Row } from 'antd';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
@@ -106,11 +106,10 @@ const CatalogCards = (): JSX.Element => {
       return (
         <Col
           key={product.name.en}
-          xs={{ span: 24 }}
-          md={{ span: 12 }}
-          lg={{ span: 8 }}
-          xl={{ span: 8 }}
-          xxl={{ span: 6 }}
+          xs={{ span: 23, offset: 1 }}
+          md={{ span: 11, offset: 1 }}
+          lg={{ span: 7, offset: 1 }}
+          xxl={{ span: 4, offset: 1 }}
           style={{ display: 'flex', justifyContent: 'center' }}
         >
           <Link href={`/catalog/${encodeURIComponent(key)}`}>
@@ -231,11 +230,19 @@ const CatalogCards = (): JSX.Element => {
   return (
     <Layout hasSider>
       <CatalogSider attributeData={attributeData} getUpdatedProductCards={getUpdatedProductCards} />
-      <Layout className="site-layout" style={{ marginLeft: 200 }}>
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-            <Row gutter={[16, 16]}>{products && productCards}</Row>
-          </Space>
+      <Layout className="site-layout">
+        <Content style={{ margin: '24px 16px 0', overflow: 'initial', display: 'flex', justifyContent: 'center' }}>
+          <Row
+            gutter={[16, 16]}
+            style={{
+              marginTop: '14px',
+              display: 'flex',
+              justifyContent: 'center',
+              maxWidth: '1600px',
+            }}
+          >
+            {products && productCards}
+          </Row>
         </Content>
       </Layout>
     </Layout>

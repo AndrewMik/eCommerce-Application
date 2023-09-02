@@ -8,7 +8,7 @@ const MyDocument = () => (
     <Head>
       <link rel="icon" href="/images/favicon.ico" />
     </Head>
-    <body style={{ margin: 0, minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+    <body style={{ margin: 0, minHeight: '100vh', backgroundColor: '#f5f5f5', overflow: 'hidden' }}>
       <Main />
       <NextScript />
     </body>
