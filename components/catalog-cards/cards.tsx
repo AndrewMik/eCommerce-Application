@@ -1,5 +1,5 @@
 import { Button, Card, Col, Layout, Row } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
