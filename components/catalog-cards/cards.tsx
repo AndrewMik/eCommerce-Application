@@ -16,8 +16,8 @@ const CatalogCards = (): JSX.Element => {
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
 
   const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
-    if (cards) {
-      setProducts(cards as ProductProjection[]);
+    if (cards && typeof cards !== 'number') {
+      setProducts(cards);
     }
   };
 
