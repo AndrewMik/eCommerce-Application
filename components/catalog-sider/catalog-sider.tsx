@@ -4,6 +4,7 @@ import { Category } from '@commercetools/platform-sdk';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
+import findSubCategoryObject from '@/utils/sub-categorySearch';
 import { CatalogSiderProps, MenuKeyProps } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
@@ -22,11 +23,16 @@ const CatalogSider = (props: CatalogSiderProps) => {
   const [category, setCategory] = useState<string[]>([]);
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
-    const arr = ['category'];
-    const items: MenuProps['items'] = arr.map((mainCategory) => {
+    const items: MenuProps['items'] = ['category'].map((mainCategory) => {
+      let categoryTitle: Category | null = null;
+
+      if (category.length !== 0) {
+        categoryTitle = findSubCategoryObject(categories, category[0]);
+      }
+
       return {
         key: `${mainCategory}`,
-        label: `Category:`,
+        label: `Category: ${categoryTitle ? categoryTitle.name.en : ''}`,
         style: { fontSize: '16px', maxHeight: '500px', overflowY: 'scroll' },
 
         children: categories.map((subCat) => {
