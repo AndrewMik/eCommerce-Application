@@ -56,8 +56,20 @@ const fieldDefinitions = {
     name: `${AddressFieldsName.POSTAL_CODE}`,
     placeholder: '4701',
   },
+  addressShipping: {
+    label: 'Set as shipping',
+  },
+  addressBilling: {
+    label: 'Set as billing',
+  },
   defaultAddress: {
     label: 'Set as default address',
+  },
+  defaultShippingAddress: {
+    label: 'Set as default shipping',
+  },
+  defaultBillingAddress: {
+    label: 'Set as default billing',
   },
   email: {
     label: 'Email',
