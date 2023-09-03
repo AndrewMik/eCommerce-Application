@@ -1,7 +1,7 @@
 import { AllCategories } from '../components/catalog-sider/types';
 
 export default function findMainCategoryById(mainCategories: AllCategories[], targetIdWithPrefix: string) {
-  const targetId = targetIdWithPrefix.replace('category-', '');
+  const targetId = targetIdWithPrefix && targetIdWithPrefix.replace('category-', '');
 
   for (const mainCategoryWrapper of mainCategories) {
     const mainCategory = mainCategoryWrapper.mainCategory;

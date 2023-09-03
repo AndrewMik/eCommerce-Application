@@ -55,6 +55,7 @@ function getFilteredProducts(filters: string[][], categories: string[]) {
     });
   } else if (!['age-range', 'brand', 'material', 'gender', 'category'].includes(categories[0])) {
     filterStrings = categories.map((category) => {
+      if (!category) return '';
       const keyVariat = category.split('-');
       const keyToPass = keyVariat.slice(1).join('-');
       return `categories.id: subtree("${keyToPass}")`;

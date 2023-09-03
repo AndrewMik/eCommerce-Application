@@ -169,7 +169,6 @@ const CatalogCards = (): JSX.Element => {
   };
 
   const handleSubMenuClick = (openKeys: string[]) => {
-    if (openKeys.length < 2) return;
     setCategory([openKeys[openKeys.length - 1]]);
   };
 
