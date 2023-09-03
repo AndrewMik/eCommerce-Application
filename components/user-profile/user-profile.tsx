@@ -154,6 +154,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                   label="Reenter new password"
                   name="newPasswordConfirmation"
                   rules={confirmPasswordRules()}
+                  dependencies={['newPassword']}
                 />
                 <Form.Item style={{ textAlign: 'center' }} wrapperCol={{ span: 24 }}>
                   <Button type="primary" htmlType="submit" style={{ marginTop: 25 }}>
