@@ -9,7 +9,7 @@ interface PasswordFieldProps {
   rules: Rule[];
   iconStyle?: React.CSSProperties;
   hasFeedback?: boolean;
-  dependencies?: [] | undefined;
+  dependencies?: string[] | undefined;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> = ({
