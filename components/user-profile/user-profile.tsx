@@ -34,12 +34,19 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       (customerData as Customer).version,
       formData.currentPassword,
       formData.newPassword,
+      (customerData as Customer).email,
     );
 
     if (response.statusCode === 200) {
       notification.success({
         message: `Password was updated successfully!`,
       });
+      const fetchData = async () => {
+        const customer = await getClient();
+        await setCustomerData(customer);
+      };
+
+      fetchData().catch(console.error);
     } else {
       notification.error({
         message: `Password change failed!`,
