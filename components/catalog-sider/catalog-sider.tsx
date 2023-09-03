@@ -45,10 +45,11 @@ const CatalogSider = ({
           position: 'fixed',
           fontSize: '16px',
           marginLeft: '7px',
-          marginTop: '40px',
+          marginTop: '0px',
           width: 64,
           height: 64,
           zIndex: 101,
+          backgroundColor: 'rgba(23, 48, 173, 0.09)',
         }}
       />
       <Sider
@@ -58,11 +59,12 @@ const CatalogSider = ({
         collapsedWidth="0"
         width={300}
         style={{
+          paddingTop: '100px',
           borderRadius: '5px',
-          height: 'calc(100vh - 100px)',
+          height: 'calc(100vh)',
           position: 'fixed',
           left: 0,
-          top: '100px',
+          top: '0px',
           backgroundColor: 'white',
           zIndex: 100,
           overflow: 'auto',
@@ -73,9 +75,8 @@ const CatalogSider = ({
           style={{
             marginLeft: '120px',
             left: '0px',
-            top: '25px',
+            top: '-15px',
             zIndex: 101,
-            backgroundColor: 'transparent',
             color: '#243763',
             fontSize: '10px',
             lineHeight: '1',
@@ -90,7 +91,7 @@ const CatalogSider = ({
         </Button>
         <Menu
           mode="inline"
-          style={{ borderRight: 0, marginTop: '80px', overflowY: 'scroll', zIndex: 100 }}
+          style={{ borderRight: 0, marginTop: '0px', overflowY: 'scroll', zIndex: 100 }}
           items={
             allCategories && attributeData
               ? [...(displayCategories(allCategories) || []), ...(displayFilteres(attributeData) || [])]
