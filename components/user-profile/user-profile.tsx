@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Layout, Card, Checkbox } from 'antd';
+import { Form, Button, Row, Col, Layout, Card, Checkbox, App } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
-
 import getClient from '@/pages/api/get-client';
 import updatePassword from '@/pages/api/update-password';
 import PersonalSection from '../registration-form/sections/personal-section';
@@ -25,12 +24,27 @@ type PasswordChangeFormData = {
 };
 
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
+  const { notification } = App.useApp();
   const [form] = Form.useForm();
   const [customerData, setCustomerData] = useState({});
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   const changePassword = async (formData: PasswordChangeFormData) => {
-    await updatePassword((customerData as Customer).version, formData.currentPassword, formData.newPassword);
+    const response = await updatePassword(
+      (customerData as Customer).version,
+      formData.currentPassword,
+      formData.newPassword,
+    );
+
+    if (response.statusCode === 200) {
+      notification.success({
+        message: `Password was updated successfully!`,
+      });
+    } else {
+      notification.error({
+        message: `Password change failed!`,
+      });
+    }
   };
 
   useEffect(() => {
@@ -136,7 +150,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                 />
                 <Form.Item style={{ textAlign: 'center' }} wrapperCol={{ span: 24 }}>
                   <Button type="primary" htmlType="submit" style={{ marginTop: 25 }}>
-                    Save Changes
+                    Change Password
                   </Button>
                 </Form.Item>
               </Form>

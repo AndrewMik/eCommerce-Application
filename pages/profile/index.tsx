@@ -1,5 +1,6 @@
 'use client';
 
+import { App } from 'antd';
 import { useContext, useState, useEffect } from 'react';
 import Home from '@/components/home/home';
 import { AuthContext } from '@/context/authorization-context';
@@ -19,7 +20,7 @@ const Page = (): JSX.Element => {
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  return <>{isLoggedIn ? <Profile countries={countries} /> : <Home />}</>;
+  return <App notification={{ placement: 'bottom' }}>{isLoggedIn ? <Profile countries={countries} /> : <Home />}</App>;
 };
 
 export default Page;
