@@ -5,6 +5,7 @@ import { Form, Button, Row, Col, Layout, Card, Checkbox } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
 
 import getClient from '@/pages/api/get-client';
+import updatePassword from '@/pages/api/update-password';
 import PersonalSection from '../registration-form/sections/personal-section';
 import { AddressSuffix } from '../registration-form/helpers/registration.types';
 import AddressSection from '../registration-form/sections/address-section';
@@ -13,13 +14,24 @@ import setFormData from './helpers/set-form-data';
 import { CountryOptionsProps } from '../registration-form/helpers/interface';
 import EmailField from '../registration-form/fields/email-field';
 import fieldDefinitions from '../registration-form/helpers/field-definitions';
-import { getEmailRules } from '../registration-form/helpers/validation-rules';
+import { confirmPasswordRules, getEmailRules, getPasswordRules } from '../registration-form/helpers/validation-rules';
 import InputField from '../registration-form/fields/input-field';
+import PasswordField from '../registration-form/fields/password-field';
+
+type PasswordChangeFormData = {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordConfirmation: string;
+};
 
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [customerData, setCustomerData] = useState({});
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
+
+  const changePassword = async (formData: PasswordChangeFormData) => {
+    await updatePassword((customerData as Customer).version, formData.currentPassword, formData.newPassword);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,6 +99,43 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                 <DividerText text={''} />
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
+                    Save Changes
+                  </Button>
+                </Form.Item>
+              </Form>
+              <div style={{ marginTop: 100 }}></div>
+              <DividerText text={'Change Password'} />
+              <Form
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                name="user-password-form"
+                initialValues={{
+                  remember: true,
+                }}
+                autoComplete="on"
+                onFinish={changePassword}
+              >
+                <div style={{ marginBottom: 20 }}>To change the password for your account, use this form.</div>
+                <PasswordField
+                  {...fieldDefinitions.password}
+                  label="Current password"
+                  name="currentPassword"
+                  rules={getPasswordRules()}
+                />
+                <PasswordField
+                  {...fieldDefinitions.password}
+                  label="New password"
+                  name="newPassword"
+                  rules={getPasswordRules()}
+                />
+                <PasswordField
+                  {...fieldDefinitions.password}
+                  label="Reenter new password"
+                  name="newPasswordConfirmation"
+                  rules={confirmPasswordRules()}
+                />
+                <Form.Item style={{ textAlign: 'center' }} wrapperCol={{ span: 24 }}>
+                  <Button type="primary" htmlType="submit" style={{ marginTop: 25 }}>
                     Save Changes
                   </Button>
                 </Form.Item>

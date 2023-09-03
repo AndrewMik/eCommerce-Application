@@ -123,6 +123,21 @@ const getPasswordRules = (): Rule[] => [
   },
 ];
 
+const confirmPasswordRules = (): Rule[] => [
+  {
+    required: true,
+    message: 'Please confirm your password!',
+  },
+  ({ getFieldValue }) => ({
+    validator(_, value) {
+      if (!value || getFieldValue('newPassword') === value) {
+        return Promise.resolve();
+      }
+      return Promise.reject(new Error('The new password that you entered do not match!'));
+    },
+  }),
+];
+
 const getPostalCodeRules = (form: FormInstance, fieldName: string): Rule[] => [
   {
     validator: (_, value: string) => {
@@ -156,4 +171,5 @@ export {
   getEmailRules,
   getPasswordRules,
   getPostalCodeRules,
+  confirmPasswordRules,
 };
