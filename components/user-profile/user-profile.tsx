@@ -18,8 +18,6 @@ import InputField from '../registration-form/fields/input-field';
 
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
-  // eslint-disable-next-line no-console
-  console.log(form.getFieldsValue());
   const [customerData, setCustomerData] = useState<Customer>({
     id: '',
     version: 0,
@@ -33,8 +31,6 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   const saveCustomerChanges = async (formData: FormData) => {
-    // eslint-disable-next-line no-console
-    console.log(form.getFieldsValue());
     await updateCustomer(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
   };
