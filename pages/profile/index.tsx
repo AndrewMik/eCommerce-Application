@@ -29,7 +29,7 @@ const Page = (): JSX.Element => {
     }
   }, [isLoggedIn, router]);
 
-  return <App notification={{ placement: 'bottom' }}>{isLoggedIn && <Profile countries={countries} /> : <Home />}</App>;
+  return <App notification={{ placement: 'bottom' }}>{isLoggedIn && <Profile countries={countries} />}</App>;
 };
 
 export default Page;
