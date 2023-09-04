@@ -261,7 +261,7 @@ const CatalogCards = (): JSX.Element => {
           md={{ span: 11, offset: 1 }}
           lg={{ span: 7, offset: 1 }}
           xxl={{ span: 4, offset: 1 }}
-          style={{ display: 'flex', justifyContent: 'center' }}
+          style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
         >
           <Link href={`/catalog/${encodeURIComponent(key)}`}>
             <Card
@@ -400,7 +400,7 @@ const CatalogCards = (): JSX.Element => {
             style={{
               marginTop: '14px',
               display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               maxWidth: '1600px',
             }}
           >

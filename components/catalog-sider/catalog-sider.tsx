@@ -49,7 +49,7 @@ const CatalogSider = ({
           width: 64,
           height: 64,
           zIndex: 101,
-          backgroundColor: 'rgba(23, 48, 173, 0.09)',
+          backgroundColor: 'white',
         }}
       />
       <Sider
