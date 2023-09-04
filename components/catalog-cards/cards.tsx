@@ -2,9 +2,11 @@ import { Button, Card, Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
 import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
+import getSortedProducts from '@/pages/api/sort';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
@@ -22,6 +24,7 @@ const CatalogCards = (): JSX.Element => {
   const [searchString, setSearchString] = useState<string>('');
   const [clear, setClear] = useState<boolean>(false);
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
+  const [sortString, setSortString] = useState<string>('');
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -107,12 +110,17 @@ const CatalogCards = (): JSX.Element => {
         filtered = await getFilteredProducts(allSelectedKeys, category);
       }
       if (filtered.response && typeof filtered.response !== 'number') {
-        getUpdatedProductCards(filtered.response);
+        if (sortString.length > 0) {
+          filtered = await getSortedProducts(allSelectedKeys, category, searchString, sortString);
+        }
+        if (filtered.response && typeof filtered.response !== 'number') {
+          getUpdatedProductCards(filtered.response);
+        }
       }
     };
 
     getFilteredProductsInfo();
-  }, [allSelectedKeys, category, clear, passSearchString]);
+  }, [allSelectedKeys, category, clear, passSearchString, sortString]);
 
   const onSearch = (string: string) => {
     setSearchString(string);
@@ -234,6 +242,46 @@ const CatalogCards = (): JSX.Element => {
   useEffect(() => {
     getProductsInfo();
   }, []);
+
+  const handleNameDropDownClick = (key: ItemType) => {
+    if (!key) return;
+    const field = 'name.en';
+    const direction = key.key;
+    setSortString(`${field} ${direction}`);
+  };
+
+  const handlePriceDropDownClick = (key: ItemType) => {
+    if (!key) return;
+    const field = 'price';
+    const direction = key.key;
+    setSortString(`${field} ${direction}`);
+  };
+
+  const itemsForName: MenuProps['items'] = [
+    {
+      label: 'Ascending',
+      key: 'asc',
+      onClick: (key) => handleNameDropDownClick(key),
+    },
+    {
+      label: ' Descending',
+      key: 'desc',
+      onClick: (key) => handleNameDropDownClick(key),
+    },
+  ];
+
+  const itemsForPrice: MenuProps['items'] = [
+    {
+      label: 'Ascending',
+      key: 'asc',
+      onClick: (key) => handlePriceDropDownClick(key),
+    },
+    {
+      label: ' Descending',
+      key: 'desc',
+      onClick: (key) => handlePriceDropDownClick(key),
+    },
+  ];
 
   const productCards =
     products &&
@@ -415,6 +463,8 @@ const CatalogCards = (): JSX.Element => {
         handleSelect={handleSelect}
         handleDeselect={handleDeselect}
         handleSubMenuClick={handleSubMenuClick}
+        itemsForPrice={itemsForPrice}
+        itemsForName={itemsForName}
       />
       <Layout className="site-layout">
         <Space style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', paddingRight: '10px' }}>

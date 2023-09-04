@@ -1,7 +1,7 @@
-import { Button, Layout, Menu, MenuProps } from 'antd';
+import { Button, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
 import { SetStateAction, useState } from 'react';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { MenuKeyProps, AllCategories } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
@@ -19,6 +19,8 @@ interface CatalogSiderProps {
   handleSelect: (menuProps: MenuKeyProps) => void;
   handleDeselect: (menuProps: MenuKeyProps) => void;
   handleSubMenuClick: (openKeys: string[]) => void;
+  itemsForName: MenuProps['items'];
+  itemsForPrice: MenuProps['items'];
 }
 
 const CatalogSider = ({
@@ -32,6 +34,8 @@ const CatalogSider = ({
   handleSubMenuClick,
   allSelectedKeys,
   setAllSelectedKeys,
+  itemsForName,
+  itemsForPrice,
 }: CatalogSiderProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -102,6 +106,24 @@ const CatalogSider = ({
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
           onOpenChange={(openKeys) => handleSubMenuClick(openKeys)}
         />
+        <Space style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+          <Dropdown menu={{ items: itemsForName }} trigger={['click']}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space style={{ marginLeft: '25px', marginTop: '20px' }}>
+                Sort by name:
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+          <Dropdown menu={{ items: itemsForPrice }} trigger={['click']}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space style={{ marginLeft: '25px', marginTop: '20px' }}>
+                Sort by price:
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        </Space>
       </Sider>
     </>
   );
