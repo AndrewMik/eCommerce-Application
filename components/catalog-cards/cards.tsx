@@ -2,9 +2,11 @@ import { Button, Card, Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
 import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
+import getSortedProducts from '@/pages/api/sort';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
@@ -22,6 +24,8 @@ const CatalogCards = (): JSX.Element => {
   const [searchString, setSearchString] = useState<string>('');
   const [clear, setClear] = useState<boolean>(false);
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
+  const [sortString, setSortString] = useState<string>('');
+  const [chosenSorting, setChosenSorting] = useState('');
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -107,12 +111,17 @@ const CatalogCards = (): JSX.Element => {
         filtered = await getFilteredProducts(allSelectedKeys, category);
       }
       if (filtered.response && typeof filtered.response !== 'number') {
-        getUpdatedProductCards(filtered.response);
+        if (sortString.length > 0) {
+          filtered = await getSortedProducts(allSelectedKeys, category, searchString, sortString);
+        }
+        if (filtered.response && typeof filtered.response !== 'number') {
+          getUpdatedProductCards(filtered.response);
+        }
       }
     };
 
     getFilteredProductsInfo();
-  }, [allSelectedKeys, category, clear, passSearchString]);
+  }, [allSelectedKeys, category, clear, passSearchString, sortString]);
 
   const onSearch = (string: string) => {
     setSearchString(string);
@@ -235,6 +244,52 @@ const CatalogCards = (): JSX.Element => {
     getProductsInfo();
   }, []);
 
+  const handleNameDropDownClick = (key: ItemType) => {
+    if (!key) return;
+    const field = 'name.en';
+    const direction = key.key;
+    setChosenSorting(`Sorted by name: ${direction === 'asc' ? 'A to Z' : 'Z to A'}`);
+    setSortString(`${field} ${direction}`);
+  };
+
+  const handlePriceDropDownClick = (key: ItemType) => {
+    if (!key) return;
+    const field = 'price';
+    const direction = key.key;
+    setChosenSorting(`Sorted by price: ${direction === 'asc' ? 'Lowest to Highest' : 'Highest to Lowest'}`);
+    setSortString(`${field} ${direction}`);
+  };
+
+  const itemsForName: MenuProps['items'] = [
+    {
+      label: 'A to Z',
+      key: 'asc',
+      onClick: (key) => handleNameDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
+    },
+    {
+      label: 'Z to A',
+      key: 'desc',
+      onClick: (key) => handleNameDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
+    },
+  ];
+
+  const itemsForPrice: MenuProps['items'] = [
+    {
+      label: 'Lowest to Highest',
+      key: 'asc',
+      onClick: (key) => handlePriceDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
+    },
+    {
+      label: 'Highest to Lowest',
+      key: 'desc',
+      onClick: (key) => handlePriceDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
+    },
+  ];
+
   const productCards =
     products &&
     products.map((product) => {
@@ -279,12 +334,8 @@ const CatalogCards = (): JSX.Element => {
 
       return (
         <Col
-          key={product.name.en}
-          xs={{ span: 23, offset: 1 }}
-          md={{ span: 11, offset: 1 }}
-          lg={{ span: 7, offset: 1 }}
-          xxl={{ span: 4, offset: 1 }}
-          style={{ display: 'flex', justifyContent: 'center', padding: '0' }}
+          key={product.key}
+          style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
         >
           <Link href={`/catalog/${encodeURIComponent(key)}`}>
             <Card
@@ -415,6 +466,11 @@ const CatalogCards = (): JSX.Element => {
         handleSelect={handleSelect}
         handleDeselect={handleDeselect}
         handleSubMenuClick={handleSubMenuClick}
+        itemsForPrice={itemsForPrice}
+        itemsForName={itemsForName}
+        chosenSorting={chosenSorting}
+        setSortString={setSortString}
+        setChosenSorting={setChosenSorting}
       />
       <Layout className="site-layout">
         <Space style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', paddingRight: '10px' }}>
@@ -430,6 +486,7 @@ const CatalogCards = (): JSX.Element => {
         <Content
           style={{
             marginLeft: '16px',
+            marginTop: '10px',
             overflow: 'initial',
             display: 'flex',
             justifyContent: 'center',
@@ -437,12 +494,12 @@ const CatalogCards = (): JSX.Element => {
           }}
         >
           <Row
-            gutter={[16, 16]}
             style={{
               marginTop: '14px',
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               maxWidth: '1600px',
+              gap: '20px',
             }}
           >
             {products && productCards}
