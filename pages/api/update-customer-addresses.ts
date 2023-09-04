@@ -1,6 +1,5 @@
 import { Customer, MyCustomerUpdate } from '@commercetools/platform-sdk';
 // import { getCode } from 'country-list';
-import { getBirthDate, getSalutation } from '@/components/registration-form/helpers/helper-functions';
 import { FormData } from '../../components/registration-form/helpers/registration.types';
 import Client from './client';
 
@@ -13,26 +12,6 @@ async function updateCustomerPersonal(customerData: Customer, formData: FormData
   const options: MyCustomerUpdate = {
     version: customerData.version,
     actions: [
-      {
-        action: 'setFirstName',
-        firstName: `${formData.firstName}`,
-      },
-      {
-        action: 'setLastName',
-        lastName: `${formData.lastName}`,
-      },
-      {
-        action: 'setDateOfBirth',
-        dateOfBirth: `${getBirthDate(formData.dateOfBirth)}`,
-      },
-      {
-        action: 'setSalutation',
-        salutation: `${getSalutation(formData.gender)}`,
-      },
-      {
-        action: 'changeEmail',
-        email: `${formData.email}`,
-      },
       {
         action: 'changeAddress',
         address: {
