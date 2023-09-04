@@ -1,7 +1,7 @@
 import { Button, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
 import { SetStateAction, useState } from 'react';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { MenuKeyProps, AllCategories } from './types';
 import { AttributeData } from '../catalog-cards/types';
 
@@ -21,6 +21,7 @@ interface CatalogSiderProps {
   handleSubMenuClick: (openKeys: string[]) => void;
   itemsForName: MenuProps['items'];
   itemsForPrice: MenuProps['items'];
+  chosenSorting: string;
 }
 
 const CatalogSider = ({
@@ -36,6 +37,7 @@ const CatalogSider = ({
   setAllSelectedKeys,
   itemsForName,
   itemsForPrice,
+  chosenSorting,
 }: CatalogSiderProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -106,10 +108,20 @@ const CatalogSider = ({
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
           onOpenChange={(openKeys) => handleSubMenuClick(openKeys)}
         />
+        <Space>
+          {chosenSorting.length > 0 ? (
+            <Space style={{ marginLeft: '25px', marginBlock: '20px', fontWeight: 'bold', color: 'rgb(36, 55, 99)' }}>
+              <CheckSquareOutlined />
+              {chosenSorting}
+            </Space>
+          ) : (
+            ''
+          )}
+        </Space>
         <Space style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <Dropdown menu={{ items: itemsForName }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
-              <Space style={{ marginLeft: '25px', marginTop: '20px' }}>
+              <Space style={{ marginLeft: '30px', marginTop: '20px', color: 'rgb(36, 55, 99)', fontWeight: 'bold' }}>
                 Sort by name:
                 <DownOutlined />
               </Space>
@@ -117,7 +129,7 @@ const CatalogSider = ({
           </Dropdown>
           <Dropdown menu={{ items: itemsForPrice }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
-              <Space style={{ marginLeft: '25px', marginTop: '20px' }}>
+              <Space style={{ marginLeft: '30px', marginTop: '20px', color: 'rgb(36, 55, 99)', fontWeight: 'bold' }}>
                 Sort by price:
                 <DownOutlined />
               </Space>

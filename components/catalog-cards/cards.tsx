@@ -25,6 +25,7 @@ const CatalogCards = (): JSX.Element => {
   const [clear, setClear] = useState<boolean>(false);
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
   const [sortString, setSortString] = useState<string>('');
+  const [chosenSorting, setChosenSorting] = useState('');
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -247,6 +248,7 @@ const CatalogCards = (): JSX.Element => {
     if (!key) return;
     const field = 'name.en';
     const direction = key.key;
+    setChosenSorting(`Sorted by name: ${direction === 'asc' ? 'A to Z' : 'Z to A'}`);
     setSortString(`${field} ${direction}`);
   };
 
@@ -254,32 +256,37 @@ const CatalogCards = (): JSX.Element => {
     if (!key) return;
     const field = 'price';
     const direction = key.key;
+    setChosenSorting(`Sorted by price: ${direction === 'asc' ? 'Lowest to Highest' : 'Highest to Lowest'}`);
     setSortString(`${field} ${direction}`);
   };
 
   const itemsForName: MenuProps['items'] = [
     {
-      label: 'Ascending',
+      label: 'A to Z',
       key: 'asc',
       onClick: (key) => handleNameDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
     },
     {
-      label: ' Descending',
+      label: 'Z to A',
       key: 'desc',
       onClick: (key) => handleNameDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
     },
   ];
 
   const itemsForPrice: MenuProps['items'] = [
     {
-      label: 'Ascending',
+      label: 'Lowest to Highest',
       key: 'asc',
       onClick: (key) => handlePriceDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
     },
     {
-      label: ' Descending',
+      label: 'Highest to Lowest',
       key: 'desc',
       onClick: (key) => handlePriceDropDownClick(key),
+      style: { color: 'rgb(36, 55, 99)' },
     },
   ];
 
@@ -465,6 +472,7 @@ const CatalogCards = (): JSX.Element => {
         handleSubMenuClick={handleSubMenuClick}
         itemsForPrice={itemsForPrice}
         itemsForName={itemsForName}
+        chosenSorting={chosenSorting}
       />
       <Layout className="site-layout">
         <Space style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', paddingRight: '10px' }}>
