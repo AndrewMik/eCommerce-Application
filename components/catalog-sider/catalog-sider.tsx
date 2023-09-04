@@ -22,6 +22,8 @@ interface CatalogSiderProps {
   itemsForName: MenuProps['items'];
   itemsForPrice: MenuProps['items'];
   chosenSorting: string;
+  setSortString: (value: SetStateAction<string>) => void;
+  setChosenSorting: (value: SetStateAction<string>) => void;
 }
 
 const CatalogSider = ({
@@ -38,6 +40,8 @@ const CatalogSider = ({
   itemsForName,
   itemsForPrice,
   chosenSorting,
+  setSortString,
+  setChosenSorting,
 }: CatalogSiderProps) => {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -79,7 +83,7 @@ const CatalogSider = ({
         <Button
           size="small"
           style={{
-            marginLeft: '120px',
+            marginLeft: '90px',
             left: '0px',
             top: '-15px',
             zIndex: 101,
@@ -91,9 +95,11 @@ const CatalogSider = ({
           onClick={() => {
             setAllSelectedKeys([]);
             setCategory([]);
+            setSortString('');
+            setChosenSorting('');
           }}
         >
-          reset filters
+          reset filters/sort options
         </Button>
         <Menu
           mode="inline"

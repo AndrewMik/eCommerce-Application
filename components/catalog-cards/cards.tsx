@@ -473,6 +473,8 @@ const CatalogCards = (): JSX.Element => {
         itemsForPrice={itemsForPrice}
         itemsForName={itemsForName}
         chosenSorting={chosenSorting}
+        setSortString={setSortString}
+        setChosenSorting={setChosenSorting}
       />
       <Layout className="site-layout">
         <Space style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', paddingRight: '10px' }}>
