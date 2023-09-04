@@ -5,7 +5,6 @@ import { Category, ProductDiscountValueRelative, ProductProjection } from '@comm
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
-import findMainCategoryById from '@/utils/sub-categorySearch';
 import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
@@ -28,15 +27,9 @@ const CatalogCards = (): JSX.Element => {
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
     const items: MenuProps['items'] = ['category'].map((mainCategory) => {
-      let categoryTitle: Category | null = null;
-
-      if (category.length !== 0) {
-        categoryTitle = findMainCategoryById(categories, category[0]);
-      }
-
       return {
         key: `${mainCategory}`,
-        label: `Category: ${categoryTitle ? categoryTitle.name.en : ''}`,
+        label: `Category:`,
 
         children: categories.map((subCat) => {
           const label = subCat.mainCategory.name.en;
