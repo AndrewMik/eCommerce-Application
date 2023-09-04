@@ -25,6 +25,8 @@ type PasswordChangeFormData = {
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const { notification } = App.useApp();
   const [form] = Form.useForm();
+
+  const [newAddresses, setNewAddresses] = useState<number[]>([]);
   const [customerData, setCustomerData] = useState<Customer>({
     id: '',
     version: 0,
@@ -38,6 +40,8 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   const saveCustomerChanges = async (formData: FormData) => {
+    // eslint-disable-next-line no-console
+    console.log(formData);
     await updateCustomer(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
   };
@@ -65,6 +69,42 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         message: `Password change failed!`,
       });
     }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [state, setState] = useState({
+    isDefaultShipping: false,
+    isDefaultBilling: false,
+    isShipping: false,
+    isBilling: false,
+  });
+
+  const onDefaultShippingChange = (checked: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isDefaultShipping: checked,
+    }));
+  };
+
+  const onDefaultBillingChange = (checked: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isDefaultBilling: checked,
+    }));
+  };
+
+  const onShippingChange = (checked: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isShipping: checked,
+    }));
+  };
+
+  const onBillingChange = (checked: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isBilling: checked,
+    }));
   };
 
   useEffect(() => {
@@ -142,9 +182,32 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                         isBilling={isBilling}
                         isDefaultShipping={isDefaultShipping}
                         isDefaultBilling={isDefaultBilling}
+                        onDefaultShippingChange={onDefaultShippingChange}
+                        onDefaultBillingChange={onDefaultBillingChange}
+                        onShippingChange={onShippingChange}
+                        onBillingChange={onBillingChange}
                       />
                     );
                   })}
+                {newAddresses.map((_, index) => (
+                  <Form.Item key={`new-${index}`}>
+                    <AddressProfileSection
+                      countries={countries}
+                      form={form}
+                      nameSuffix={`new-${index}`}
+                      componentDisabled={componentDisabled}
+                      isShipping={false}
+                      isBilling={false}
+                      isDefaultShipping={false}
+                      isDefaultBilling={false}
+                      onDefaultShippingChange={onDefaultShippingChange}
+                      onDefaultBillingChange={onDefaultBillingChange}
+                      onShippingChange={onShippingChange}
+                      onBillingChange={onBillingChange}
+                    />
+                  </Form.Item>
+                ))}
+                <Button onClick={() => setNewAddresses([...newAddresses, newAddresses.length])}>Add</Button>
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
                     Save Changes
