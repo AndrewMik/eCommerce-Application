@@ -9,6 +9,7 @@ interface PasswordFieldProps {
   rules: Rule[];
   iconStyle?: React.CSSProperties;
   hasFeedback?: boolean;
+  dependencies?: string[] | undefined;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> = ({
@@ -18,8 +19,16 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   rules,
   iconStyle,
   hasFeedback = false,
+  dependencies,
 }) => (
-  <Form.Item label={label} name={name} required={true} rules={rules} hasFeedback={hasFeedback}>
+  <Form.Item
+    label={label}
+    name={name}
+    required={true}
+    rules={rules}
+    hasFeedback={hasFeedback}
+    dependencies={dependencies}
+  >
     <Input.Password prefix={<LockOutlined style={iconStyle} />} placeholder={placeholder} />
   </Form.Item>
 );
