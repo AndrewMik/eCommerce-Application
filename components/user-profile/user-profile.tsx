@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Layout, Card, Switch, App } from 'antd';
+import { Form, Button, Row, Col, Layout, Card, Switch, App, Modal } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
-import updateCustomer from '@/pages/api/update-customer';
+import updateCustomerPersonal from '@/pages/api/update-customer-personal';
 import getClient from '@/pages/api/get-client';
 import updatePassword from '@/pages/api/update-password';
 import PersonalSection from '../registration-form/sections/personal-section';
@@ -25,8 +25,10 @@ type PasswordChangeFormData = {
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const { notification } = App.useApp();
   const [form] = Form.useForm();
+  const [formModal] = Form.useForm();
 
-  const [newAddresses, setNewAddresses] = useState<number[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newAddresses] = useState<number[]>([]);
   const [customerData, setCustomerData] = useState<Customer>({
     id: '',
     version: 0,
@@ -42,7 +44,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const saveCustomerChanges = async (formData: FormData) => {
     // eslint-disable-next-line no-console
     console.log(formData);
-    await updateCustomer(customerData as Customer, formData as FormData);
+    await updateCustomerPersonal(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
   };
 
@@ -69,6 +71,14 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         message: `Password change failed!`,
       });
     }
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -192,6 +202,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                 {newAddresses.map((_, index) => (
                   <Form.Item key={`new-${index}`}>
                     <AddressProfileSection
+                      key={`new-${index}`}
                       countries={countries}
                       form={form}
                       nameSuffix={`new-${index}`}
@@ -207,7 +218,46 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                     />
                   </Form.Item>
                 ))}
-                <Button onClick={() => setNewAddresses([...newAddresses, newAddresses.length])}>Add</Button>
+                {/* <Button onClick={() => setNewAddresses([...newAddresses, newAddresses.length])}>Add</Button> */}
+                <Button onClick={showModal}>Add</Button>
+                <Modal
+                  title="Add Address"
+                  open={isModalVisible}
+                  onCancel={handleCancel}
+                  footer={[
+                    <Button key="cancel" onClick={handleCancel}>
+                      Cancel
+                    </Button>,
+                    <Button key="submit" type="primary" form="address-form" htmlType="submit">
+                      Save
+                    </Button>,
+                  ]}
+                >
+                  <Form
+                    id="address-form"
+                    form={formModal}
+                    autoComplete="on"
+                    layout="vertical"
+                    onFinish={saveCustomerChanges}
+                  >
+                    <Form.Item>
+                      <AddressProfileSection
+                        form={formModal}
+                        countries={countries}
+                        nameSuffix={`new-modal`}
+                        componentDisabled={false}
+                        isShipping={false}
+                        isBilling={false}
+                        isDefaultShipping={false}
+                        isDefaultBilling={false}
+                        onDefaultShippingChange={onDefaultShippingChange}
+                        onDefaultBillingChange={onDefaultBillingChange}
+                        onShippingChange={onShippingChange}
+                        onBillingChange={onBillingChange}
+                      />
+                    </Form.Item>
+                  </Form>
+                </Modal>
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
                     Save Changes
@@ -217,16 +267,14 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
               <div style={{ marginTop: 100 }}></div>
               <DividerText text={'Change Password'} />
               <Form
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
                 name="user-password-form"
                 initialValues={{
                   remember: true,
                 }}
+                layout="vertical"
                 autoComplete="on"
                 onFinish={changePassword}
               >
-                <div style={{ marginBottom: 20 }}>To change the password for your account, use this form.</div>
                 <PasswordField
                   {...fieldDefinitions.password}
                   label="Current password"

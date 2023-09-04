@@ -138,10 +138,10 @@ const confirmPasswordRules = (): Rule[] => [
   }),
 ];
 
-const getPostalCodeRules = (form: FormInstance, fieldName: string): Rule[] => [
+const getPostalCodeRules = (form: FormInstance, countryFieldName: string): Rule[] => [
   {
     validator: (_, value: string) => {
-      const countryName = form.getFieldValue(fieldName);
+      const countryName = form.getFieldValue(countryFieldName);
       const countryCode = countryName ? getCode(countryName) : null;
 
       if (!value) {
