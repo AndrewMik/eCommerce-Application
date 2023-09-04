@@ -43,7 +43,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
     <>
       <Modal
         className={customClassname}
-        width={'50%'}
+        width={'75vh'}
         centered={true}
         open={open}
         onCancel={handleCancel}
