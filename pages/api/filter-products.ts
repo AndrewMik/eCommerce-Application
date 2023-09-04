@@ -2,7 +2,7 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function executeQuery(filterStrings: string[]) {
+async function executeQuery(filterStrings: string[], searchString: string) {
   const client = new Client().clientCredentialsClient;
 
   try {
@@ -14,6 +14,8 @@ async function executeQuery(filterStrings: string[]) {
           limit: 200,
           expand: ['masterVariant.prices[*].discounted.discount'],
           filter: filterStrings,
+          'text.en': searchString,
+          fuzzy: true,
         },
       })
       .execute();
@@ -24,7 +26,7 @@ async function executeQuery(filterStrings: string[]) {
   }
 }
 
-function getFilteredProducts(filters: string[][], categories: string[]) {
+function getFilteredProducts(filters: string[][], categories: string[], search = '') {
   let filterStrings: string[] = [];
 
   if (filters.length > 0) {
@@ -62,7 +64,7 @@ function getFilteredProducts(filters: string[][], categories: string[]) {
     });
   }
 
-  return executeQuery(filterStrings);
+  return executeQuery(filterStrings, search);
 }
 
 export default getFilteredProducts;

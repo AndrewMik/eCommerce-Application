@@ -10,7 +10,6 @@ import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import getSearchedProducts from '../../pages/api/search-products';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -22,6 +21,7 @@ const CatalogCards = (): JSX.Element => {
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
   const [searchString, setSearchString] = useState<string>('');
   const [clear, setClear] = useState<boolean>(false);
+  const [passSearchString, setPassSearchString] = useState<boolean>(false);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -100,25 +100,23 @@ const CatalogCards = (): JSX.Element => {
   useEffect(() => {
     const getFilteredProductsInfo = async () => {
       if (!allSelectedKeys) return;
-      const filtered = await getFilteredProducts(allSelectedKeys, category);
+      let filtered;
+      if (searchString.length > 0) {
+        filtered = await getFilteredProducts(allSelectedKeys, category, searchString);
+      } else {
+        filtered = await getFilteredProducts(allSelectedKeys, category);
+      }
       if (filtered.response && typeof filtered.response !== 'number') {
-        if (searchString.length > 0) {
-          const { response } = await getSearchedProducts(searchString);
-          if (response && typeof response !== 'number') {
-            getUpdatedProductCards(response);
-          }
-        } else {
-          getUpdatedProductCards(filtered.response);
-        }
+        getUpdatedProductCards(filtered.response);
       }
     };
+
     getFilteredProductsInfo();
-  }, [allSelectedKeys, category, clear]);
+  }, [allSelectedKeys, category, clear, passSearchString]);
 
   const onSearch = (string: string) => {
     setSearchString(string);
-    setAllSelectedKeys([]);
-    setCategory([]);
+    setPassSearchString((prevValue) => !prevValue);
   };
 
   const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
