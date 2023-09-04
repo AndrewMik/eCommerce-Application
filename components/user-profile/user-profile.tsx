@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Layout, Card, Switch, App, Modal } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
+import addNewCustomerAddress from '@/pages/api/update-customer-addresses';
 import updateCustomerPersonal from '@/pages/api/update-customer-personal';
 import getClient from '@/pages/api/get-client';
 import updatePassword from '@/pages/api/update-password';
 import PersonalSection from '../registration-form/sections/personal-section';
-import { FormData } from '../registration-form/helpers/registration.types';
+import { FormData, FormDataAddNewAddress } from '../registration-form/helpers/registration.types';
 import AddressProfileSection from './address-profile-section';
 import DividerText from '../registration-form/fields/divider-field';
 import setFormData from './helpers/set-form-data';
@@ -28,7 +29,6 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [formModal] = Form.useForm();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newAddresses] = useState<number[]>([]);
   const [customerData, setCustomerData] = useState<Customer>({
     id: '',
     version: 0,
@@ -41,10 +41,40 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   });
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
+  function updateCustomerData() {
+    const fetchData = async () => {
+      const customer = await getClient();
+      setCustomerData(customer as Customer);
+      setFormData(form, customer as Customer);
+    };
+
+    fetchData().catch(console.error);
+  }
+
   const saveCustomerChanges = async (formData: FormData) => {
     // eslint-disable-next-line no-console
     console.log(formData);
     await updateCustomerPersonal(customerData as Customer, formData as FormData);
+    setComponentDisabled(true);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    formModal.resetFields();
+  };
+
+  const addNewAddress = async (formData: FormData) => {
+    // eslint-disable-next-line no-console
+    console.log(formData);
+    await addNewCustomerAddress(customerData as Customer, formData as unknown as FormDataAddNewAddress);
+
+    updateCustomerData();
+
+    await handleCancel();
     setComponentDisabled(true);
   };
 
@@ -71,14 +101,6 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
         message: `Password change failed!`,
       });
     }
-  };
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -118,14 +140,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const customer = await getClient();
-      console.log(customer); // eslint-disable-line no-console
-      setCustomerData(customer as Customer);
-      setFormData(form, customer as Customer);
-    };
-
-    fetchData().catch(console.error);
+    updateCustomerData();
   }, []);
 
   return (
@@ -199,27 +214,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                       />
                     );
                   })}
-                {newAddresses.map((_, index) => (
-                  <Form.Item key={`new-${index}`}>
-                    <AddressProfileSection
-                      key={`new-${index}`}
-                      countries={countries}
-                      form={form}
-                      nameSuffix={`new-${index}`}
-                      componentDisabled={componentDisabled}
-                      isShipping={false}
-                      isBilling={false}
-                      isDefaultShipping={false}
-                      isDefaultBilling={false}
-                      onDefaultShippingChange={onDefaultShippingChange}
-                      onDefaultBillingChange={onDefaultBillingChange}
-                      onShippingChange={onShippingChange}
-                      onBillingChange={onBillingChange}
-                    />
-                  </Form.Item>
-                ))}
-                {/* <Button onClick={() => setNewAddresses([...newAddresses, newAddresses.length])}>Add</Button> */}
-                <Button onClick={showModal}>Add</Button>
+                <Button onClick={showModal}>Add New Address</Button>
                 <Modal
                   title="Add Address"
                   open={isModalVisible}
@@ -233,18 +228,12 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                     </Button>,
                   ]}
                 >
-                  <Form
-                    id="address-form"
-                    form={formModal}
-                    autoComplete="on"
-                    layout="vertical"
-                    onFinish={saveCustomerChanges}
-                  >
+                  <Form id="address-form" form={formModal} autoComplete="on" layout="vertical" onFinish={addNewAddress}>
                     <Form.Item>
                       <AddressProfileSection
                         form={formModal}
                         countries={countries}
-                        nameSuffix={`new-modal`}
+                        nameSuffix={`newAddress`}
                         componentDisabled={false}
                         isShipping={false}
                         isBilling={false}

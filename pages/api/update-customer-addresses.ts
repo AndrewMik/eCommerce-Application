@@ -1,9 +1,9 @@
 import { Customer, MyCustomerUpdate } from '@commercetools/platform-sdk';
-// import { getCode } from 'country-list';
-import { FormData } from '../../components/registration-form/helpers/registration.types';
+import { getCode } from 'country-list';
+import { FormDataAddNewAddress } from '../../components/registration-form/helpers/registration.types';
 import Client from './client';
 
-async function updateCustomerPersonal(customerData: Customer, formData: FormData) {
+async function addNewCustomerAddress(customerData: Customer, formData: FormDataAddNewAddress) {
   const refreshToken = localStorage.getItem('refreshToken') as string;
   const client = Client.getInstance().clientWithRefreshTokenFlow(refreshToken);
   // eslint-disable-next-line no-console
@@ -13,9 +13,14 @@ async function updateCustomerPersonal(customerData: Customer, formData: FormData
     version: customerData.version,
     actions: [
       {
-        action: 'changeAddress',
+        action: 'addAddress',
         address: {
-          country: `${formData.country_shipping}`,
+          streetName: formData.street_newAddress,
+          postalCode: formData.postalCode_newAddress,
+          city: formData.city_newAddress,
+          country: getCode(formData.country_newAddress) as string,
+          building: formData.building_newAddress,
+          apartment: formData.apartment_newAddress,
         },
       },
     ],
@@ -31,4 +36,4 @@ async function updateCustomerPersonal(customerData: Customer, formData: FormData
   }
 }
 
-export default updateCustomerPersonal;
+export default addNewCustomerAddress;

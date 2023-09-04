@@ -63,7 +63,7 @@ const CatalogCards = (): JSX.Element => {
     return items;
   };
 
-  const displayFilteres = (attributes: AttributeData): MenuProps['items'] => {
+  const displayFilters = (attributes: AttributeData): MenuProps['items'] => {
     const items: MenuProps['items'] = filterNames.map((name) => {
       const label = getCapitalizedFirstLabel(name);
       const childrenData = Object.values(attributes[name]);
@@ -410,7 +410,7 @@ const CatalogCards = (): JSX.Element => {
         setCategory={setCategory}
         allCategories={allCategories}
         displayCategories={displayCategories}
-        displayFilteres={displayFilteres}
+        displayFilters={displayFilters}
         handleSelect={handleSelect}
         handleDeselect={handleDeselect}
         handleSubMenuClick={handleSubMenuClick}

@@ -60,3 +60,16 @@ export type FormData = {
   setAsDefault_shipping: boolean;
   setAsDefault_billing: boolean;
 };
+
+export type FormDataAddNewAddress = {
+  apartment_newAddress: string;
+  building_newAddress: string;
+  city_newAddress: string;
+  country_newAddress: string;
+  postalCode_newAddress: string;
+  setAsBilling_newAddress: string;
+  setAsDefaultBilling_newAddress: string;
+  setAsDefaultShipping_newAddress: string;
+  setAsShipping_newAddress: string;
+  street_newAddress: string;
+};
