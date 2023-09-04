@@ -334,12 +334,8 @@ const CatalogCards = (): JSX.Element => {
 
       return (
         <Col
-          key={product.name.en}
-          xs={{ span: 23, offset: 1 }}
-          md={{ span: 11, offset: 1 }}
-          lg={{ span: 7, offset: 1 }}
-          xxl={{ span: 4, offset: 1 }}
-          style={{ display: 'flex', justifyContent: 'center', padding: '0' }}
+          key={product.key}
+          style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
         >
           <Link href={`/catalog/${encodeURIComponent(key)}`}>
             <Card
@@ -490,6 +486,7 @@ const CatalogCards = (): JSX.Element => {
         <Content
           style={{
             marginLeft: '16px',
+            marginTop: '10px',
             overflow: 'initial',
             display: 'flex',
             justifyContent: 'center',
@@ -497,12 +494,12 @@ const CatalogCards = (): JSX.Element => {
           }}
         >
           <Row
-            gutter={[16, 16]}
             style={{
               marginTop: '14px',
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               maxWidth: '1600px',
+              gap: '20px',
             }}
           >
             {products && productCards}
