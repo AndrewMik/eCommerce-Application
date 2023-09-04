@@ -1,5 +1,5 @@
-import { Button, Card, Col, Layout, MenuProps, Row } from 'antd';
-import { useState, useEffect } from 'react';
+import { Button, Card, Col, Layout, MenuProps, Row, Space, Input } from 'antd';
+import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
 import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import getFilteredProducts from '@/pages/api/filter-products';
@@ -12,12 +12,16 @@ import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
 
 const { Content } = Layout;
+const { Search } = Input;
 
 const { Meta } = Card;
 
 const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[] | null>(null);
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
+  const [searchString, setSearchString] = useState<string>('');
+  const [clear, setClear] = useState<boolean>(false);
+  const [passSearchString, setPassSearchString] = useState<boolean>(false);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -96,13 +100,32 @@ const CatalogCards = (): JSX.Element => {
   useEffect(() => {
     const getFilteredProductsInfo = async () => {
       if (!allSelectedKeys) return;
-      const filtered = await getFilteredProducts(allSelectedKeys, category);
+      let filtered;
+      if (searchString.length > 0) {
+        filtered = await getFilteredProducts(allSelectedKeys, category, searchString);
+      } else {
+        filtered = await getFilteredProducts(allSelectedKeys, category);
+      }
       if (filtered.response && typeof filtered.response !== 'number') {
         getUpdatedProductCards(filtered.response);
       }
     };
+
     getFilteredProductsInfo();
-  }, [allSelectedKeys, category]);
+  }, [allSelectedKeys, category, clear, passSearchString]);
+
+  const onSearch = (string: string) => {
+    setSearchString(string);
+    setPassSearchString((prevValue) => !prevValue);
+  };
+
+  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setSearchString(target.value);
+    if (target.value.length === 0) {
+      setClear((prevValue) => !prevValue);
+    }
+  };
 
   const handleSelect = (menuProps: MenuKeyProps) => {
     const { keyPath } = menuProps;
@@ -261,7 +284,7 @@ const CatalogCards = (): JSX.Element => {
           md={{ span: 11, offset: 1 }}
           lg={{ span: 7, offset: 1 }}
           xxl={{ span: 4, offset: 1 }}
-          style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+          style={{ display: 'flex', justifyContent: 'center', padding: '0' }}
         >
           <Link href={`/catalog/${encodeURIComponent(key)}`}>
             <Card
@@ -394,7 +417,25 @@ const CatalogCards = (): JSX.Element => {
         handleSubMenuClick={handleSubMenuClick}
       />
       <Layout className="site-layout">
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial', display: 'flex', justifyContent: 'center' }}>
+        <Space style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', paddingRight: '10px' }}>
+          <Search
+            placeholder="input search text"
+            onSearch={onSearch}
+            style={{ width: 200 }}
+            onInput={(e) => handleInputChange(e)}
+            value={searchString}
+          />
+        </Space>
+
+        <Content
+          style={{
+            marginLeft: '16px',
+            overflow: 'initial',
+            display: 'flex',
+            justifyContent: 'center',
+            overflowX: 'hidden',
+          }}
+        >
           <Row
             gutter={[16, 16]}
             style={{
