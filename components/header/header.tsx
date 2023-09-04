@@ -27,7 +27,7 @@ const MainHeader = () => {
   const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
-    setVisible(true);
+    setVisible((prevValue) => !prevValue);
   };
 
   const onClose = () => {
@@ -78,7 +78,15 @@ const MainHeader = () => {
   return (
     <>
       <Notifications />
-      <Header style={{ padding: 0 }}>
+      <Header
+        style={{
+          padding: 0,
+          zIndex: 10001,
+          position: 'sticky',
+          top: 0,
+          width: '100%',
+        }}
+      >
         <Row>
           <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
             <Link href={'/'} style={{ marginLeft: 10 }}>

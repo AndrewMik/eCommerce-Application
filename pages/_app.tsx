@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
 import { ConfigProvider, Layout, Space, Spin } from 'antd';
+import '../global.css';
 import { useState, useEffect } from 'react';
 import MainFooter from '@/components/footer/footer';
 import MainHeader from '@/components/header/header';
