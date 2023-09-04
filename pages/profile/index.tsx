@@ -2,13 +2,18 @@
 
 import { App } from 'antd';
 import { useContext, useState, useEffect } from 'react';
-import Home from '@/components/home/home';
+import { useRouter } from 'next/router'; // change 'next/navigation' to 'next/router'
+
 import { AuthContext } from '@/context/authorization-context';
 import Profile from '@/components/user-profile/user-profile';
 import getCountries from '@/pages/api/get-countries';
 
+import { Paths } from '../../utils/route-links';
+
 const Page = (): JSX.Element => {
   const [countries, setCountries] = useState<string[]>([]);
+  const { isLoggedIn } = useContext(AuthContext);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchCountries() {
@@ -18,9 +23,13 @@ const Page = (): JSX.Element => {
     fetchCountries();
   }, []);
 
-  const { isLoggedIn } = useContext(AuthContext);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push(Paths.LOGIN);
+    }
+  }, [isLoggedIn, router]);
 
-  return <App notification={{ placement: 'bottom' }}>{isLoggedIn ? <Profile countries={countries} /> : <Home />}</App>;
+  return <App notification={{ placement: 'bottom' }}>{isLoggedIn && <Profile countries={countries} /> : <Home />}</App>;
 };
 
 export default Page;

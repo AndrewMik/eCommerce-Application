@@ -53,8 +53,8 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
                 name="register-form"
                 initialValues={{
                   remember: true,
-                  [`${AddressFieldsName.SET_AS_DEFAULT}${AddressSuffix.SHIPPING}`]: true,
-                  [`${AddressFieldsName.SET_AS_DEFAULT}${AddressSuffix.BILLING}`]: true,
+                  [`${AddressFieldsName.SET_AS_DEFAULT_SHIPPING}${AddressSuffix.SHIPPING}`]: true,
+                  [`${AddressFieldsName.SET_AS_DEFAULT_BILLING}${AddressSuffix.BILLING}`]: true,
                   [AddressFieldsName.USE_AS_BILLING_ADDRESS]: false,
                 }}
                 autoComplete="on"

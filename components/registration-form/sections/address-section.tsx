@@ -73,14 +73,16 @@ const AddressSection: React.FC<AddressSectionProps & SectionProps> = ({
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
-            <SelectField
-              {...fieldDefinitions.country}
-              name={countryFieldName}
-              options={countries.map((country) => ({ value: country, label: country }))}
-              rules={getCountryRules()}
-              required={true}
-              onChange={() => form.validateFields([postalCodeFieldName])}
-            />
+            <>
+              <SelectField
+                {...fieldDefinitions.country}
+                name={countryFieldName}
+                options={countries.map((country) => ({ value: country, label: country }))}
+                rules={getCountryRules()}
+                required={true}
+                onChange={() => form.validateFields([postalCodeFieldName])}
+              />
+            </>
           )}
           {isProfilePage && componentDisabled && (
             <InputField

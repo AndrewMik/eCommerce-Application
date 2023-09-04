@@ -6,7 +6,12 @@ export enum AddressFieldsName {
   APARTMENT = 'apartment',
   POSTAL_CODE = 'postalCode',
   SET_AS_DEFAULT = 'setAsDefault',
+  SET_AS_DEFAULT_SHIPPING = 'setAsDefaultShipping',
+  SET_AS_DEFAULT_BILLING = 'setAsDefaultBilling',
+  SET_AS_SHIPPING = 'setAsShipping',
+  SET_AS_BILLING = 'setAsBilling',
   USE_AS_BILLING_ADDRESS = 'useAsBillingAddress',
+  ADDRESS_ID = 'addressId',
 }
 
 export enum AddressSuffix {
