@@ -116,7 +116,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           )}
         </Col>
 
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
           <InputField
             {...fieldDefinitions.postalCode}
             componentDisabled={componentDisabled}
