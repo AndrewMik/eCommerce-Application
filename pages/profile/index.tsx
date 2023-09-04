@@ -1,3 +1,6 @@
+'use client';
+
+import { App } from 'antd';
 import { useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/router'; // change 'next/navigation' to 'next/router'
 
@@ -26,7 +29,7 @@ const Page = (): JSX.Element => {
     }
   }, [isLoggedIn, router]);
 
-  return <>{isLoggedIn && <Profile countries={countries} />}</>;
+  return <App notification={{ placement: 'bottom' }}>{isLoggedIn && <Profile countries={countries} /> : <Home />}</App>;
 };
 
 export default Page;

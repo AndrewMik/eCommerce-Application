@@ -1,4 +1,4 @@
-import { Attribute, LocalizedString, Image, Price, ProductDiscountValueRelative } from '@commercetools/platform-sdk';
+import { Attribute, LocalizedString, Image, Price } from '@commercetools/platform-sdk';
 
 export interface Discount {
   permyriad: number;
