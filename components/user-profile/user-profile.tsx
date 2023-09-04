@@ -1,7 +1,5 @@
-'use client';
-
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Layout, Card, Switch, Checkbox, App } from 'antd';
+import { Form, Button, Row, Col, Layout, Card, Switch, App } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
 import updateCustomer from '@/pages/api/update-customer';
 import getClient from '@/pages/api/get-client';
@@ -39,10 +37,10 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   });
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
-
   const saveCustomerChanges = async (formData: FormData) => {
     await updateCustomer(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
+  };
 
   const changePassword = async (formData: PasswordChangeFormData) => {
     const response = await updatePassword(
@@ -58,7 +56,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       });
       const fetchData = async () => {
         const customer = await getClient();
-        await setCustomerData(customer);
+        await setCustomerData(customer as Customer);
       };
 
       fetchData().catch(console.error);
@@ -72,8 +70,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   useEffect(() => {
     const fetchData = async () => {
       const customer = await getClient();
-      // eslint-disable-next-line no-console
-      console.log(customer);
+      console.log(customer); // eslint-disable-line no-console
       setCustomerData(customer as Customer);
       setFormData(form, customer as Customer);
     };
