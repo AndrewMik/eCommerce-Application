@@ -1,8 +1,8 @@
-import { Button, Card, Col, Layout, MenuProps, Row } from 'antd';
+import { Breadcrumb, Button, Card, Col, Layout, MenuProps, Row } from 'antd';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
-// import { HomeOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { HomeOutlined, ShoppingOutlined } from '@ant-design/icons';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
@@ -381,7 +381,7 @@ const CatalogCards = (): JSX.Element => {
 
   return (
     <Layout hasSider>
-      {/* <Breadcrumb
+      <Breadcrumb
         items={[
           {
             href: './',
@@ -396,12 +396,9 @@ const CatalogCards = (): JSX.Element => {
               </>
             ),
           },
-          {
-            title: 'Application',
-          },
         ]}
         style={{ marginLeft: 100, marginTop: 10 }}
-      /> */}
+      />
       <CatalogSider
         attributeData={attributeData}
         getUpdatedProductCards={getUpdatedProductCards}
