@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Layout, Card, Switch, App, Modal } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
-import addNewCustomerAddress from '@/pages/api/update-customer-addresses';
+import addNewCustomerAddress from '@/pages/api/add-new-customer-address';
 import updateCustomerPersonal from '@/pages/api/update-customer-personal';
 import getClient from '@/pages/api/get-client';
 import updatePassword from '@/pages/api/update-password';
+import setTagsToNewAddress from '@/pages/api/set-tags-to-new-address';
 import PersonalSection from '../registration-form/sections/personal-section';
 import { FormData, FormDataAddNewAddress } from '../registration-form/helpers/registration.types';
 import AddressProfileSection from './address-profile-section';
@@ -41,14 +42,19 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   });
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
-  function updateCustomerData() {
-    const fetchData = async () => {
-      const customer = await getClient();
-      setCustomerData(customer as Customer);
-      setFormData(form, customer as Customer);
-    };
+  const [state, setState] = useState({
+    isDefaultShipping: false,
+    isDefaultBilling: false,
+    isShipping: false,
+    isBilling: false,
+  });
 
-    fetchData().catch(console.error);
+  async function updateCustomerData() {
+    const customer = await getClient();
+    // eslint-disable-next-line no-console
+    console.log((customer as Customer).version);
+    setCustomerData(customer as Customer);
+    setFormData(form, customer as Customer);
   }
 
   const saveCustomerChanges = async (formData: FormData) => {
@@ -67,14 +73,43 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
     formModal.resetFields();
   };
 
-  const addNewAddress = async (formData: FormData) => {
+  const addNewAddress = async (formData: FormDataAddNewAddress) => {
     // eslint-disable-next-line no-console
     console.log(formData);
-    await addNewCustomerAddress(customerData as Customer, formData as unknown as FormDataAddNewAddress);
 
-    updateCustomerData();
+    // eslint-disable-next-line no-console
+    console.log('1', customerData.version);
+    await addNewCustomerAddress(customerData as Customer, formData);
 
-    await handleCancel();
+    // eslint-disable-next-line no-console
+    console.log('2', customerData.version);
+    await updateCustomerData();
+
+    // eslint-disable-next-line no-console
+    console.log('4', customerData.version);
+    setState({
+      isShipping: formData.setAsShipping_newAddress,
+      isBilling: formData.setAsBilling_newAddress,
+      isDefaultShipping: formData.setAsDefaultShipping_newAddress,
+      isDefaultBilling: formData.setAsDefaultBilling_newAddress,
+    });
+
+    const lastCustomerAddressId = customerData.addresses[customerData.addresses.length - 1].id as string;
+
+    const fetchData = async () => {
+      const customer = await getClient();
+      setCustomerData(customer as Customer);
+      // eslint-disable-next-line no-console
+      console.log('5', customerData.version);
+    };
+
+    fetchData().catch(console.error);
+    // eslint-disable-next-line no-console
+    console.log('6', customerData.version);
+
+    await setTagsToNewAddress(customerData.version, lastCustomerAddressId, state);
+
+    handleCancel();
     setComponentDisabled(true);
   };
 
@@ -92,7 +127,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       });
       const fetchData = async () => {
         const customer = await getClient();
-        await setCustomerData(customer as Customer);
+        setCustomerData(customer as Customer);
       };
 
       fetchData().catch(console.error);
@@ -102,14 +137,6 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       });
     }
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [state, setState] = useState({
-    isDefaultShipping: false,
-    isDefaultBilling: false,
-    isShipping: false,
-    isBilling: false,
-  });
 
   const onDefaultShippingChange = (checked: boolean) => {
     setState((prevState) => ({
