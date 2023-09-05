@@ -15,8 +15,6 @@ function getAddressDetails(
   defaultBillingId: string,
 ) {
   addresses.forEach((address) => {
-    // eslint-disable-next-line no-console
-    console.log('address after if', address);
     form.setFieldsValue({
       [`${AddressFieldsName.COUNTRY}_${address.id}`]: regionNames.of(address.country),
       [`${AddressFieldsName.POSTAL_CODE}_${address.id}`]: address.postalCode,

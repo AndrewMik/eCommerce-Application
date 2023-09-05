@@ -15,7 +15,7 @@ interface CatalogSiderProps {
   setCategory: (value: SetStateAction<string[]>) => void;
   allCategories: AllCategories[] | null;
   displayCategories: (categories: AllCategories[]) => MenuProps['items'];
-  displayFilteres: (attributes: AttributeData) => MenuProps['items'];
+  displayFilters: (attributes: AttributeData) => MenuProps['items'];
   handleSelect: (menuProps: MenuKeyProps) => void;
   handleDeselect: (menuProps: MenuKeyProps) => void;
   handleSubMenuClick: (openKeys: string[]) => void;
@@ -31,7 +31,7 @@ const CatalogSider = ({
   setCategory,
   allCategories,
   displayCategories,
-  displayFilteres,
+  displayFilters,
   handleSelect,
   handleDeselect,
   handleSubMenuClick,
@@ -106,7 +106,7 @@ const CatalogSider = ({
           style={{ borderRight: 0, marginTop: '0px', overflowY: 'scroll', zIndex: 100 }}
           items={
             allCategories && attributeData
-              ? [...(displayCategories(allCategories) || []), ...(displayFilteres(attributeData) || [])]
+              ? [...(displayCategories(allCategories) || []), ...(displayFilters(attributeData) || [])]
               : []
           }
           selectedKeys={allSelectedKeys.map((key) => key[0])}
