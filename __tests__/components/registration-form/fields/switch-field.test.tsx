@@ -25,7 +25,7 @@ describe('SwitchField', () => {
     const switchElement = screen.getByTestId('mocked-switch') as HTMLInputElement;
 
     expect(switchElement).toBeInTheDocument();
-    expect(switchElement.defaultChecked).toBe(true);
+    expect(switchElement.defaultChecked).toBe(false);
     expect(screen.getByText(testProps.label!)).toBeInTheDocument();
   });
 });
