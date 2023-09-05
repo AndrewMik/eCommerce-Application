@@ -1,7 +1,10 @@
-import { Row, Col, Tag, Space, Divider } from 'antd';
+import { Row, Col, Tag, Space, Divider, Button, App } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 
 import { useState } from 'react';
+import { CloseOutlined } from '@ant-design/icons';
+import { Customer } from '@commercetools/platform-sdk';
+import removeAddress from '@/pages/api/remove-address';
 import InputField from '../registration-form/fields/input-field';
 import SelectField from '../registration-form/fields/select-field';
 import SwitchField from '../registration-form/fields/switch-field';
@@ -28,6 +31,9 @@ interface AddressProfileSectionProps {
   onDefaultBillingChange: (checked: boolean) => void;
   onShippingChange: (checked: boolean) => void;
   onBillingChange: (checked: boolean) => void;
+  version?: number;
+  addressId?: string;
+  updateCustomerData: (customer: Customer) => void;
 }
 
 const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps> = ({
@@ -43,7 +49,12 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
   onDefaultBillingChange,
   onShippingChange,
   onBillingChange,
+  version,
+  addressId,
+  updateCustomerData,
 }) => {
+  const { notification } = App.useApp();
+
   const streetFieldName = `${AddressFieldsName.STREET}_${nameSuffix}`;
   const cityFieldName = `${AddressFieldsName.CITY}_${nameSuffix}`;
   const buildingFieldName = `${AddressFieldsName.BUILDING}_${nameSuffix}`;
@@ -62,6 +73,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
   const [localIsBilling, setLocalIsBilling] = useState(isBilling);
   const [localIsDefaultShipping, setLocalIsDefaultShipping] = useState(isDefaultShipping);
   const [localIsDefaultBilling, setLocalIsDefaultBilling] = useState(isDefaultBilling);
+  const [removedAddress, setRemovedAddress] = useState(false);
 
   const handleDefaultShippingChange = (checked: boolean) => {
     setLocalIsDefaultShipping(checked);
@@ -82,6 +94,29 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
     setLocalIsBilling(checked);
     onBillingChange(checked);
   };
+
+  const handleRemoveAddress = async (customerVersion: number, customerAddressId: string) => {
+    // eslint-disable-next-line no-console
+    console.log('from handleRemoveAddress', customerVersion, customerAddressId);
+    const response = await removeAddress(customerVersion, customerAddressId);
+    if (response.statusCode === 200) {
+      updateCustomerData(response as unknown as Customer);
+      setRemovedAddress(true);
+      notification.success({
+        message: `Address successfully deleted!`,
+      });
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to remove the address',
+      });
+    }
+  };
+
+  if (removedAddress) {
+    return null;
+    // Don't render this component if the address has been removed
+  }
 
   return (
     <>
@@ -194,6 +229,14 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           ></SwitchField>
         </Col>
       </Row>
+      <Button
+        type="primary"
+        danger
+        icon={<CloseOutlined />}
+        onClick={() => handleRemoveAddress(version as number, addressId as string)}
+      >
+        Remove
+      </Button>
       <Divider></Divider>
     </>
   );

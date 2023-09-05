@@ -14,7 +14,7 @@ function getAddressDetails(
   defaultShippingId: string,
   defaultBillingId: string,
 ) {
-  addresses.forEach((address) => {
+  addresses?.forEach((address) => {
     form.setFieldsValue({
       [`${AddressFieldsName.COUNTRY}_${address.id}`]: regionNames.of(address.country),
       [`${AddressFieldsName.POSTAL_CODE}_${address.id}`]: address.postalCode,
@@ -32,6 +32,8 @@ function getAddressDetails(
 }
 
 export default function setFormData(form: FormInstance, customer: Customer) {
+  // eslint-disable-next-line no-console
+  console.log('🚀 ~ file: set-form-data.tsx:35 ~ setFormData ~ customer:', customer);
   form.setFieldsValue({
     firstName: customer.firstName,
     lastName: customer.lastName,

@@ -40,6 +40,9 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
     isEmailVerified: false,
     authenticationMode: '',
   });
+
+  // eslint-disable-next-line no-console
+  console.log('customerData', customerData);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
   const [state, setState] = useState({
@@ -49,14 +52,20 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
     isBilling: false,
   });
 
+  function updateCustomer(customer: Customer) {
+    setCustomerData(customer);
+    setFormData(form, customer);
+  }
+
   async function updateCustomerData() {
     const customer = await getClient();
-    setCustomerData(customer as Customer);
-    setFormData(form, customer as Customer);
+    updateCustomer(customer as Customer);
     return customer as Customer;
   }
 
   const saveCustomerChanges = async (formData: FormData) => {
+    // eslint-disable-next-line no-console
+    console.log('formData', formData);
     await updateCustomerPersonal(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
   };
@@ -82,24 +91,25 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       isDefaultBilling: formData.setAsDefaultBilling_newAddress,
     });
 
-    const lastCustomerAddressId = updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id as string;
+    if (updatedCustomer.addresses && updatedCustomer.addresses.length > 0) {
+      const lastCustomerAddressId = updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id as string;
 
-    const response = await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
+      const response = await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
+      if (response.statusCode === 200) {
+        notification.success({
+          message: `New address added!`,
+        });
+        const fetchData = async () => {
+          const customer = await getClient();
+          setCustomerData(customer as Customer);
+        };
 
-    if (response.statusCode === 200) {
-      notification.success({
-        message: `New address was added!`,
-      });
-      const fetchData = async () => {
-        const customer = await getClient();
-        setCustomerData(customer as Customer);
-      };
-
-      fetchData().catch(console.error);
-    } else {
-      notification.error({
-        message: `New address is not added!`,
-      });
+        fetchData().catch(console.error);
+      } else {
+        notification.error({
+          message: `Failed to remove the address`,
+        });
+      }
     }
 
     handleCancel();
@@ -231,6 +241,9 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                         onDefaultBillingChange={onDefaultBillingChange}
                         onShippingChange={onShippingChange}
                         onBillingChange={onBillingChange}
+                        version={customerData.version}
+                        addressId={customerData.addresses[index].id}
+                        updateCustomerData={updateCustomer}
                       />
                     );
                   })}
@@ -263,6 +276,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                         onDefaultBillingChange={onDefaultBillingChange}
                         onShippingChange={onShippingChange}
                         onBillingChange={onBillingChange}
+                        updateCustomerData={updateCustomer}
                       />
                     </Form.Item>
                   </Form>
