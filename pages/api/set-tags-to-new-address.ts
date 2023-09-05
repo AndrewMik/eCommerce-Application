@@ -14,6 +14,27 @@ async function setTagsToNewAddress(customerVersion: number, addressId: string, s
     });
   }
 
+  if (state.isDefaultShipping) {
+    updateActions.push({
+      action: 'setDefaultShippingAddress',
+      addressId,
+    });
+  }
+
+  if (state.isBilling) {
+    updateActions.push({
+      action: 'addBillingAddressId',
+      addressId,
+    });
+  }
+
+  if (state.isDefaultBilling) {
+    updateActions.push({
+      action: 'setDefaultBillingAddress',
+      addressId,
+    });
+  }
+
   const options: MyCustomerUpdate = {
     version: customerVersion,
     actions: updateActions,

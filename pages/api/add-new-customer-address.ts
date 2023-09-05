@@ -6,8 +6,6 @@ import Client from './client';
 async function addNewCustomerAddress(customerData: Customer, formData: FormDataAddNewAddress) {
   const refreshToken = localStorage.getItem('refreshToken') as string;
   const client = Client.getInstance().clientWithRefreshTokenFlow(refreshToken);
-  // eslint-disable-next-line no-console
-  console.log('formDataAddresses', formData);
 
   const options: MyCustomerUpdate = {
     version: customerData.version,

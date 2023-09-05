@@ -51,15 +51,12 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
 
   async function updateCustomerData() {
     const customer = await getClient();
-    // eslint-disable-next-line no-console
-    console.log((customer as Customer).version);
     setCustomerData(customer as Customer);
     setFormData(form, customer as Customer);
+    return customer as Customer;
   }
 
   const saveCustomerChanges = async (formData: FormData) => {
-    // eslint-disable-next-line no-console
-    console.log(formData);
     await updateCustomerPersonal(customerData as Customer, formData as FormData);
     setComponentDisabled(true);
   };
@@ -74,19 +71,10 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   };
 
   const addNewAddress = async (formData: FormDataAddNewAddress) => {
-    // eslint-disable-next-line no-console
-    console.log(formData);
-
-    // eslint-disable-next-line no-console
-    console.log('1', customerData.version);
     await addNewCustomerAddress(customerData as Customer, formData);
 
-    // eslint-disable-next-line no-console
-    console.log('2', customerData.version);
-    await updateCustomerData();
+    const updatedCustomer = await updateCustomerData();
 
-    // eslint-disable-next-line no-console
-    console.log('4', customerData.version);
     setState({
       isShipping: formData.setAsShipping_newAddress,
       isBilling: formData.setAsBilling_newAddress,
@@ -94,23 +82,13 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       isDefaultBilling: formData.setAsDefaultBilling_newAddress,
     });
 
-    const lastCustomerAddressId = customerData.addresses[customerData.addresses.length - 1].id as string;
+    const lastCustomerAddressId = updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id as string;
 
-    const fetchData = async () => {
-      const customer = await getClient();
-      setCustomerData(customer as Customer);
-      // eslint-disable-next-line no-console
-      console.log('5', customerData.version);
-    };
-
-    fetchData().catch(console.error);
-    // eslint-disable-next-line no-console
-    console.log('6', customerData.version);
-
-    await setTagsToNewAddress(customerData.version, lastCustomerAddressId, state);
+    await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
 
     handleCancel();
     setComponentDisabled(true);
+    window.location.reload();
   };
 
   const changePassword = async (formData: PasswordChangeFormData) => {
