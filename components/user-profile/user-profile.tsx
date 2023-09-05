@@ -84,11 +84,26 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
 
     const lastCustomerAddressId = updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id as string;
 
-    await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
+    const response = await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
+
+    if (response.statusCode === 200) {
+      notification.success({
+        message: `New address was added!`,
+      });
+      const fetchData = async () => {
+        const customer = await getClient();
+        setCustomerData(customer as Customer);
+      };
+
+      fetchData().catch(console.error);
+    } else {
+      notification.error({
+        message: `New address is not added!`,
+      });
+    }
 
     handleCancel();
     setComponentDisabled(true);
-    window.location.reload();
   };
 
   const changePassword = async (formData: PasswordChangeFormData) => {
