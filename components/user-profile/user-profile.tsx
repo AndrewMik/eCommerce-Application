@@ -34,16 +34,16 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
 
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
-  function updateCustomer(customer: Customer, oldForm = form) {
+  const updateCustomer = (customer: Customer, oldForm = form) => {
     setCustomerData(customer);
     setFormData(oldForm, customer);
-  }
+  };
 
-  async function updateCustomerData() {
+  const updateCustomerData = async () => {
     const customer = await getClient();
     updateCustomer(customer as Customer);
     return customer as Customer;
-  }
+  };
 
   const saveCustomerChanges = async (formData: FormData) => {
     try {
@@ -55,7 +55,7 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
     } catch (error) {
       notification.error({
         message: 'Error',
-        description: 'Failed to save data',
+        description: 'Failed to save personal data',
       });
     }
   };

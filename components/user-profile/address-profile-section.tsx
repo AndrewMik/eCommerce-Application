@@ -8,6 +8,7 @@ import removeAddress from '@/pages/api/remove-address';
 import InputField from '../registration-form/fields/input-field';
 import SelectField from '../registration-form/fields/select-field';
 import SwitchField from '../registration-form/fields/switch-field';
+import { AddressFieldsName } from '../registration-form/helpers/registration.types';
 
 import {
   getStreetRules,
@@ -16,7 +17,6 @@ import {
   getCityRules,
 } from '../registration-form/helpers/validation-rules';
 import fieldDefinitions from '../registration-form/helpers/field-definitions';
-import { AddressFieldsName } from '../registration-form/helpers/registration.types';
 import { SectionProps } from '../registration-form/helpers/interface';
 
 interface AddressProfileSectionProps {
