@@ -1,53 +1,48 @@
-import { MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
-import { State } from '@/components/registration-form/helpers/registration.types';
+import { Customer, MyCustomerUpdate, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+import { FormDataAddNewAddress } from '@/components/registration-form/helpers/registration.types';
 import Client from './client';
 
-async function setTagsToNewAddress(customerVersion: number, addressId: string, state: State) {
+async function setTagsToNewAddress(customer: Customer, formData: FormDataAddNewAddress) {
   const refreshToken = localStorage.getItem('refreshToken') as string;
   const client = Client.getInstance().clientWithRefreshTokenFlow(refreshToken);
   const updateActions: MyCustomerUpdateAction[] = [];
 
-  if (state.isShipping) {
-    updateActions.push({
-      action: 'addShippingAddressId',
-      addressId,
-    });
-  }
-
-  if (state.isDefaultShipping) {
-    updateActions.push({
-      action: 'setDefaultShippingAddress',
-      addressId,
-    });
-  }
-
-  if (state.isBilling) {
+  if (formData.setAsBilling_newAddress) {
     updateActions.push({
       action: 'addBillingAddressId',
-      addressId,
+      addressId: customer.addresses.at(-1)?.id,
     });
   }
 
-  if (state.isDefaultBilling) {
+  if (formData.setAsShipping_newAddress) {
+    updateActions.push({
+      action: 'addShippingAddressId',
+      addressId: customer.addresses.at(-1)?.id,
+    });
+  }
+
+  if (formData.setAsDefaultBilling_newAddress) {
     updateActions.push({
       action: 'setDefaultBillingAddress',
-      addressId,
+      addressId: customer.addresses.at(-1)?.id,
+    });
+  }
+
+  if (formData.setAsDefaultShipping_newAddress) {
+    updateActions.push({
+      action: 'setDefaultShippingAddress',
+      addressId: customer.addresses.at(-1)?.id,
     });
   }
 
   const options: MyCustomerUpdate = {
-    version: customerVersion,
+    version: customer.version,
     actions: updateActions,
   };
 
-  try {
-    const response = await client.me().post({ body: options }).execute();
+  const response = await client.me().post({ body: options }).execute();
 
-    return response;
-  } catch (error) {
-    const errorResponse = JSON.parse(JSON.stringify(error));
-    return { statusCode: errorResponse.code };
-  }
+  return response.body;
 }
 
 export default setTagsToNewAddress;

@@ -23,15 +23,9 @@ async function addNewCustomerAddress(customerData: Customer, formData: FormDataA
       },
     ],
   };
+  const response = await client.me().post({ body: options }).execute();
 
-  try {
-    const response = await client.me().post({ body: options }).execute();
-
-    return response;
-  } catch (error) {
-    const errorResponse = JSON.parse(JSON.stringify(error));
-    return { statusCode: errorResponse.code };
-  }
+  return response.body;
 }
 
 export default addNewCustomerAddress;
