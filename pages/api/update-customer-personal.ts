@@ -33,14 +33,8 @@ async function updateCustomerPersonal(customerData: Customer, formData: FormData
     ],
   };
 
-  try {
-    const response = await client.me().post({ body: options }).execute();
-
-    return response;
-  } catch (error) {
-    const errorResponse = JSON.parse(JSON.stringify(error));
-    return { statusCode: errorResponse.code };
-  }
+  const response = await client.me().post({ body: options }).execute();
+  return response;
 }
 
 export default updateCustomerPersonal;

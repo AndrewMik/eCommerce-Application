@@ -46,8 +46,18 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   }
 
   const saveCustomerChanges = async (formData: FormData) => {
-    await updateCustomerPersonal(customerData!, formData as FormData);
-    setComponentDisabled(true);
+    try {
+      await updateCustomerPersonal(customerData!, formData);
+      setComponentDisabled(true);
+      notification.success({
+        message: `User data successfully updated!`,
+      });
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to save data',
+      });
+    }
   };
 
   const handleCancel = () => {
