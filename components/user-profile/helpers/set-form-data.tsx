@@ -7,15 +7,14 @@ import { getGender } from '../../registration-form/helpers/helper-functions';
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
 function getAddressDetails(
-  form: FormInstance,
   addresses: Address[],
   shippingIds: string[],
   billingIds: string[],
   defaultShippingId: string,
   defaultBillingId: string,
 ) {
-  addresses?.forEach((address) => {
-    form.setFieldsValue({
+  return addresses.map((address) => {
+    return {
       [`${AddressFieldsName.COUNTRY}_${address.id}`]: regionNames.of(address.country),
       [`${AddressFieldsName.POSTAL_CODE}_${address.id}`]: address.postalCode,
       [`${AddressFieldsName.CITY}_${address.id}`]: address.city,
@@ -27,13 +26,19 @@ function getAddressDetails(
       [`${AddressFieldsName.SET_AS_DEFAULT_BILLING}_${address.id}`]: address.id === defaultBillingId,
       [`${AddressFieldsName.SET_AS_SHIPPING}_${address.id}`]: shippingIds.includes(address.id ?? ''),
       [`${AddressFieldsName.SET_AS_BILLING}_${address.id}`]: billingIds.includes(address.id ?? ''),
-    });
+    };
   });
 }
 
 export default function setFormData(form: FormInstance, customer: Customer) {
-  // eslint-disable-next-line no-console
-  console.log('🚀 ~ file: set-form-data.tsx:35 ~ setFormData ~ customer:', customer);
+  const addresses = getAddressDetails(
+    customer.addresses,
+    customer.shippingAddressIds ?? [],
+    customer.billingAddressIds ?? [],
+    customer.defaultShippingAddressId ?? '',
+    customer.defaultBillingAddressId ?? '',
+  );
+
   form.setFieldsValue({
     firstName: customer.firstName,
     lastName: customer.lastName,
@@ -41,14 +46,6 @@ export default function setFormData(form: FormInstance, customer: Customer) {
     dateOfBirthProfile: customer.dateOfBirth,
     gender: getGender(customer.salutation),
     email: customer.email,
+    ...addresses.reduce((acc, address) => ({ ...acc, ...address }), {}),
   });
-
-  getAddressDetails(
-    form,
-    customer.addresses,
-    customer.shippingAddressIds ?? [],
-    customer.billingAddressIds ?? [],
-    customer.defaultShippingAddressId ?? '',
-    customer.defaultBillingAddressId ?? '',
-  );
 }

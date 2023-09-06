@@ -1,7 +1,7 @@
-import { MyCustomerUpdate } from '@commercetools/platform-sdk';
+import { BaseAddress, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function removeAddress(version: number, addressId: string) {
+async function changeAddress(version: number, addressId: string, address: BaseAddress) {
   const refreshToken = localStorage.getItem('refreshToken') as string;
   const client = Client.getInstance().clientWithRefreshTokenFlow(refreshToken);
 
@@ -9,8 +9,9 @@ async function removeAddress(version: number, addressId: string) {
     version,
     actions: [
       {
-        action: 'removeAddress',
+        action: 'changeAddress',
         addressId,
+        address,
       },
     ],
   };
@@ -19,4 +20,4 @@ async function removeAddress(version: number, addressId: string) {
   return response;
 }
 
-export default removeAddress;
+export default changeAddress;

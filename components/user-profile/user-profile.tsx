@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Form, Button, Row, Col, Layout, Card, Switch, App, Modal } from 'antd';
+import { Form, Button, Row, Col, Layout, Card, Switch, App } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
 import addNewCustomerAddress from '@/pages/api/add-new-customer-address';
 import updateCustomerPersonal from '@/pages/api/update-customer-personal';
@@ -17,6 +17,7 @@ import fieldDefinitions from '../registration-form/helpers/field-definitions';
 import { confirmPasswordRules, getEmailRules, getPasswordRules } from '../registration-form/helpers/validation-rules';
 import InputField from '../registration-form/fields/input-field';
 import PasswordField from '../registration-form/fields/password-field';
+import { AddAddressModal } from './add-address-modal';
 
 type PasswordChangeFormData = {
   currentPassword: string;
@@ -27,34 +28,15 @@ type PasswordChangeFormData = {
 const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   const { notification } = App.useApp();
   const [form] = Form.useForm();
-  const [formModal] = Form.useForm();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [customerData, setCustomerData] = useState<Customer>({
-    id: '',
-    version: 0,
-    createdAt: '',
-    lastModifiedAt: '',
-    email: '',
-    addresses: [],
-    isEmailVerified: false,
-    authenticationMode: '',
-  });
+  const [customerData, setCustomerData] = useState<Customer | null>(null);
 
-  // eslint-disable-next-line no-console
-  console.log('customerData', customerData);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
-  const [state, setState] = useState({
-    isDefaultShipping: false,
-    isDefaultBilling: false,
-    isShipping: false,
-    isBilling: false,
-  });
-
-  function updateCustomer(customer: Customer) {
+  function updateCustomer(customer: Customer, oldForm = form) {
     setCustomerData(customer);
-    setFormData(form, customer);
+    setFormData(oldForm, customer);
   }
 
   async function updateCustomerData() {
@@ -64,56 +46,31 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   }
 
   const saveCustomerChanges = async (formData: FormData) => {
-    // eslint-disable-next-line no-console
-    console.log('formData', formData);
-    await updateCustomerPersonal(customerData as Customer, formData as FormData);
+    await updateCustomerPersonal(customerData!, formData as FormData);
     setComponentDisabled(true);
-  };
-
-  const showModal = () => {
-    setIsModalVisible(true);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    formModal.resetFields();
   };
 
   const addNewAddress = async (formData: FormDataAddNewAddress) => {
-    await addNewCustomerAddress(customerData as Customer, formData);
+    try {
+      const customer = await addNewCustomerAddress(customerData!, formData);
+      const response = await setTagsToNewAddress(customer, formData);
 
-    const updatedCustomer = await updateCustomerData();
-
-    setState({
-      isShipping: formData.setAsShipping_newAddress,
-      isBilling: formData.setAsBilling_newAddress,
-      isDefaultShipping: formData.setAsDefaultShipping_newAddress,
-      isDefaultBilling: formData.setAsDefaultBilling_newAddress,
-    });
-
-    if (updatedCustomer.addresses && updatedCustomer.addresses.length > 0) {
-      const lastCustomerAddressId = updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id as string;
-
-      const response = await setTagsToNewAddress(updatedCustomer.version, lastCustomerAddressId, state);
-      if (response.statusCode === 200) {
-        notification.success({
-          message: `New address added!`,
-        });
-        const fetchData = async () => {
-          const customer = await getClient();
-          setCustomerData(customer as Customer);
-        };
-
-        fetchData().catch(console.error);
-      } else {
-        notification.error({
-          message: `Failed to remove the address`,
-        });
-      }
+      notification.success({
+        message: `New address added!`,
+      });
+      updateCustomer(response);
+    } catch (error) {
+      notification.error({
+        message: `Failed to add the address`,
+      });
+    } finally {
+      handleCancel();
+      setComponentDisabled(true);
     }
-
-    handleCancel();
-    setComponentDisabled(true);
   };
 
   const changePassword = async (formData: PasswordChangeFormData) => {
@@ -134,39 +91,15 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
       };
 
       fetchData().catch(console.error);
+    } else if (response.statusCode === 400) {
+      notification.error({
+        message: `The given current password doesn't match, try once again!`,
+      });
     } else {
       notification.error({
         message: `Password change failed!`,
       });
     }
-  };
-
-  const onDefaultShippingChange = (checked: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isDefaultShipping: checked,
-    }));
-  };
-
-  const onDefaultBillingChange = (checked: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isDefaultBilling: checked,
-    }));
-  };
-
-  const onShippingChange = (checked: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isShipping: checked,
-    }));
-  };
-
-  const onBillingChange = (checked: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isBilling: checked,
-    }));
   };
 
   useEffect(() => {
@@ -176,15 +109,21 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
   return (
     <Layout>
       <Layout.Content>
+        {isModalVisible && (
+          <AddAddressModal
+            handleCancel={handleCancel}
+            addNewAddress={addNewAddress}
+            updateCustomer={updateCustomer}
+            countries={countries}
+          />
+        )}
+
         <Row justify="center" align="middle">
           <Col xs={22} sm={20} md={18} lg={14} xl={12}>
             <Card bordered style={{ borderRadius: 15, marginBlock: 40 }}>
               <Switch
                 checked={!componentDisabled}
                 onChange={(checked) => {
-                  if (!checked) {
-                    setFormData(form, customerData as Customer);
-                  }
                   setComponentDisabled(!checked);
                 }}
               ></Switch>
@@ -211,76 +150,37 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                   />
                 )}
                 <DividerText text="Addresses"></DividerText>
-                {customerData.addresses &&
-                  customerData.addresses.map((address, index) => {
-                    if (!address.id) {
-                      return null;
-                    }
+                {customerData?.addresses &&
+                  customerData.addresses.map((address) => {
                     const { id } = address;
+
                     const isDefaultShipping = customerData.defaultShippingAddressId === id;
                     const isDefaultBilling = customerData.defaultBillingAddressId === id;
                     const isShipping = customerData.shippingAddressIds
-                      ? customerData.shippingAddressIds.includes(id)
+                      ? customerData.shippingAddressIds.includes(id!)
                       : false;
                     const isBilling = customerData.billingAddressIds
-                      ? customerData.billingAddressIds.includes(id)
+                      ? customerData.billingAddressIds.includes(id!)
                       : false;
 
                     return (
                       <AddressProfileSection
-                        key={index}
+                        key={id}
                         countries={countries}
                         form={form}
+                        isModal={false}
                         nameSuffix={id}
                         componentDisabled={componentDisabled}
                         isShipping={isShipping}
                         isBilling={isBilling}
                         isDefaultShipping={isDefaultShipping}
                         isDefaultBilling={isDefaultBilling}
-                        onDefaultShippingChange={onDefaultShippingChange}
-                        onDefaultBillingChange={onDefaultBillingChange}
-                        onShippingChange={onShippingChange}
-                        onBillingChange={onBillingChange}
                         version={customerData.version}
-                        addressId={customerData.addresses[index].id}
                         updateCustomerData={updateCustomer}
                       />
                     );
                   })}
-                <Button onClick={showModal}>Add New Address</Button>
-                <Modal
-                  title="Add Address"
-                  open={isModalVisible}
-                  onCancel={handleCancel}
-                  footer={[
-                    <Button key="cancel" onClick={handleCancel}>
-                      Cancel
-                    </Button>,
-                    <Button key="submit" type="primary" form="address-form" htmlType="submit">
-                      Save
-                    </Button>,
-                  ]}
-                >
-                  <Form id="address-form" form={formModal} autoComplete="on" layout="vertical" onFinish={addNewAddress}>
-                    <Form.Item>
-                      <AddressProfileSection
-                        form={formModal}
-                        countries={countries}
-                        nameSuffix={`newAddress`}
-                        componentDisabled={false}
-                        isShipping={false}
-                        isBilling={false}
-                        isDefaultShipping={false}
-                        isDefaultBilling={false}
-                        onDefaultShippingChange={onDefaultShippingChange}
-                        onDefaultBillingChange={onDefaultBillingChange}
-                        onShippingChange={onShippingChange}
-                        onBillingChange={onBillingChange}
-                        updateCustomerData={updateCustomer}
-                      />
-                    </Form.Item>
-                  </Form>
-                </Modal>
+                <Button onClick={() => setIsModalVisible(true)}>Add New Address</Button>
                 <Form.Item style={{ textAlign: 'center' }}>
                   <Button type="primary" htmlType="submit">
                     Save Changes

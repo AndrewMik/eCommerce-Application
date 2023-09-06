@@ -22,35 +22,27 @@ import { SectionProps } from '../registration-form/helpers/interface';
 interface AddressProfileSectionProps {
   countries: string[];
   form: FormInstance;
+  isModal: boolean;
   nameSuffix?: string;
   isShipping: boolean;
   isBilling: boolean;
   isDefaultShipping: boolean;
   isDefaultBilling: boolean;
-  onDefaultShippingChange: (checked: boolean) => void;
-  onDefaultBillingChange: (checked: boolean) => void;
-  onShippingChange: (checked: boolean) => void;
-  onBillingChange: (checked: boolean) => void;
   version?: number;
-  addressId?: string;
   updateCustomerData: (customer: Customer) => void;
 }
 
 const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps> = ({
   countries,
   form,
-  nameSuffix = '',
+  isModal,
+  nameSuffix,
   componentDisabled,
   isShipping = false,
   isBilling = false,
   isDefaultBilling = false,
   isDefaultShipping = false,
-  onDefaultShippingChange,
-  onDefaultBillingChange,
-  onShippingChange,
-  onBillingChange,
   version,
-  addressId,
   updateCustomerData,
 }) => {
   const { notification } = App.useApp();
@@ -66,57 +58,41 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
   const setAsDefaultShipping = `${AddressFieldsName.SET_AS_DEFAULT_SHIPPING}_${nameSuffix}`;
   const setAsDefaultBilling = `${AddressFieldsName.SET_AS_DEFAULT_BILLING}_${nameSuffix}`;
 
-  const isProfilePage = window.location.href.match('profile');
-  const isRegistrationPage = window.location.href.match('registration');
-
   const [localIsShipping, setLocalIsShipping] = useState(isShipping);
   const [localIsBilling, setLocalIsBilling] = useState(isBilling);
   const [localIsDefaultShipping, setLocalIsDefaultShipping] = useState(isDefaultShipping);
   const [localIsDefaultBilling, setLocalIsDefaultBilling] = useState(isDefaultBilling);
-  const [removedAddress, setRemovedAddress] = useState(false);
 
   const handleDefaultShippingChange = (checked: boolean) => {
     setLocalIsDefaultShipping(checked);
-    onDefaultShippingChange(checked);
   };
 
   const handleDefaultBillingChange = (checked: boolean) => {
     setLocalIsDefaultBilling(checked);
-    onDefaultBillingChange(checked);
   };
 
   const handleShippingChange = (checked: boolean) => {
     setLocalIsShipping(checked);
-    onShippingChange(checked);
   };
 
   const handleBillingChange = (checked: boolean) => {
     setLocalIsBilling(checked);
-    onBillingChange(checked);
   };
 
   const handleRemoveAddress = async (customerVersion: number, customerAddressId: string) => {
-    // eslint-disable-next-line no-console
-    console.log('from handleRemoveAddress', customerVersion, customerAddressId);
-    const response = await removeAddress(customerVersion, customerAddressId);
-    if (response.statusCode === 200) {
-      updateCustomerData(response as unknown as Customer);
-      setRemovedAddress(true);
+    try {
+      const response = await removeAddress(customerVersion, customerAddressId);
+      updateCustomerData(response.body);
       notification.success({
         message: `Address successfully deleted!`,
       });
-    } else {
+    } catch (error) {
       notification.error({
         message: 'Error',
         description: 'Failed to remove the address',
       });
     }
   };
-
-  if (removedAddress) {
-    return null;
-    // Don't render this component if the address has been removed
-  }
 
   return (
     <>
@@ -128,7 +104,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
       </Space>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          {(isRegistrationPage || (isProfilePage && !componentDisabled)) && (
+          {!componentDisabled && (
             <>
               <SelectField
                 {...fieldDefinitions.country}
@@ -140,7 +116,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
               />
             </>
           )}
-          {isProfilePage && componentDisabled && (
+          {componentDisabled && (
             <InputField
               {...fieldDefinitions.country}
               name={countryFieldName}
@@ -229,14 +205,16 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           ></SwitchField>
         </Col>
       </Row>
-      <Button
-        type="primary"
-        danger
-        icon={<CloseOutlined />}
-        onClick={() => handleRemoveAddress(version as number, addressId as string)}
-      >
-        Remove
-      </Button>
+      {!isModal && (
+        <Button
+          type="primary"
+          danger
+          icon={<CloseOutlined />}
+          onClick={() => handleRemoveAddress(version as number, nameSuffix!)}
+        >
+          Remove
+        </Button>
+      )}
       <Divider></Divider>
     </>
   );
