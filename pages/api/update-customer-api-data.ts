@@ -54,7 +54,7 @@ function getAddressUpdateActions(customerData: Customer, formData: FormData) {
         action: `addBillingAddressId`,
         addressId: address.id,
       });
-    } else {
+    } else if (customerData.billingAddressIds?.includes(address.id as string)) {
       tagActions.push({
         action: 'removeBillingAddressId',
         addressId: address.id,
@@ -66,7 +66,7 @@ function getAddressUpdateActions(customerData: Customer, formData: FormData) {
         action: `addShippingAddressId`,
         addressId: address.id,
       });
-    } else {
+    } else if (customerData.shippingAddressIds?.includes(address.id as string)) {
       tagActions.push({
         action: 'removeShippingAddressId',
         addressId: address.id,
