@@ -17,7 +17,7 @@ import fieldDefinitions from '../registration-form/helpers/field-definitions';
 import { confirmPasswordRules, getEmailRules, getPasswordRules } from '../registration-form/helpers/validation-rules';
 import InputField from '../registration-form/fields/input-field';
 import PasswordField from '../registration-form/fields/password-field';
-import { AddAddressModal } from './add-address-modal';
+import AddAddressModal from './add-address-modal';
 
 type PasswordChangeFormData = {
   currentPassword: string;

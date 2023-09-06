@@ -58,25 +58,45 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
   const setAsDefaultShipping = `${AddressFieldsName.SET_AS_DEFAULT_SHIPPING}_${nameSuffix}`;
   const setAsDefaultBilling = `${AddressFieldsName.SET_AS_DEFAULT_BILLING}_${nameSuffix}`;
 
-  const [localIsShipping, setLocalIsShipping] = useState(isShipping);
-  const [localIsBilling, setLocalIsBilling] = useState(isBilling);
-  const [localIsDefaultShipping, setLocalIsDefaultShipping] = useState(isDefaultShipping);
-  const [localIsDefaultBilling, setLocalIsDefaultBilling] = useState(isDefaultBilling);
-
-  const handleDefaultShippingChange = (checked: boolean) => {
-    setLocalIsDefaultShipping(checked);
-  };
-
-  const handleDefaultBillingChange = (checked: boolean) => {
-    setLocalIsDefaultBilling(checked);
-  };
+  const [localIsShipping, setLocalIsShipping] = useState<boolean>(isShipping);
+  const [localIsBilling, setLocalIsBilling] = useState<boolean>(isBilling);
+  const [localIsDefaultShipping, setLocalIsDefaultShipping] = useState<boolean>(isDefaultShipping);
+  const [localIsDefaultBilling, setLocalIsDefaultBilling] = useState<boolean>(isDefaultBilling);
 
   const handleShippingChange = (checked: boolean) => {
     setLocalIsShipping(checked);
+    form.setFieldValue(setAsShipping, checked);
+    if (!checked) {
+      setLocalIsDefaultShipping(false);
+      form.setFieldValue(setAsDefaultShipping, false);
+    }
   };
 
   const handleBillingChange = (checked: boolean) => {
     setLocalIsBilling(checked);
+    form.setFieldValue(setAsBilling, checked);
+    if (!checked) {
+      setLocalIsDefaultBilling(false);
+      form.setFieldValue(setAsDefaultBilling, false);
+    }
+  };
+
+  const handleDefaultShippingChange = (checked: boolean) => {
+    setLocalIsDefaultShipping(checked);
+    form.setFieldValue(setAsDefaultShipping, checked);
+    if (checked) {
+      setLocalIsShipping(true);
+      form.setFieldValue(setAsShipping, true);
+    }
+  };
+
+  const handleDefaultBillingChange = (checked: boolean) => {
+    setLocalIsDefaultBilling(checked);
+    form.setFieldValue(setAsDefaultBilling, checked);
+    if (checked) {
+      setLocalIsBilling(true);
+      form.setFieldValue(setAsBilling, true);
+    }
   };
 
   const handleRemoveAddress = async (customerVersion: number, customerAddressId: string) => {
@@ -99,7 +119,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
       <Space size={[2, 4]} wrap style={{ marginBottom: 40 }}>
         {localIsShipping && <Tag color="blue">Shipping</Tag>}
         {localIsBilling && <Tag color="green">Billing</Tag>}
-        {localIsDefaultShipping && <Tag color="cyan">Default Shipping</Tag>}
+        {form.getFieldValue(setAsDefaultShipping) && <Tag color="cyan">Default Shipping</Tag>}
         {localIsDefaultBilling && <Tag color="purple">Default Billing</Tag>}
       </Space>
       <Row gutter={16}>
@@ -174,34 +194,34 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SwitchField
-            defaultChecked={isDefaultShipping}
-            onChange={handleDefaultShippingChange}
-            name={setAsDefaultShipping}
             {...fieldDefinitions.defaultShippingAddress}
+            defaultChecked={localIsDefaultShipping}
+            name={setAsDefaultShipping}
+            onChange={handleDefaultShippingChange}
           ></SwitchField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SwitchField
-            defaultChecked={isDefaultBilling}
-            onChange={handleDefaultBillingChange}
-            name={setAsDefaultBilling}
             {...fieldDefinitions.defaultBillingAddress}
+            defaultChecked={localIsDefaultBilling}
+            name={setAsDefaultBilling}
+            onChange={handleDefaultBillingChange}
           ></SwitchField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SwitchField
-            defaultChecked={isShipping}
-            onChange={handleShippingChange}
-            name={setAsShipping}
             {...fieldDefinitions.addressShipping}
+            defaultChecked={localIsShipping}
+            name={setAsShipping}
+            onChange={handleShippingChange}
           ></SwitchField>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
           <SwitchField
-            defaultChecked={isBilling}
-            onChange={handleBillingChange}
-            name={setAsBilling}
             {...fieldDefinitions.addressBilling}
+            defaultChecked={localIsBilling}
+            name={setAsBilling}
+            onChange={handleBillingChange}
           ></SwitchField>
         </Col>
       </Row>
@@ -211,6 +231,9 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           danger
           icon={<CloseOutlined />}
           onClick={() => handleRemoveAddress(version as number, nameSuffix!)}
+          style={{
+            marginTop: 24,
+          }}
         >
           Remove
         </Button>

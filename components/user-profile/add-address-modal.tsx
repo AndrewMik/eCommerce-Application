@@ -10,8 +10,7 @@ type Props = {
   updateCustomer: (customer: Customer) => void;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const AddAddressModal = ({ handleCancel, addNewAddress, countries, updateCustomer }: Props) => {
+const AddAddressModal = ({ handleCancel, addNewAddress, countries, updateCustomer }: Props) => {
   const [formModal] = Form.useForm();
 
   return (
@@ -47,3 +46,5 @@ export const AddAddressModal = ({ handleCancel, addNewAddress, countries, update
     </Modal>
   );
 };
+
+export default AddAddressModal;
