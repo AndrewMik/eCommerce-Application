@@ -13,7 +13,7 @@ function getAddressDetails(
   defaultShippingId: string,
   defaultBillingId: string,
 ) {
-  return addresses.map((address) => {
+  return addresses?.map((address) => {
     return {
       [`${AddressFieldsName.COUNTRY}_${address.id}`]: regionNames.of(address.country),
       [`${AddressFieldsName.POSTAL_CODE}_${address.id}`]: address.postalCode,

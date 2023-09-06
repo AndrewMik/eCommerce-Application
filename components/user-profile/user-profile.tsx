@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Layout, Card, Switch, App } from 'antd';
 import { Customer } from '@commercetools/platform-sdk';
 import addNewCustomerAddress from '@/pages/api/add-new-customer-address';
-import updateCustomerPersonal from '@/pages/api/update-customer-personal';
+import updateCustomerApiData from '@/pages/api/update-customer-api-data';
 import getClient from '@/pages/api/get-client';
 import updatePassword from '@/pages/api/update-password';
 import setTagsToNewAddress from '@/pages/api/set-tags-to-new-address';
@@ -47,7 +47,8 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
 
   const saveCustomerChanges = async (formData: FormData) => {
     try {
-      await updateCustomerPersonal(customerData!, formData);
+      const response = await updateCustomerApiData(customerData!, formData);
+      updateCustomer(response.body);
       setComponentDisabled(true);
       notification.success({
         message: `User data successfully updated!`,
