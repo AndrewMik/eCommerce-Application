@@ -12,6 +12,8 @@ async function loginUser(email: string, password: string) {
     Client.token.clear();
     const response = await client.login().post({ body }).execute();
     const token = Client.token.get();
+    localStorage.setItem('userToken', token.token);
+    localStorage.setItem('refreshToken', token.refreshToken as string);
     return { statusCode: response.statusCode, token };
   } catch (error) {
     Client.getInstance().clearApiRoot();
