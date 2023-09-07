@@ -13,6 +13,7 @@ import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import Client from '../../pages/api/client';
 import { AuthContext } from '../../context/authorization-context';
 import Notifications from '../notifications/notifications';
 import { Paths, navigationLinks } from '../../utils/route-links';
@@ -26,7 +27,7 @@ const MainHeader = () => {
   const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
-    setVisible(true);
+    setVisible((prevValue) => !prevValue);
   };
 
   const onClose = () => {
@@ -34,6 +35,8 @@ const MainHeader = () => {
   };
 
   const handleSignOutButtonClick = () => {
+    Client.getInstance().clearApiRoot();
+    Client.token.clear();
     removeLogInState();
     setLogInStatusCode(null);
     setRegistrationStatusCode(null);
@@ -75,7 +78,15 @@ const MainHeader = () => {
   return (
     <>
       <Notifications />
-      <Header style={{ padding: 0 }}>
+      <Header
+        style={{
+          padding: 0,
+          zIndex: 10001,
+          position: 'sticky',
+          top: 0,
+          width: '100%',
+        }}
+      >
         <Row>
           <Col xs={20} sm={20} md={4} style={{ lineHeight: 0 }}>
             <Link href={'/'} style={{ marginLeft: 10 }}>

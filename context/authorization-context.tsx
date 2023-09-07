@@ -7,11 +7,13 @@ interface AuthContextType {
   logInStatusCode: number | null;
   isLoggedIn: boolean | null;
   userToken: string | null;
+  userRefreshToken: string | null;
   toggleInactiveLinks: boolean | null;
   setToggleInactiveLinks: (state: boolean | null | ((prevState: boolean | null) => boolean | null)) => void;
   setUserToken: (token: string | null) => void;
+  setUserRefreshToken: (token: string | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  saveLogInState: (id: string) => void;
+  saveLogInState: (token: string, refreshToken: string) => void;
   removeLogInState: () => void;
   setToggleNotificationForLogIn: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
@@ -28,8 +30,10 @@ const AuthContext = createContext<AuthContextType>({
   setToggleInactiveLinks: () => {},
   isLoggedIn: null,
   userToken: null,
+  userRefreshToken: null,
   setIsLoggedIn: () => {},
   setUserToken: () => {},
+  setUserRefreshToken: () => {},
   saveLogInState: () => {
     throw new Error('saveLogInState function must be overridden');
   },
@@ -47,27 +51,32 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [toggleNotificationForRegistration, setToggleNotificationForRegistration] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [userToken, setUserToken] = useState<string | null>(null);
+  const [userRefreshToken, setUserRefreshToken] = useState<string | null>(null);
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
   const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
-    if (token) {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (token && refreshToken) {
       setIsLoggedIn(true);
       setUserToken(token);
+      setUserRefreshToken(refreshToken);
     } else {
       setIsLoggedIn(false);
     }
   }, []);
 
-  const saveLogInState = (token: string) => {
+  const saveLogInState = (token: string, refreshToken: string) => {
     localStorage.setItem('userToken', token);
+    localStorage.setItem('refreshToken', refreshToken);
     setIsLoggedIn(true);
   };
 
   const removeLogInState = () => {
     localStorage.removeItem('userToken');
+    localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
   };
 
@@ -78,6 +87,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setToggleInactiveLinks,
         isLoggedIn,
         userToken,
+        userRefreshToken,
         saveLogInState,
         removeLogInState,
         toggleNotificationForLogIn,
@@ -90,6 +100,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setLogInStatusCode,
         setIsLoggedIn,
         setUserToken,
+        setUserRefreshToken,
       }}
     >
       {children}

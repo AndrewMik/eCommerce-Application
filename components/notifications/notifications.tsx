@@ -39,7 +39,7 @@ const Notifications = () => {
       if (logInStatusCode === 200) {
         openNotificationWithIcon(
           NotificationType.SUCCESS,
-          NotificationMessage.AUTENTICATED,
+          NotificationMessage.AUTHENTICATED,
           NotificationDescription.CUSTOMER_ACCOUNT_AUTHENTICATED,
           NotificationPlacement.BOTTOM,
         );
@@ -63,7 +63,7 @@ const Notifications = () => {
 
   useEffect(() => {
     if (registrationStatusCode) {
-      if (registrationStatusCode === 201) {
+      if (registrationStatusCode === 200 || registrationStatusCode === 201) {
         openNotificationWithIcon(
           NotificationType.SUCCESS,
           NotificationMessage.REGISTERED,
@@ -93,7 +93,7 @@ const Notifications = () => {
     if (isLoggedIn) {
       openNotificationWithIcon(
         NotificationType.INFO,
-        NotificationMessage.AUTENTICATED,
+        NotificationMessage.AUTHENTICATED,
         NotificationDescription.CUSTOMER_LOGGED_IN_ALREADY,
         NotificationPlacement.BOTTOM,
       );

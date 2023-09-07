@@ -28,30 +28,30 @@ describe('Client', () => {
   });
 
   it('should initialize with environment variables', () => {
-    const client = new Client();
+    const client = Client.getInstance();
     expect(client).toBeDefined();
   });
 
   it('should get clientCredentialsClient', () => {
-    const client = new Client();
+    const client = Client.getInstance();
     const result = client.clientCredentialsClient;
     expect(result).toBeDefined();
   });
 
   it('should get getPasswordFlowClient', () => {
-    const client = new Client();
+    const client = Client.getInstance();
     const result = client.getPasswordFlowClient('test@example.com', 'password123');
     expect(result).toBeDefined();
   });
 
   it('should get anonymousClient', () => {
-    const client = new Client();
+    const client = Client.getInstance();
     const result = client.anonymousClient;
     expect(result).toBeDefined();
   });
 
   it('should clear cached clients', () => {
-    const client = new Client();
+    const client = Client.getInstance();
     client.clearApiRoot();
     expect(client.clientCredentialsClient).toBeDefined();
     expect(client.getPasswordFlowClient('test@example.com', 'password123')).toBeDefined();

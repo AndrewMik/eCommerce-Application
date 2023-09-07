@@ -20,8 +20,8 @@ const LoginForm: React.FC = () => {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
         if (token) {
-          setUserToken(token);
-          saveLogInState(token);
+          setUserToken(token.refreshToken as string);
+          saveLogInState(token.token, token.refreshToken as string);
           setIsLoggedIn(true);
           router.push(`/`);
         } else {
@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
             wrapperCol={{ span: 16 }}
             name="login-form"
             initialValues={{ remember: true }}
-            autoComplete="off"
+            autoComplete="on"
             onFinish={onFinish}
           >
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>

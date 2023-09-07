@@ -5,11 +5,21 @@ export function getBirthDate(date: moment.Moment): string {
 }
 
 export function getSalutation(gender: string): string {
-  if (gender === 'male') {
+  if (gender === 'Male') {
     return 'Mr.';
   }
-  if (gender === 'female') {
+  if (gender === 'Female') {
     return 'Ms.';
+  }
+  return '';
+}
+
+export function getGender(salutation: string | undefined): string {
+  if (salutation === 'Mr.') {
+    return 'Male';
+  }
+  if (salutation === 'Ms.') {
+    return 'Female';
   }
   return '';
 }
