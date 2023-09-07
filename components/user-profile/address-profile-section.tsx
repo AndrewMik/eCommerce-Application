@@ -196,6 +196,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           <SwitchField
             {...fieldDefinitions.defaultShippingAddress}
             defaultChecked={localIsDefaultShipping}
+            disabled={componentDisabled || isDefaultShipping}
             name={setAsDefaultShipping}
             onChange={handleDefaultShippingChange}
           ></SwitchField>
@@ -204,6 +205,7 @@ const AddressProfileSection: React.FC<AddressProfileSectionProps & SectionProps>
           <SwitchField
             {...fieldDefinitions.defaultBillingAddress}
             defaultChecked={localIsDefaultBilling}
+            disabled={componentDisabled || isDefaultBilling}
             name={setAsDefaultBilling}
             onChange={handleDefaultBillingChange}
           ></SwitchField>
