@@ -1,6 +1,6 @@
 import { Button, Space } from 'antd';
 
-const Page = (): JSX.Element => (
+const AboutPage = (): JSX.Element => (
   <div style={{ padding: '0 24px' }}>
     <Space>
       <Button type="primary">Test about page</Button>
@@ -8,4 +8,4 @@ const Page = (): JSX.Element => (
   </div>
 );
 
-export default Page;
+export default AboutPage;
