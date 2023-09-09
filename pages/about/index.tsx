@@ -1,11 +1,5 @@
-import { Button, Space } from 'antd';
+import TeamPage from '@/components/about/about';
 
-const AboutPage = (): JSX.Element => (
-  <div style={{ padding: '0 24px' }}>
-    <Space>
-      <Button type="primary">Test about page</Button>
-    </Space>
-  </div>
-);
+const AboutPage = (): JSX.Element => <TeamPage></TeamPage>;
 
 export default AboutPage;
