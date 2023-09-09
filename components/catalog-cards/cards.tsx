@@ -12,6 +12,7 @@ import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
+import AddToCartButton from './add-to-cart/add-to-cart-button';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -443,6 +444,7 @@ const CatalogCards = (): JSX.Element => {
                         see more details
                       </Button>
                     </div>
+                    <AddToCartButton productId={product.id} />
                   </div>
                 }
               />
