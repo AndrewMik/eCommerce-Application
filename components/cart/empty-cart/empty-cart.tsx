@@ -24,7 +24,7 @@ const EmptyCart = () => {
         }
       >
         <Title level={3}>Your cart is empty</Title>
-        <Text>You have no items in your shopping cart. Let's go but something!</Text>
+        <Text>You have no items in your shopping cart. Let's go buy something!</Text>
         <br />
         <Link href={`/catalog/`}>
           <Button type="primary" style={{ marginTop: 30 }}>
