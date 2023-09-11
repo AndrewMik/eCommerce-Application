@@ -24,7 +24,7 @@ const CatalogCards = (): JSX.Element => {
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
   const [sortString, setSortString] = useState<string>('');
   const [chosenSorting, setChosenSorting] = useState('');
-  const [cart, setCart] = useState<Cart | undefined>(undefined);
+  const [cart, setCart] = useState<Cart | null>(null);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 

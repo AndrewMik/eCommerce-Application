@@ -12,8 +12,8 @@ const { Meta } = Card;
 
 interface Props {
   product: ProductProjection;
-  cart?: Cart;
-  setCart: (value: React.SetStateAction<Cart | undefined>) => void;
+  cart: Cart | null;
+  setCart: (value: React.SetStateAction<Cart | null>) => void;
 }
 
 const CatalogProductCard = (props: Props) => {
