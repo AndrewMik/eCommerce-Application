@@ -7,7 +7,6 @@ import ProductBreadcrumb from './breadcrumb';
 import ProductDetails from './details';
 import Attributes from './attributes';
 import ImageModal from './modal';
-import AddToCartButton from '../catalog-cards/add-to-cart/add-to-cart-button';
 
 enum AttributesKeys {
   BRAND = 'brand',
@@ -159,7 +158,6 @@ const Product = ({ product }: { product: ProductProjection }) => {
                 discountedPrice={discountedPrice}
               />
               <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
-              <AddToCartButton productId={product.id} style={{ marginTop: 10 }} />
             </div>
           </Col>
         </Row>
