@@ -1,10 +1,10 @@
 import { Card, Row, Col, Button } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import Meta from 'antd/es/card/Meta';
 import { Cart, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
 
+const { Meta } = Card;
 interface Props {
   product: ProductProjection;
   cart?: Cart;
@@ -53,8 +53,7 @@ const CatalogProductCard = (props: Props) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     // TODO:
-    // if { cart } {
-    // add product to cart
+    // if (!props.cart) {
     // }
   };
 

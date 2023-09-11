@@ -1,11 +1,12 @@
 import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
-import { Category, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, Category, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
+import getActiveCart from '@/pages/api/get-active-cart';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
@@ -23,6 +24,7 @@ const CatalogCards = (): JSX.Element => {
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
   const [sortString, setSortString] = useState<string>('');
   const [chosenSorting, setChosenSorting] = useState('');
+  const [cart, setCart] = useState<Cart | undefined>(undefined);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -230,6 +232,13 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
+  const createCart = async () => {
+    const response = await getActiveCart();
+    if (response !== 404) {
+      setCart(response);
+    }
+  };
+
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
@@ -239,6 +248,7 @@ const CatalogCards = (): JSX.Element => {
 
   useEffect(() => {
     getProductsInfo();
+    createCart();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
@@ -342,7 +352,7 @@ const CatalogCards = (): JSX.Element => {
                 key={product.key}
                 style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
               >
-                <CatalogProductCard product={product} />
+                <CatalogProductCard product={product} cart={cart && cart} />
               </Col>
             ))}
           </Row>
