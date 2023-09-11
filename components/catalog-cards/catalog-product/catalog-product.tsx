@@ -1,6 +1,7 @@
 import { Card, Row, Col, Button } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Cart, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
 import createNewCartWithProduct from '@/pages/api/create-new-cart-with-product';
@@ -18,6 +19,7 @@ interface Props {
 const CatalogProductCard = (props: Props) => {
   const { key, masterVariant, id, metaDescription } = props.product;
   const { attributes, images, prices } = masterVariant;
+  const [loadings, setLoadings] = useState<boolean>();
 
   if (!attributes) throw new Error('No attributes found');
   if (!images) throw new Error('No images found');
@@ -55,8 +57,10 @@ const CatalogProductCard = (props: Props) => {
     discountedPrice = discounted.value.centAmount;
   }
 
-  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setLoadings(true);
 
     if (!props.cart) {
       const response = await createNewCartWithProduct(props.product.id);
@@ -67,6 +71,7 @@ const CatalogProductCard = (props: Props) => {
         } else {
           props.setCart(response);
         }
+        setLoadings(false);
       }
     } else {
       const response = await addProductToActiveCart(props.cart.id, props.cart.version, props.product.id);
@@ -77,6 +82,7 @@ const CatalogProductCard = (props: Props) => {
         } else {
           props.setCart(response as Cart);
         }
+        setLoadings(false);
       }
     }
   };
@@ -190,6 +196,7 @@ const CatalogProductCard = (props: Props) => {
               </div>
               <Button
                 icon={<ShoppingCartOutlined />}
+                loading={loadings}
                 disabled={props.cart?.lineItems.some((lineItem) => lineItem.productId === props.product.id)}
                 onClick={handleClick}
                 style={{ marginTop: 5 }}
