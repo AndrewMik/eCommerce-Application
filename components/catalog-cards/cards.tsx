@@ -232,7 +232,7 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
-  const createCart = async () => {
+  const getCart = async () => {
     const response = await getActiveCart();
     if (response !== 404) {
       setCart(response);
@@ -248,7 +248,7 @@ const CatalogCards = (): JSX.Element => {
 
   useEffect(() => {
     getProductsInfo();
-    createCart();
+    getCart();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
