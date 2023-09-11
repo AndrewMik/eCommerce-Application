@@ -80,7 +80,7 @@ const CatalogProductCard = (props: Props) => {
         if ('statusCode' in response) {
           handleErrorResponse(response);
         } else {
-          props.setCart(response as Cart);
+          props.setCart(response);
         }
         setLoadings(false);
       }
