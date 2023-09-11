@@ -2,15 +2,19 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function createNewCartWithProduct(productId: string) {
+async function addProductToActiveCart(cartId: string, cartVersion: number, productId: string) {
   const client = Client.getInstance().anonymousClient;
 
   try {
     const response = await client
       .me()
       .carts()
+      .withId({ ID: cartId })
       .post({
-        body: { currency: 'USD', lineItems: [{ productId }] },
+        body: {
+          version: cartVersion,
+          actions: [{ action: 'addLineItem', productId }],
+        },
       })
       .execute();
 
@@ -21,4 +25,4 @@ async function createNewCartWithProduct(productId: string) {
   }
 }
 
-export default createNewCartWithProduct;
+export default addProductToActiveCart;

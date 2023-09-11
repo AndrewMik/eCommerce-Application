@@ -3,11 +3,16 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { Cart, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
+import createNewCartWithProduct from '@/pages/api/create-new-cart-with-product';
+import addProductToActiveCart from '@/pages/api/add-product-to-active-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 
 const { Meta } = Card;
+
 interface Props {
   product: ProductProjection;
   cart?: Cart;
+  setCart: (value: React.SetStateAction<Cart | undefined>) => void;
 }
 
 const CatalogProductCard = (props: Props) => {
@@ -50,11 +55,30 @@ const CatalogProductCard = (props: Props) => {
     discountedPrice = discounted.value.centAmount;
   }
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // TODO:
-    // if (!props.cart) {
-    // }
+
+    if (!props.cart) {
+      const response = await createNewCartWithProduct(props.product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          props.setCart(response);
+        }
+      }
+    } else {
+      const response = await addProductToActiveCart(props.cart.id, props.cart.version, props.product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          props.setCart(response as Cart);
+        }
+      }
+    }
   };
 
   return (
@@ -157,14 +181,19 @@ const CatalogProductCard = (props: Props) => {
             </Row>
           }
           description={
-            <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
+            <div style={{ fontSize: 12, lineHeight: '1', margin: '3px', paddingBottom: 5 }}>
               {descriptionPreview && <div style={{ height: 30 }}>{descriptionPreview}</div>}
               <div>
                 <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
                   see more details
                 </Button>
               </div>
-              <Button icon={<ShoppingCartOutlined />} onClick={handleClick} style={{ marginTop: 10 }}>
+              <Button
+                icon={<ShoppingCartOutlined />}
+                disabled={props.cart?.lineItems.some((lineItem) => lineItem.productId === props.product.id)}
+                onClick={handleClick}
+                style={{ marginTop: 5 }}
+              >
                 Add to cart
               </Button>
             </div>

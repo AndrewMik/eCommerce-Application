@@ -11,7 +11,7 @@ import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import CatalogProductCard from './catalog-product-card/catalog-product-card';
+import CatalogProductCard from './catalog-product/catalog-product';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -352,7 +352,7 @@ const CatalogCards = (): JSX.Element => {
                 key={product.key}
                 style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
               >
-                <CatalogProductCard product={product} cart={cart && cart} />
+                <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
               </Col>
             ))}
           </Row>
