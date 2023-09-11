@@ -1,22 +1,20 @@
-import { Button, Card, Col, Layout, MenuProps, Row, Space, Input } from 'antd';
+import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
-import Link from 'next/link';
-import { Category, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, Category, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
-import { permyriadToPercentage, transformCentToDollar } from '../../utils/price';
+import getActiveCart from '@/pages/api/get-active-cart';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
+import CatalogProductCard from './catalog-product/catalog-product';
 
 const { Content } = Layout;
 const { Search } = Input;
-
-const { Meta } = Card;
 
 const CatalogCards = (): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[] | null>(null);
@@ -26,6 +24,7 @@ const CatalogCards = (): JSX.Element => {
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
   const [sortString, setSortString] = useState<string>('');
   const [chosenSorting, setChosenSorting] = useState('');
+  const [cart, setCart] = useState<Cart | null>(null);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
@@ -233,6 +232,13 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
+  const getCart = async () => {
+    const response = await getActiveCart();
+    if (response !== 404) {
+      setCart(response);
+    }
+  };
+
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
@@ -242,6 +248,7 @@ const CatalogCards = (): JSX.Element => {
 
   useEffect(() => {
     getProductsInfo();
+    getCart();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
@@ -289,168 +296,6 @@ const CatalogCards = (): JSX.Element => {
       style: { color: 'rgb(36, 55, 99)' },
     },
   ];
-
-  const productCards =
-    products &&
-    products.map((product) => {
-      const { key, masterVariant, id, metaDescription } = product;
-      const { attributes, images, prices } = masterVariant;
-
-      if (!attributes) throw new Error('No attributes found');
-      if (!images) throw new Error('No images found');
-      if (!id) throw new Error('No id found');
-      if (!key) throw new Error('No key found');
-
-      const maxLengthOfDescription = 115;
-      let descriptionPreview = metaDescription && metaDescription.en;
-
-      if (descriptionPreview && descriptionPreview.length > maxLengthOfDescription) {
-        descriptionPreview = `${descriptionPreview.slice(0, maxLengthOfDescription)}...`;
-      }
-
-      if (!prices) throw new Error('No prices found');
-      const { discounted, value } = prices[0];
-      const regularPrice = value.centAmount;
-
-      let discountAmount: number | null = null;
-      let discountedPrice: number | null = null;
-
-      if (!discounted) {
-        discountAmount = null;
-        discountedPrice = null;
-      } else {
-        const { discount } = discounted;
-
-        if (!discount) throw new Error('No discount found');
-        const { obj } = discount;
-
-        if (!obj) throw new Error('No obj found');
-        const { value: discountValue } = obj;
-
-        const { permyriad } = discountValue as ProductDiscountValueRelative;
-        discountAmount = permyriadToPercentage(permyriad);
-        discountedPrice = discounted.value.centAmount;
-      }
-
-      return (
-        <Col
-          key={product.key}
-          style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
-        >
-          <Link href={`/catalog/${encodeURIComponent(key)}`}>
-            <Card
-              bodyStyle={{ padding: '3px', paddingTop: '20px' }}
-              key={key}
-              hoverable
-              style={{ width: 260, position: 'relative', textAlign: 'center', height: '450px' }}
-              cover={
-                <div
-                  style={{
-                    height: 240,
-                    overflow: 'hidden',
-                    borderRadius: '5px 5px 0 0',
-                    backgroundImage: `url(${images[0].url})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                ></div>
-              }
-            >
-              <Row>
-                {discountedPrice && (
-                  <Col
-                    style={{
-                      position: 'absolute',
-                      top: -5,
-                      right: -5,
-                      fontSize: '16px',
-                      color: 'red',
-                      fontWeight: 'bold',
-                      backgroundColor: 'white',
-                      borderRadius: '5px',
-                      padding: '3px 5px',
-                      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-                    }}
-                  >
-                    - {discountAmount}%
-                  </Col>
-                )}
-              </Row>
-              <Meta
-                title={
-                  <Row>
-                    <Col span={24} style={{ fontSize: 16, textAlign: 'center', height: 40 }}>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          whiteSpace: 'normal',
-                          color: 'rgba(33, 41, 62, 1)',
-                          textTransform: 'uppercase',
-                          lineHeight: '1',
-                          paddingBottom: '10px',
-                          fontSize: '14px',
-                        }}
-                      >
-                        {product.name && product.name.en}
-                      </span>
-                    </Col>
-                    <Col span={24}>
-                      {discountedPrice ? (
-                        <Row style={{ borderTop: '1px solid rgba(55, 34, 11, 0.11)' }}>
-                          <Col
-                            span={6}
-                            offset={6}
-                            style={{
-                              color: '#243763',
-                              display: 'flex',
-                              fontWeight: 'normal',
-                              textDecoration: 'line-through',
-                              alignItems: 'center',
-                              fontSize: '16px',
-                              paddingTop: '10px',
-                            }}
-                          >
-                            ${regularPrice && transformCentToDollar(regularPrice)}
-                          </Col>
-                          <Col style={{ fontSize: 18, color: 'red', paddingTop: '9px', fontWeight: 'bolder' }}>
-                            ${transformCentToDollar(discountedPrice)}
-                          </Col>
-                        </Row>
-                      ) : (
-                        <Row>
-                          <Col
-                            span={24}
-                            style={{
-                              fontSize: 18,
-                              borderTop: '1px solid rgba(55, 34, 11, 0.11)',
-                              paddingTop: '10px',
-                              fontWeight: 'bolder',
-                              color: '#243763',
-                            }}
-                          >
-                            ${regularPrice && transformCentToDollar(regularPrice)}
-                          </Col>
-                        </Row>
-                      )}
-                    </Col>
-                  </Row>
-                }
-                description={
-                  <div style={{ fontSize: 12, lineHeight: '1', margin: '3px' }}>
-                    {descriptionPreview && <div style={{ height: 30 }}>{descriptionPreview}</div>}
-                    <div>
-                      <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
-                        see more details
-                      </Button>
-                    </div>
-                  </div>
-                }
-              />
-            </Card>
-          </Link>
-        </Col>
-      );
-    });
 
   return (
     <Layout hasSider>
@@ -502,7 +347,14 @@ const CatalogCards = (): JSX.Element => {
               gap: '20px',
             }}
           >
-            {products && productCards}
+            {products?.map((product) => (
+              <Col
+                key={product.key}
+                style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
+              >
+                <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
+              </Col>
+            ))}
           </Row>
         </Content>
       </Layout>
