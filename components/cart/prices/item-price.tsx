@@ -22,7 +22,7 @@ const ItemPrice = ({ item }: Props) => {
   }
 
   return (
-    <b style={{ fontSize: 20 }}>
+    <b style={{ fontSize: 16 }}>
       {getCurrency(item.price.value)}
       {getPrice(item.price.value)}
     </b>
