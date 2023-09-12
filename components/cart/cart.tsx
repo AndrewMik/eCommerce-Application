@@ -6,17 +6,19 @@ import EmptyCart from './empty-cart/empty-cart';
 
 const CustomerCart = () => {
   const [cart, setCart] = useState<Cart | null>(null);
+  const [isCartLoaded, setIsCartLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCart = async () => {
       const userCart = await getCart();
       setCart(userCart);
+      setIsCartLoaded(true);
     };
 
     fetchCart();
   }, []);
 
-  return cart?.lineItems.length ? <CartContent cart={cart} /> : <EmptyCart />;
+  return isCartLoaded && cart?.lineItems.length ? <CartContent cart={cart} /> : <EmptyCart />;
 };
 
 export default CustomerCart;
