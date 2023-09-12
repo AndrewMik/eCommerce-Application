@@ -1,8 +1,9 @@
 import { HomeOutlined } from '@ant-design/icons';
 import { Cart } from '@commercetools/platform-sdk';
-import { Breadcrumb, Col, Divider, Layout, Row, theme, Typography } from 'antd';
+import { Breadcrumb, Divider, Layout, theme, Typography } from 'antd';
 import Link from 'next/link';
-import { getPrice, getTotalPrice, getTotalItemPrice } from '../helpers/get-price';
+import { getTotalPrice } from '../helpers/get-price';
+import CartItem from './cart-item';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -33,31 +34,7 @@ const CartItems = ({ cart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            let imageUrl = '';
-            if (item.variant.images) {
-              imageUrl = item.variant.images[0].url;
-            }
-
-            return (
-              <Row key={item.id}>
-                <Col flex="250px">
-                  <img
-                    src={imageUrl}
-                    alt={item.name.en}
-                    style={{ width: 240, aspectRatio: 1, borderRadius: '1%', objectFit: 'cover' }}
-                  />
-                </Col>
-                <Col flex="auto" style={{ width: '250px' }}>
-                  <Title key={item.id} level={4} style={{ margin: 0 }}>
-                    {item.name.en}
-                  </Title>
-                  {getPrice(item)}
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Subtotal: {getTotalItemPrice(item)}</p>
-                </Col>
-                <Divider />
-              </Row>
-            );
+            return <CartItem key={item.id} item={item} />;
           })}
           <Title level={2}>Total Price: {getTotalPrice(cart)}</Title>
         </div>
