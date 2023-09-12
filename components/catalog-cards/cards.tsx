@@ -6,12 +6,12 @@ import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
-import getActiveCart from '@/pages/api/get-active-cart';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
 import CatalogProductCard from './catalog-product/catalog-product';
+import getCart from '../cart/helpers/get-cart';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -232,13 +232,6 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
-  const getCart = async () => {
-    const response = await getActiveCart();
-    if (response !== 404) {
-      setCart(response);
-    }
-  };
-
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
@@ -248,7 +241,12 @@ const CatalogCards = (): JSX.Element => {
 
   useEffect(() => {
     getProductsInfo();
-    getCart();
+    const fetchCart = async () => {
+      const userCart = await getCart();
+      setCart(userCart);
+    };
+
+    fetchCart();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
