@@ -55,6 +55,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
       if ('statusCode' in response) {
         handleErrorResponse(response);
       } else {
+        /* eslint-disable no-console */
+        console.log(response);
         setCart(response);
       }
     }
