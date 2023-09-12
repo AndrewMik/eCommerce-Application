@@ -2,8 +2,8 @@ import { HomeOutlined } from '@ant-design/icons';
 import { Cart } from '@commercetools/platform-sdk';
 import { Breadcrumb, Divider, Layout, theme, Typography } from 'antd';
 import Link from 'next/link';
-import { getTotalPrice } from '../helpers/get-price';
 import CartItem from './cart-item';
+import TotalPrice from '../prices/total-price';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -36,7 +36,9 @@ const CartItems = ({ cart }: Props) => {
           {cart.lineItems.map((item) => {
             return <CartItem key={item.id} item={item} />;
           })}
-          <Title level={2}>Total Price: {getTotalPrice(cart)}</Title>
+          <Title level={2}>
+            Total Price: <TotalPrice cart={cart} />
+          </Title>
         </div>
       </Content>
     </Layout>
