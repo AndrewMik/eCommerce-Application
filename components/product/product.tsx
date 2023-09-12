@@ -43,8 +43,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [open, setOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [loadings, setLoadings] = useState<boolean>(false);
-  const [productPageCart, setProductPageCart] = useState<Cart | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [cart, setCart] = useState<Cart | null>(null);
 
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
@@ -55,7 +55,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
       if ('statusCode' in response) {
         handleErrorResponse(response);
       } else {
-        setProductPageCart(response);
+        setCart(response);
       }
     }
   };
@@ -110,29 +110,29 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    setLoadings(true);
+    setLoading(true);
 
-    if (!productPageCart) {
+    if (!cart) {
       const response = await createNewCartWithProduct(product.id);
 
       if (response) {
         if ('statusCode' in response) {
           handleErrorResponse(response);
         } else {
-          setProductPageCart(response);
+          setCart(response);
         }
-        setLoadings(false);
+        setLoading(false);
       }
     } else {
-      const response = await addProductToActiveCart(productPageCart.id, productPageCart.version, product.id);
+      const response = await addProductToActiveCart(cart.id, cart.version, product.id);
 
       if (response) {
         if ('statusCode' in response) {
           handleErrorResponse(response);
         } else {
-          setProductPageCart(response);
+          setCart(response);
         }
-        setLoadings(false);
+        setLoading(false);
       }
     }
   };
@@ -213,11 +213,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
             </div>
             <Button
               icon={<ShoppingCartOutlined />}
-              loading={loadings}
-              disabled={
-                productPageCart?.lineItems &&
-                productPageCart?.lineItems.some((lineItem) => lineItem.productId === product.id)
-              }
+              loading={loading}
+              disabled={cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id)}
               onClick={handleClick}
               style={{ marginTop: 10 }}
             >
