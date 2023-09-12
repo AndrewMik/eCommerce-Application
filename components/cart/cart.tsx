@@ -1,11 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Cart } from '@commercetools/platform-sdk';
 import EmptyCart from './empty-cart/empty-cart';
+import getCart from './helpers/get-cart';
 
-const Cart = () => {
-  // data from CT will be used for isCartEmpty state
-  const [isCartEmpty] = useState<boolean>(true);
+const CustomerCart = () => {
+  const [cart, setCart] = useState<Cart | null>(null);
 
-  return isCartEmpty ? <EmptyCart /> : <div />;
+  useEffect(() => {
+    const fetchCart = async () => {
+      const userCart = await getCart();
+      setCart(userCart);
+    };
+
+    fetchCart();
+  }, []);
+
+  return cart?.lineItems.length ? <>Cart Content</> : <EmptyCart />;
 };
 
-export default Cart;
+export default CustomerCart;
