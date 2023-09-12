@@ -3,6 +3,7 @@ import { Cart } from '@commercetools/platform-sdk';
 import getCart from './helpers/get-cart';
 import CartContent from './cart-items/cart-content';
 import EmptyCart from './empty-cart/empty-cart';
+import Spinner from '../spinner/spinner';
 
 const CustomerCart = () => {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -14,11 +15,10 @@ const CustomerCart = () => {
       setCart(userCart);
       setIsCartLoaded(true);
     };
-
     fetchCart();
   }, []);
 
-  return isCartLoaded && cart?.lineItems.length ? <CartContent cart={cart} /> : <EmptyCart />;
+  return (isCartLoaded && (cart?.lineItems.length ? <CartContent cart={cart} /> : <EmptyCart />)) || <Spinner />;
 };
 
 export default CustomerCart;
