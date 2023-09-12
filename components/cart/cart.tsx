@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
 import getCart from './helpers/get-cart';
-import CartItems from './cart-items/cart-items';
+import CartContent from './cart-items/cart-content';
 
 const CustomerCart = () => {
   const [cart, setCart] = useState<Cart | null>(null);
@@ -15,7 +15,7 @@ const CustomerCart = () => {
     fetchCart();
   }, []);
 
-  return cart?.lineItems.length ? <CartItems cart={cart} /> : <>Empty Cart</>;
+  return cart?.lineItems.length ? <CartContent cart={cart} /> : <>Empty Cart</>;
 };
 
 export default CustomerCart;

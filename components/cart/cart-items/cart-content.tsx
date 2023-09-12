@@ -12,7 +12,7 @@ interface Props {
   cart: Cart;
 }
 
-const CartItems = ({ cart }: Props) => {
+const CartContent = ({ cart }: Props) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -45,4 +45,4 @@ const CartItems = ({ cart }: Props) => {
   );
 };
 
-export default CartItems;
+export default CartContent;
