@@ -1,4 +1,4 @@
-import { AllCategories } from '../components/catalog-sider/types';
+import { AllCategories } from '../components/catalog/catalog-sider/types';
 
 export default function findMainCategoryById(mainCategories: AllCategories[], targetIdWithPrefix: string) {
   const targetId = targetIdWithPrefix && targetIdWithPrefix.replace('category-', '');

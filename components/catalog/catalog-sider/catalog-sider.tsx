@@ -3,7 +3,7 @@ import { SetStateAction, useState } from 'react';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { CheckSquareOutlined, DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { MenuKeyProps, AllCategories } from './types';
-import { AttributeData } from '../catalog-cards/types';
+import { AttributeData } from '../types';
 
 const { Sider } = Layout;
 

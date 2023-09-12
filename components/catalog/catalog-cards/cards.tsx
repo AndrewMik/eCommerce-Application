@@ -7,11 +7,11 @@ import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/get-active-cart';
-import getProducts from '../../pages/api/get-products';
-import { AttributeData } from './types';
+import getProducts from '../../../pages/api/get-products';
+import { AttributeData } from '../types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import CatalogProductCard from './catalog-product/catalog-product';
+import CatalogProductCard from '../catalog-product/catalog-product';
 
 const { Content } = Layout;
 const { Search } = Input;
