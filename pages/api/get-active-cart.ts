@@ -11,10 +11,7 @@ async function getActiveCart() {
     return response.body;
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-    if (errorResponse.body?.statusCode !== 404) {
-      throw new Error('something went wrong');
-    }
-    return errorResponse.body?.statusCode;
+    return errorResponse.body;
   }
 }
 

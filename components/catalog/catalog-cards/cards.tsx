@@ -7,6 +7,7 @@ import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/get-active-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import getProducts from '../../../pages/api/get-products';
 import { AttributeData } from '../types';
 import CatalogSider from '../catalog-sider/catalog-sider';
@@ -234,8 +235,12 @@ const CatalogCards = (): JSX.Element => {
 
   const getCart = async () => {
     const response = await getActiveCart();
-    if (response !== 404) {
-      setCart(response);
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setCart(response);
+      }
     }
   };
 

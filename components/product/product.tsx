@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Spin, Row, Col } from 'antd';
-import { ProductProjection, Image } from '@commercetools/platform-sdk';
+import { Spin, Row, Col, Button } from 'antd';
+import { ProductProjection, Image, Cart } from '@commercetools/platform-sdk';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
+import addProductToActiveCart from '../../pages/api/add-product-to-active-cart';
+import createNewCartWithProduct from '../../pages/api/create-new-cart-with-product';
+import getActiveCart from '../../pages/api/get-active-cart';
+import { handleErrorResponse } from '../../utils/handle-cart-error-response';
 import Slider from './slider';
 import ProductBreadcrumb from './breadcrumb';
 import ProductDetails from './details';
@@ -38,9 +43,26 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [open, setOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [loadings, setLoadings] = useState<boolean>(false);
+  const [productPageCart, setProductPageCart] = useState<Cart | null>(null);
 
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
+
+  const getCart = async () => {
+    const response = await getActiveCart();
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setProductPageCart(response);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   useEffect(() => {
     if (product) {
@@ -82,6 +104,36 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const prev = () => {
     if (modalCarouselRef.current) {
       modalCarouselRef.current.prev();
+    }
+  };
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setLoadings(true);
+
+    if (!productPageCart) {
+      const response = await createNewCartWithProduct(product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          setProductPageCart(response);
+        }
+        setLoadings(false);
+      }
+    } else {
+      const response = await addProductToActiveCart(productPageCart.id, productPageCart.version, product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          setProductPageCart(response);
+        }
+        setLoadings(false);
+      }
     }
   };
 
@@ -159,6 +211,18 @@ const Product = ({ product }: { product: ProductProjection }) => {
               />
               <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
             </div>
+            <Button
+              icon={<ShoppingCartOutlined />}
+              loading={loadings}
+              disabled={
+                productPageCart?.lineItems &&
+                productPageCart?.lineItems.some((lineItem) => lineItem.productId === product.id)
+              }
+              onClick={handleClick}
+              style={{ marginTop: 10 }}
+            >
+              Add to cart
+            </Button>
           </Col>
         </Row>
         <ImageModal
