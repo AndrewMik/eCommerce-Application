@@ -11,7 +11,7 @@ import getProducts from '../../../pages/api/get-products';
 import { AttributeData } from '../types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import CatalogProductCard from '../catalog-product/catalog-product';
+import CatalogProductCard from '../catalog-card/catalog-card';
 
 const { Content } = Layout;
 const { Search } = Input;
