@@ -18,18 +18,18 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
   const { notification } = App.useApp();
 
   const [quantity, setQuantity] = useState<number>(item.quantity);
-  const [isCartLoaded, setIsCartLoaded] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const maxQuantity = item.variant.availability?.availableQuantity ?? 1;
 
   useEffect(() => {
     const fetchCart = async () => {
-      setIsCartLoaded(false);
+      setLoading(false);
       try {
         await changeQuantity(cart.id, cart.version, item.id, quantity);
         const userCart = await getCart();
         setCart(userCart);
-        setIsCartLoaded(true);
+        setLoading(true);
       } catch (error) {
         console.error(error);
       }
@@ -72,7 +72,7 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
       <Button onClick={() => handleQuantityChange(quantity + 1)} disabled={quantity >= maxQuantity}>
         <PlusOutlined />
       </Button>
-      {isCartLoaded || <Spin style={{ marginLeft: 5 }} />}
+      {loading || <Spin style={{ marginLeft: 5 }} />}
     </>
   );
 };
