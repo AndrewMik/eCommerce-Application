@@ -1,12 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
-import { Spin, Row, Col } from 'antd';
-import { ProductProjection, Image } from '@commercetools/platform-sdk';
+import { Spin, Row, Col, Button } from 'antd';
+import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 
+import getCartWithToken from '../../pages/api/cart/get-cart-with-token';
+import addProductToActiveCart from '../../pages/api/cart/add-product-to-cart';
+import createNewCartWithProduct from '../../pages/api/cart/create-cart-with-product';
+import getActiveCart from '../../pages/api/cart/get-active-cart';
+import { handleErrorResponse } from '../../utils/handle-cart-error-response';
 import Slider from './slider';
 import ProductBreadcrumb from './breadcrumb';
 import ProductDetails from './details';
 import Attributes from './attributes';
 import ImageModal from './modal';
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 enum AttributesKeys {
   BRAND = 'brand',
@@ -38,9 +46,34 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [open, setOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [cart, setCart] = useState<Cart | null>(null);
 
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
+
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setCart(response);
+      }
+    }
+  };
+
+  const getCart = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken !== null) {
+      await getCartWithToken();
+    }
+    const response = await getActiveCart();
+    handleResponse(response);
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   useEffect(() => {
     if (product) {
@@ -82,6 +115,36 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const prev = () => {
     if (modalCarouselRef.current) {
       modalCarouselRef.current.prev();
+    }
+  };
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    if (!cart) {
+      const response = await createNewCartWithProduct(product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          setCart(response);
+        }
+        setLoading(false);
+      }
+    } else {
+      const response = await addProductToActiveCart(cart.id, cart.version, product.id);
+
+      if (response) {
+        if ('statusCode' in response) {
+          handleErrorResponse(response);
+        } else {
+          setCart(response);
+        }
+        setLoading(false);
+      }
     }
   };
 
@@ -159,6 +222,15 @@ const Product = ({ product }: { product: ProductProjection }) => {
               />
               <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
             </div>
+            <Button
+              icon={<ShoppingCartOutlined />}
+              loading={loading}
+              disabled={cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id)}
+              onClick={handleClick}
+              style={{ marginTop: 10 }}
+            >
+              Add to cart
+            </Button>
           </Col>
         </Row>
         <ImageModal
