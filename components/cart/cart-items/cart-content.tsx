@@ -1,12 +1,11 @@
 import { HomeOutlined } from '@ant-design/icons';
-import { Cart } from '@commercetools/platform-sdk';
+import { Cart, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import { Breadcrumb, Button, Divider, Layout, Popconfirm, theme, Typography } from 'antd';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
-import clearShoppingCart from '@/pages/api/clear-shopping-cart';
+import updateCart from '@/pages/api/update-cart';
 import CartItem from './cart-item';
 import TotalPrice from '../prices/total-price';
-import getCart from '../helpers/get-cart';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -22,9 +21,17 @@ const CartContent = ({ cart, setCart }: Props) => {
   } = theme.useToken();
 
   const clearShoppingCartHandler = async () => {
-    await clearShoppingCart(cart.id, cart.version, cart.lineItems);
-    const userCart = await getCart();
-    setCart(userCart);
+    const actions: MyCartUpdateAction[] = cart.lineItems.map((lineItem) => ({
+      action: 'removeLineItem',
+      lineItemId: lineItem.id,
+    }));
+
+    const response = await updateCart(cart.id, cart.version, actions);
+    if (response && 'type' in response) {
+      setCart(response as Cart);
+    } else {
+      setCart(null);
+    }
   };
 
   return (

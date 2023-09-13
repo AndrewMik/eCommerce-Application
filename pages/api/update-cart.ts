@@ -1,16 +1,11 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { ErrorResponse, LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
+import { ErrorResponse, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function clearShoppingCart(cartId: string, cartVersion: number, lineItems: LineItem[]) {
+async function updateCart(cartId: string, cartVersion: number, actions: MyCartUpdateAction[]) {
   const client = Client.getInstance().anonymousClient;
 
   try {
-    const actions: MyCartUpdateAction[] = lineItems.map((lineItem) => ({
-      action: 'removeLineItem',
-      lineItemId: lineItem.id,
-    }));
-
     const response = await client
       .me()
       .carts()
@@ -30,4 +25,4 @@ async function clearShoppingCart(cartId: string, cartVersion: number, lineItems:
   }
 }
 
-export default clearShoppingCart;
+export default updateCart;
