@@ -2,6 +2,7 @@ import { LineItem } from '@commercetools/platform-sdk';
 import { Col, Divider, Row, Typography } from 'antd';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
+import ItemQuantity from './quantity/item-quantity';
 
 interface Props {
   item: LineItem;
@@ -29,7 +30,9 @@ const CartItem = ({ item }: Props) => {
           {item.name.en}
         </Title>
         <ItemPrice item={item} />
-        <p>Quantity: {item.quantity}</p>
+        <p>
+          Quantity: <ItemQuantity item={item} />
+        </p>
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>
