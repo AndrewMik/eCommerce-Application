@@ -53,7 +53,7 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
     } else {
       setQuantity(minQuantity);
     }
-  }, 150);
+  }, 200);
 
   return (
     <>
