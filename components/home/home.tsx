@@ -1,4 +1,4 @@
-import { LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined, TeamOutlined } from '@ant-design/icons';
+import { LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Col, List, Row } from 'antd';
 import { useContext } from 'react';
 import Link from 'next/link';
@@ -15,11 +15,6 @@ const Home = (): JSX.Element => {
   };
 
   const navigationMainPage = [
-    {
-      key: Paths.ABOUT,
-      label: <Link href={Paths.ABOUT}>About us</Link>,
-      icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
-    },
     {
       key: Paths.CATALOG,
       label: <Link href={Paths.CATALOG}>Catalog</Link>,

@@ -1,16 +1,8 @@
-import {
-  HomeOutlined,
-  LoginOutlined,
-  UserOutlined,
-  ShoppingOutlined,
-  ShoppingCartOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
+import { HomeOutlined, LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 export enum Paths {
   HOME = '/',
-  ABOUT = '/about',
   LOGIN = '/login',
   REGISTRATION = '/registration',
   CATALOG = '/catalog',
@@ -20,11 +12,6 @@ export enum Paths {
 
 export const navigationLinks = [
   { key: Paths.HOME, label: <Link href={Paths.HOME}>Home</Link>, icon: <HomeOutlined style={{ color: '#633211' }} /> },
-  {
-    key: Paths.ABOUT,
-    label: <Link href={Paths.ABOUT}>About us</Link>,
-    icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
-  },
   {
     key: Paths.CATALOG,
     label: <Link href={Paths.CATALOG}>Catalog</Link>,
