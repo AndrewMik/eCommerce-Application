@@ -3,6 +3,7 @@ import { Spin, Row, Col, Button } from 'antd';
 import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
+import getCartWithToken from '../../pages/api/cart/get-cart-with-token';
 import addProductToActiveCart from '../../pages/api/cart/add-product-to-cart';
 import createNewCartWithProduct from '../../pages/api/cart/create-cart-with-product';
 import getActiveCart from '../../pages/api/cart/get-active-cart';
@@ -62,6 +63,10 @@ const Product = ({ product }: { product: ProductProjection }) => {
   };
 
   const getCart = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken !== null) {
+      await getCartWithToken();
+    }
     const response = await getActiveCart();
     handleResponse(response);
   };

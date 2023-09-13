@@ -8,6 +8,7 @@ import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/cart/get-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import getCartWithToken from '@/pages/api/cart/get-cart-with-token';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from './sider';
@@ -254,6 +255,10 @@ const CatalogCards = (): JSX.Element => {
   };
 
   const getCart = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken !== null) {
+      await getCartWithToken();
+    }
     const response = await getActiveCart();
     handleResponse(response);
   };
