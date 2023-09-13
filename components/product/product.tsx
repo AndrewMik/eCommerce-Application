@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Spin, Row, Col, Button } from 'antd';
-import { ProductProjection, Image, Cart } from '@commercetools/platform-sdk';
+import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
 import addProductToActiveCart from '../../pages/api/add-product-to-active-cart';
@@ -12,6 +12,8 @@ import ProductBreadcrumb from './breadcrumb';
 import ProductDetails from './details';
 import Attributes from './attributes';
 import ImageModal from './modal';
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 enum AttributesKeys {
   BRAND = 'brand',
@@ -49,17 +51,19 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
 
-  const getCart = async () => {
-    const response = await getActiveCart();
+  const handleResponse = (response: Response) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
       } else {
-        /* eslint-disable no-console */
-        console.log(response);
         setCart(response);
       }
     }
+  };
+
+  const getCart = async () => {
+    const response = await getActiveCart();
+    handleResponse(response);
   };
 
   useEffect(() => {

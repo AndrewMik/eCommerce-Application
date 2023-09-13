@@ -1,6 +1,6 @@
 import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
-import { Cart, Category, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
@@ -13,6 +13,8 @@ import { AttributeData } from '../types';
 import CatalogSider from '../catalog-sider/catalog-sider';
 import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
 import CatalogProductCard from '../catalog-card/catalog-card';
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -233,8 +235,7 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
-  const getCart = async () => {
-    const response = await getActiveCart();
+  const handleResponse = (response: Response) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
@@ -242,6 +243,11 @@ const CatalogCards = (): JSX.Element => {
         setCart(response);
       }
     }
+  };
+
+  const getCart = async () => {
+    const response = await getActiveCart();
+    handleResponse(response);
   };
 
   useEffect(() => {

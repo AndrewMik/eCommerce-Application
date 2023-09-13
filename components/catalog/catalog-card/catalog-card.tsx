@@ -2,13 +2,15 @@ import { Card, Row, Col, Button } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Cart, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ErrorResponse, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
 import createNewCartWithProduct from '@/pages/api/create-new-cart-with-product';
 import addProductToActiveCart from '@/pages/api/add-product-to-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 
 const { Meta } = Card;
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 interface Props {
   product: ProductProjection;
@@ -57,6 +59,17 @@ const CatalogProductCard = (props: Props) => {
     discountedPrice = discounted.value.centAmount;
   }
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        props.setCart(response);
+      }
+      setLoading(false);
+    }
+  };
+
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -64,26 +77,10 @@ const CatalogProductCard = (props: Props) => {
 
     if (!props.cart) {
       const response = await createNewCartWithProduct(props.product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          props.setCart(response);
-        }
-        setLoading(false);
-      }
+      handleResponse(response);
     } else {
       const response = await addProductToActiveCart(props.cart.id, props.cart.version, props.product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          props.setCart(response);
-        }
-        setLoading(false);
-      }
+      handleResponse(response);
     }
   };
 
