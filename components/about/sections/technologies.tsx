@@ -1,6 +1,6 @@
 import { Card, List, Typography } from 'antd';
 
-import FontColors from '@/components/product/product.data';
+import FontColors from '../../product/product.data';
 import projectDescription from '../data/project-description';
 
 const { Text } = Typography;

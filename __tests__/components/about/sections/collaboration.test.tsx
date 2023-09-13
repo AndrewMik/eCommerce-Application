@@ -3,7 +3,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { ReactNode } from 'react';
 import Collaboration from '../../../../components/about/sections/collaboration';
 
-// Mocking Next.js specific modules
 jest.mock('next/link', () => {
   return ({ children }: { children?: ReactNode }) => {
     return children;

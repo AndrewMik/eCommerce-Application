@@ -1,5 +1,6 @@
 import { Card, Avatar, Typography, List, Space } from 'antd';
-import FontColors from '@/components/product/product.data';
+
+import FontColors from '../../product/product.data';
 import teamMembers from '../data/team-member-data';
 
 const { Title, Text } = Typography;
