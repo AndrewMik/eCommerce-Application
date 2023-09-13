@@ -1,5 +1,5 @@
 import { Card } from 'antd';
-import FontColors from '@/components/product/product.data';
+import FontColors from '../../product/product.data';
 import projectDescription from '../data/project-description';
 
 interface ProjectDescriptionProps {

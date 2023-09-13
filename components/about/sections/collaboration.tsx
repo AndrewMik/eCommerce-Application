@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Card, Col, Row } from 'antd';
-import FontColors from '@/components/product/product.data';
+import FontColors from '../../product/product.data';
 
 import logo from '../../../public/rs-logo.svg';
 
