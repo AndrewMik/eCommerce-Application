@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction } from 'react';
 import removeFromCart from '@/pages/api/remove-from-cart';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
-import getCart from '../helpers/get-cart';
 
 interface Props {
   item: LineItem;
@@ -19,12 +18,6 @@ const CartItem = ({ item, cart, setCart }: Props) => {
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
   }
-
-  const removeItemFromCartHandler = async () => {
-    await removeFromCart(cart.id, cart.version, item.id);
-    const userCart = await getCart();
-    setCart(userCart);
-  };
 
   return (
     <Row key={item.id}>
@@ -44,7 +37,17 @@ const CartItem = ({ item, cart, setCart }: Props) => {
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>
-        <Button danger onClick={removeItemFromCartHandler}>
+        <Button
+          danger
+          onClick={async () => {
+            const response = await removeFromCart(cart.id, cart.version, item.id);
+            if (response && 'type' in response) {
+              setCart(response as Cart);
+            } else {
+              setCart(null);
+            }
+          }}
+        >
           Remove from Cart
         </Button>
       </Col>
