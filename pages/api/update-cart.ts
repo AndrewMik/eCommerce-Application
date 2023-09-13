@@ -1,8 +1,8 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { ErrorResponse } from '@commercetools/platform-sdk';
+import { ErrorResponse, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function changeQuantity(cartId: string, cartVersion: number, lineItemId: string, quantity: number) {
+async function updateCart(cartId: string, cartVersion: number, actions: MyCartUpdateAction[]) {
   const client = Client.getInstance().anonymousClient;
 
   try {
@@ -13,7 +13,7 @@ async function changeQuantity(cartId: string, cartVersion: number, lineItemId: s
       .post({
         body: {
           version: cartVersion,
-          actions: [{ action: 'changeLineItemQuantity', lineItemId, quantity }],
+          actions,
         },
       })
       .execute();
@@ -25,4 +25,4 @@ async function changeQuantity(cartId: string, cartVersion: number, lineItemId: s
   }
 }
 
-export default changeQuantity;
+export default updateCart;

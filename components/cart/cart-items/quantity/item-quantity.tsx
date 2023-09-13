@@ -3,8 +3,7 @@ import { App, Button, Input, Spin } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
-import changeQuantity from '@/pages/api/change-quantity';
-import getCart from '../../helpers/get-cart';
+import updateCart from '@/pages/api/update-cart';
 
 interface Props {
   item: LineItem;
@@ -26,9 +25,14 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
     const fetchCart = async () => {
       setLoading(false);
       try {
-        await changeQuantity(cart.id, cart.version, item.id, quantity);
-        const userCart = await getCart();
-        setCart(userCart);
+        const response = await updateCart(cart.id, cart.version, [
+          { action: 'changeLineItemQuantity', lineItemId: item.id, quantity },
+        ]);
+        if (response && 'type' in response) {
+          setCart(response as Cart);
+        } else {
+          setCart(null);
+        }
         setLoading(true);
       } catch (error) {
         console.error(error);
