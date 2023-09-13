@@ -3,8 +3,8 @@ import { Spin, Row, Col, Button } from 'antd';
 import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
-import addProductToActiveCart from '../../pages/api/cart/add-product-to-active-cart';
-import createNewCartWithProduct from '../../pages/api/cart/create-new-cart-with-product';
+import addProductToActiveCart from '../../pages/api/cart/add-product-to-cart';
+import createNewCartWithProduct from '../../pages/api/cart/create-cart-with-product';
 import getActiveCart from '../../pages/api/cart/get-active-cart';
 import { handleErrorResponse } from '../../utils/handle-cart-error-response';
 import Slider from './slider';
