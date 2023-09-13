@@ -1,8 +1,8 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { ErrorResponse } from '@commercetools/platform-sdk';
+import { ErrorResponse, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function removeFromCart(cartId: string, cartVersion: number, lineItemId: string) {
+async function updateCart(cartId: string, cartVersion: number, actions: MyCartUpdateAction[]) {
   const client = Client.getInstance().anonymousClient;
 
   try {
@@ -13,7 +13,7 @@ async function removeFromCart(cartId: string, cartVersion: number, lineItemId: s
       .post({
         body: {
           version: cartVersion,
-          actions: [{ action: 'removeLineItem', lineItemId }],
+          actions,
         },
       })
       .execute();
@@ -25,4 +25,4 @@ async function removeFromCart(cartId: string, cartVersion: number, lineItemId: s
   }
 }
 
-export default removeFromCart;
+export default updateCart;

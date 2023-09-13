@@ -1,7 +1,7 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Button, Col, Divider, Row, Typography } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
-import removeFromCart from '@/pages/api/remove-from-cart';
+import updateCart from '@/pages/api/update-cart';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
 
@@ -20,7 +20,7 @@ const CartItem = ({ item, cart, setCart }: Props) => {
   }
 
   const removeLineItemFromCart = async () => {
-    const response = await removeFromCart(cart.id, cart.version, item.id);
+    const response = await updateCart(cart.id, cart.version, [{ action: 'removeLineItem', lineItemId: item.id }]);
     if (response && 'type' in response) {
       setCart(response as Cart);
     } else {
