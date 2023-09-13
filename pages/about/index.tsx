@@ -1,4 +1,4 @@
-import TeamPage from '@/components/about/about';
+import TeamPage from '@/components/about/team-page';
 
 const AboutPage = (): JSX.Element => <TeamPage></TeamPage>;
 

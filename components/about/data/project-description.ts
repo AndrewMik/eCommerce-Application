@@ -1,6 +1,6 @@
 const projectDescription = {
   about:
-    "Welcome to our Kiddo Kingdom, the magical eCommerce application for children's toys.\nFrom educational puzzles to adventurous playsets, Kiddo Kingdom offers a wide range of toys that inspire creativity, learning, and endless fun! Our online store provides a seamless shopping experience, catering to kids and parents alike. Our user-friendly platform makes shopping for toys a breeze, offering quality products that inspire creativity, learning, and lots of fun!",
+    "Welcome to our Kiddo Kingdom, the magical eCommerce application for children's toys.\nFrom educational puzzles to adventurous playsets, Kiddo Kingdom offers a wide range of toys that inspire creativity, learning, and endless fun! Our online store provides a seamless shopping experience, catering to kids and parents alike.\nOur user-friendly platform makes shopping for toys a breeze, offering quality products that inspire creativity, learning, and lots of fun!\nThe eCommerce platform is designed with parents and kids in mind, providing an engaging, secure, and hassle-free shopping journey. We aspire to be a trusted partner in building happy memories, supporting families in their quest for the perfect toy.\nWelcome to Kiddo Kingdom, where imagination reigns supreme!",
   technologies: {
     frontend: ['Frontend', 'TypeScript, React, Next.js'],
     bundling: ['Bundling', 'Managed by Next.js (using Webpack)'],
