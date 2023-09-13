@@ -19,6 +19,15 @@ const CartItem = ({ item, cart, setCart }: Props) => {
     imageUrl = item.variant.images[0].url;
   }
 
+  const removeLineItemFromCart = async () => {
+    const response = await removeFromCart(cart.id, cart.version, item.id);
+    if (response && 'type' in response) {
+      setCart(response as Cart);
+    } else {
+      setCart(null);
+    }
+  };
+
   return (
     <Row key={item.id}>
       <Col flex="250px">
@@ -37,17 +46,7 @@ const CartItem = ({ item, cart, setCart }: Props) => {
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>
-        <Button
-          danger
-          onClick={async () => {
-            const response = await removeFromCart(cart.id, cart.version, item.id);
-            if (response && 'type' in response) {
-              setCart(response as Cart);
-            } else {
-              setCart(null);
-            }
-          }}
-        >
+        <Button danger onClick={removeLineItemFromCart}>
           Remove from Cart
         </Button>
       </Col>
