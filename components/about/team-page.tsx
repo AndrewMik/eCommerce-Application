@@ -14,7 +14,7 @@ const TeamPage: React.FC = () => {
           <Col md={24} lg={16} style={{ display: 'flex' }}>
             <ProjectDescription description={projectDescription} />
           </Col>
-          <Col md={24} lg={8} style={{ display: 'flex' }}>
+          <Col xs={24} lg={8} style={{ display: 'flex' }}>
             <Technologies technologies={projectDescription.technologies} />
           </Col>
         </Row>
