@@ -15,7 +15,7 @@ const CustomerCart = () => {
     fetchCart();
   }, []);
 
-  return cart?.lineItems.length ? <CartContent cart={cart} /> : <>Empty Cart</>;
+  return cart?.lineItems.length ? <CartContent cart={cart} setCart={setCart} /> : <>Empty Cart</>;
 };
 
 export default CustomerCart;
