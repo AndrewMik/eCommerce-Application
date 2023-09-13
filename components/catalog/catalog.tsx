@@ -6,7 +6,7 @@ import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
-import getActiveCart from '@/pages/api/get-active-cart';
+import getActiveCart from '@/pages/api/cart/get-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';

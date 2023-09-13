@@ -1,6 +1,6 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
-import Client from './client';
+import Client from '../client';
 
 async function getActiveCart() {
   const client = Client.getInstance().anonymousClient;

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Cart, ErrorResponse, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
-import createNewCartWithProduct from '@/pages/api/create-new-cart-with-product';
-import addProductToActiveCart from '@/pages/api/add-product-to-active-cart';
+import createNewCartWithProduct from '@/pages/api/cart/create-new-cart-with-product';
+import addProductToActiveCart from '@/pages/api/cart/add-product-to-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 
 const { Meta } = Card;
