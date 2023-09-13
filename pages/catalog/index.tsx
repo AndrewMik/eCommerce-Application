@@ -1,4 +1,4 @@
-import CatalogCards from '@/components/catalog/catalog-cards/cards';
+import CatalogCards from '@/components/catalog/catalog';
 
 const CatalogPage = (): JSX.Element => {
   return (

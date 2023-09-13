@@ -8,11 +8,19 @@ import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/get-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
-import getProducts from '../../../pages/api/get-products';
-import { AttributeData } from '../types';
-import CatalogSider from '../catalog-sider/catalog-sider';
-import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import CatalogProductCard from '../catalog-card/catalog-card';
+import getProducts from '../../pages/api/get-products';
+import { AttributeData } from './types';
+import CatalogSider from './sider';
+import CatalogProductCard from './card';
+
+interface MenuKeyProps {
+  keyPath: string[];
+}
+
+interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
+}
 
 type Response = Cart | ErrorResponse | undefined | null;
 
