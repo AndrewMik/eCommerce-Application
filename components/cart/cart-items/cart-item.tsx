@@ -1,15 +1,19 @@
-import { LineItem } from '@commercetools/platform-sdk';
+import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { Col, Divider, Row, Typography } from 'antd';
+import { Dispatch, SetStateAction } from 'react';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
+import ItemQuantity from './quantity/item-quantity';
 
 interface Props {
   item: LineItem;
+  cart: Cart;
+  setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
 const { Title } = Typography;
 
-const CartItem = ({ item }: Props) => {
+const CartItem = ({ item, cart, setCart }: Props) => {
   let imageUrl = '';
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
@@ -29,7 +33,9 @@ const CartItem = ({ item }: Props) => {
           {item.name.en}
         </Title>
         <ItemPrice item={item} />
-        <p>Quantity: {item.quantity}</p>
+        <p>
+          Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
+        </p>
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>

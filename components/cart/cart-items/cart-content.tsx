@@ -51,7 +51,7 @@ const CartContent = ({ cart, setCart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            return <CartItem key={item.id} item={item} />;
+            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} />;
           })}
           <Title level={2}>
             Total Price: <TotalPrice cart={cart} />

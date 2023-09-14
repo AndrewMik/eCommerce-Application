@@ -1,10 +1,16 @@
 import { Cart } from '@commercetools/platform-sdk';
-import getActiveCart from '@/pages/api/get-active-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import getActiveCart from '../../../pages/api/cart/get-active-cart';
 
 const getCart = async (): Promise<Cart | null> => {
   const response = await getActiveCart();
-  if (response !== 404) {
-    return response;
+
+  if (response) {
+    if ('statusCode' in response) {
+      handleErrorResponse(response);
+    } else {
+      return response;
+    }
   }
   return null;
 };
