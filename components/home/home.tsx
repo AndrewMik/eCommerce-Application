@@ -1,9 +1,14 @@
 import { LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined, TeamOutlined } from '@ant-design/icons';
 import { Col, List, Row } from 'antd';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Link from 'next/link';
+import { DiscountCodePagedQueryResponse, ErrorResponse } from '@commercetools/platform-sdk';
 import { Paths } from '@/utils/route-links';
 import { AuthContext } from '@/context/authorization-context';
+import getDiscountCodes from '@/pages/api/discount/get-discount-codes';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+
+type Response = DiscountCodePagedQueryResponse | ErrorResponse | undefined;
 
 const Home = (): JSX.Element => {
   const { isLoggedIn, setToggleInactiveLinks } = useContext(AuthContext);
@@ -13,6 +18,26 @@ const Home = (): JSX.Element => {
       setToggleInactiveLinks((prevState) => !prevState);
     }
   };
+
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(response);
+      }
+    }
+  };
+
+  const setDiscountCodes = async () => {
+    const response = await getDiscountCodes();
+    handleResponse(response);
+  };
+
+  useEffect(() => {
+    setDiscountCodes();
+  }, []);
 
   const navigationMainPage = [
     {
