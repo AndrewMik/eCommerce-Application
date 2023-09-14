@@ -1,17 +1,29 @@
 import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
-import { Cart, Category, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
 import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
+import getActiveCart from '@/pages/api/cart/get-active-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import getCartWithToken from '@/pages/api/cart/get-cart-with-token';
 import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
-import CatalogSider from '../catalog-sider/catalog-sider';
-import { AllCategories, MenuKeyProps } from '../catalog-sider/types';
-import CatalogProductCard from './catalog-product/catalog-product';
-import getCart from '../cart/helpers/get-cart';
+import CatalogSider from './sider';
+import CatalogProductCard from './card';
+
+interface MenuKeyProps {
+  keyPath: string[];
+}
+
+interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
+}
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -232,6 +244,25 @@ const CatalogCards = (): JSX.Element => {
     }
   };
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setCart(response);
+      }
+    }
+  };
+
+  const getCart = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken !== null) {
+      await getCartWithToken();
+    }
+    const response = await getActiveCart();
+    handleResponse(response);
+  };
+
   useEffect(() => {
     if (!attributeData) return;
     const attributeNames = Object.keys(attributeData);
@@ -241,12 +272,7 @@ const CatalogCards = (): JSX.Element => {
 
   useEffect(() => {
     getProductsInfo();
-    const fetchCart = async () => {
-      const userCart = await getCart();
-      setCart(userCart);
-    };
-
-    fetchCart();
+    getCart();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
