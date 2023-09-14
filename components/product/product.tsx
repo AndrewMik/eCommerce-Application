@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Spin, Row, Col, Button } from 'antd';
+import { App, Spin, Row, Col, Button } from 'antd';
 import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
@@ -52,6 +52,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
 
+  const { notification } = App.useApp();
+
   const isProductInCart = cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id);
 
   const handleResponse = (response: Response) => {
@@ -82,8 +84,18 @@ const Product = ({ product }: { product: ProductProjection }) => {
 
         if (response && 'type' in response) {
           setCart(response as Cart);
+          notification.success({
+            message: 'Removed from cart',
+            description: `${product.name.en} was successfully removed from your cart.`,
+            placement: 'bottom',
+          });
         } else {
           setCart(null);
+          notification.error({
+            message: 'Oops, something went wrong.',
+            description: `${product.name.en} wasn't removed from your cart. Please try again later.`,
+            placement: 'bottom',
+          });
         }
       }
     }
