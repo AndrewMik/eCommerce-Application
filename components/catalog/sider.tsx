@@ -1,11 +1,19 @@
 import { Button, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
 import { SetStateAction, useState } from 'react';
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { ProductProjection, Category } from '@commercetools/platform-sdk';
 import { CheckSquareOutlined, DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { MenuKeyProps, AllCategories } from './types';
-import { AttributeData } from '../catalog-cards/types';
+import { AttributeData } from './types';
 
 const { Sider } = Layout;
+
+interface MenuKeyProps {
+  keyPath: string[];
+}
+
+interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
+}
 
 interface CatalogSiderProps {
   attributeData: AttributeData | null;

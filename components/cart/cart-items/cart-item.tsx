@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction } from 'react';
 import updateCart from '@/pages/api/update-cart';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
+import ItemQuantity from './quantity/item-quantity';
 
 interface Props {
   item: LineItem;
@@ -42,7 +43,9 @@ const CartItem = ({ item, cart, setCart }: Props) => {
           {item.name.en}
         </Title>
         <ItemPrice item={item} />
-        <p>Quantity: {item.quantity}</p>
+        <p>
+          Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
+        </p>
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>

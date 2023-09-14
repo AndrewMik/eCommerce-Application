@@ -2,13 +2,15 @@ import { Card, Row, Col, Button } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Cart, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ErrorResponse, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
-import createNewCartWithProduct from '@/pages/api/create-new-cart-with-product';
-import addProductToActiveCart from '@/pages/api/add-product-to-active-cart';
+import createNewCartWithProduct from '@/pages/api/cart/create-cart-with-product';
+import addProductToActiveCart from '@/pages/api/cart/add-product-to-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 
 const { Meta } = Card;
+
+type Response = Cart | ErrorResponse | undefined | null;
 
 interface Props {
   product: ProductProjection;
@@ -19,7 +21,7 @@ interface Props {
 const CatalogProductCard = (props: Props) => {
   const { key, masterVariant, id, metaDescription } = props.product;
   const { attributes, images, prices } = masterVariant;
-  const [loadings, setLoadings] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>();
 
   if (!attributes) throw new Error('No attributes found');
   if (!images) throw new Error('No images found');
@@ -57,33 +59,28 @@ const CatalogProductCard = (props: Props) => {
     discountedPrice = discounted.value.centAmount;
   }
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        props.setCart(response);
+      }
+      setLoading(false);
+    }
+  };
+
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    setLoadings(true);
+    setLoading(true);
 
     if (!props.cart) {
       const response = await createNewCartWithProduct(props.product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          props.setCart(response);
-        }
-        setLoadings(false);
-      }
+      handleResponse(response);
     } else {
       const response = await addProductToActiveCart(props.cart.id, props.cart.version, props.product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          props.setCart(response);
-        }
-        setLoadings(false);
-      }
+      handleResponse(response);
     }
   };
 
@@ -196,7 +193,7 @@ const CatalogProductCard = (props: Props) => {
               </div>
               <Button
                 icon={<ShoppingCartOutlined />}
-                loading={loadings}
+                loading={loading}
                 disabled={props.cart?.lineItems.some((lineItem) => lineItem.productId === props.product.id)}
                 onClick={handleClick}
                 style={{ marginTop: 5 }}
