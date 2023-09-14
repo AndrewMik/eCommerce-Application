@@ -75,8 +75,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   };
 
   const removeLogInState = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 

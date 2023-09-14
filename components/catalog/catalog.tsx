@@ -250,6 +250,7 @@ const CatalogCards = (): JSX.Element => {
         handleErrorResponse(response);
       } else {
         setCart(response);
+        localStorage.setItem('cart', JSON.stringify(response));
       }
     }
   };
