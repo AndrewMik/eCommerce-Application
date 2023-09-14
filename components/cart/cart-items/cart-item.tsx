@@ -1,6 +1,7 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
-import { Col, Divider, Row, Typography } from 'antd';
+import { Button, Col, Divider, Row, Typography } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
+import updateCart from '@/pages/api/update-cart';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
 import ItemQuantity from './quantity/item-quantity';
@@ -18,6 +19,15 @@ const CartItem = ({ item, cart, setCart }: Props) => {
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
   }
+
+  const removeLineItemFromCart = async () => {
+    const response = await updateCart(cart.id, cart.version, [{ action: 'removeLineItem', lineItemId: item.id }]);
+    if (response && 'type' in response) {
+      setCart(response as Cart);
+    } else {
+      setCart(null);
+    }
+  };
 
   return (
     <Row key={item.id}>
@@ -39,6 +49,9 @@ const CartItem = ({ item, cart, setCart }: Props) => {
         <p>
           Subtotal: <ItemSubtotal item={item} />
         </p>
+        <Button danger onClick={removeLineItemFromCart}>
+          Remove from Cart
+        </Button>
       </Col>
       <Divider />
     </Row>
