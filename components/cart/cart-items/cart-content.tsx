@@ -2,6 +2,7 @@ import { HomeOutlined } from '@ant-design/icons';
 import { Cart } from '@commercetools/platform-sdk';
 import { Breadcrumb, Divider, Layout, theme, Typography } from 'antd';
 import Link from 'next/link';
+import { Dispatch, SetStateAction } from 'react';
 import CartItem from './cart-item';
 import TotalPrice from '../prices/total-price';
 
@@ -10,9 +11,10 @@ const { Title } = Typography;
 
 interface Props {
   cart: Cart;
+  setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
-const CartContent = ({ cart }: Props) => {
+const CartContent = ({ cart, setCart }: Props) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -34,7 +36,7 @@ const CartContent = ({ cart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            return <CartItem key={item.id} item={item} />;
+            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} />;
           })}
           <Title level={2}>
             Total Price: <TotalPrice cart={cart} />
