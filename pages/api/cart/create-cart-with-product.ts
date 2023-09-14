@@ -11,7 +11,7 @@ function handleRefreshTokenInLocalStorage() {
 
 async function createNewCartWithProduct(productId: string) {
   const client = Client.getInstance().anonymousClient;
-  console.log(Client.token.get());
+
   handleRefreshTokenInLocalStorage();
   try {
     const response = await client

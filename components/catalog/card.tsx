@@ -65,6 +65,7 @@ const CatalogProductCard = (props: Props) => {
         handleErrorResponse(response);
       } else {
         props.setCart(response);
+        localStorage.setItem('cart', JSON.stringify(response));
       }
       setLoading(false);
     }
