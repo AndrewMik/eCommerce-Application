@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Spin, Row, Col, Button } from 'antd';
+import { App, Spin, Row, Col, Button } from 'antd';
 import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 
+import updateCart from '../../pages/api/update-cart';
 import getCartWithToken from '../../pages/api/cart/get-cart-with-token';
 import addProductToActiveCart from '../../pages/api/cart/add-product-to-cart';
 import createNewCartWithProduct from '../../pages/api/cart/create-cart-with-product';
@@ -48,9 +49,12 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [cart, setCart] = useState<Cart | null>(null);
-
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
+
+  const { notification } = App.useApp();
+
+  const isProductInCart = cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id);
 
   const handleResponse = (response: Response) => {
     if (response) {
@@ -69,6 +73,32 @@ const Product = ({ product }: { product: ProductProjection }) => {
     }
     const response = await getActiveCart();
     handleResponse(response);
+  };
+
+  const removeLineItemFromCart = async () => {
+    if (cart) {
+      const item = cart.lineItems.find((lineItem) => lineItem.productId === product.id);
+
+      if (item) {
+        const response = await updateCart(cart.id, cart.version, [{ action: 'removeLineItem', lineItemId: item.id }]);
+
+        if (response && 'type' in response) {
+          setCart(response as Cart);
+          notification.success({
+            message: 'Removed from cart',
+            description: `${product.name.en} was successfully removed from your cart.`,
+            placement: 'bottom',
+          });
+        } else {
+          setCart(null);
+          notification.error({
+            message: 'Oops, something went wrong.',
+            description: `${product.name.en} wasn't removed from your cart. Please try again later.`,
+            placement: 'bottom',
+          });
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -222,15 +252,15 @@ const Product = ({ product }: { product: ProductProjection }) => {
               />
               <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
             </div>
-            <Button
-              icon={<ShoppingCartOutlined />}
-              loading={loading}
-              disabled={cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id)}
-              onClick={handleClick}
-              style={{ marginTop: 10 }}
-            >
-              Add to cart
-            </Button>
+            {!isProductInCart ? (
+              <Button icon={<ShoppingCartOutlined />} loading={loading} onClick={handleClick} style={{ marginTop: 10 }}>
+                Add to cart
+              </Button>
+            ) : (
+              <Button danger loading={loading} onClick={removeLineItemFromCart} style={{ marginTop: 10 }}>
+                Remove from Cart
+              </Button>
+            )}
           </Col>
         </Row>
         <ImageModal

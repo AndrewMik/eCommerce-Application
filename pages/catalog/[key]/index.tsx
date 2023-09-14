@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { App } from 'antd';
 import Product from '@/components/product/product';
 import getProductbyKey from '../../api/get-product';
 
@@ -9,9 +10,9 @@ interface ProductPageProps {
 
 const ProductPage = ({ product }: ProductPageProps): JSX.Element => {
   return (
-    <>
+    <App>
       <Product product={product} />
-    </>
+    </App>
   );
 };
 

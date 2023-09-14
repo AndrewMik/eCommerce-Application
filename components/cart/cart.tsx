@@ -18,7 +18,11 @@ const CustomerCart = () => {
     fetchCart();
   }, []);
 
-  return (isCartLoaded && (cart?.lineItems.length ? <CartContent cart={cart} /> : <EmptyCart />)) || <Spinner />;
+  return (
+    (isCartLoaded && (cart?.lineItems.length ? <CartContent cart={cart} setCart={setCart} /> : <EmptyCart />)) || (
+      <Spinner />
+    )
+  );
 };
 
 export default CustomerCart;
