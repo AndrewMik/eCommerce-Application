@@ -3,10 +3,17 @@ import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from '../client';
 
 async function getDiscountCodes() {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
 
   try {
-    const response = await client.discountCodes().get().execute();
+    const response = await client
+      .discountCodes()
+      .get({
+        queryArgs: {
+          expand: ['cartDiscounts[*]'],
+        },
+      })
+      .execute();
     return response.body;
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;

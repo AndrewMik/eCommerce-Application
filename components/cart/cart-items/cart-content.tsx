@@ -1,9 +1,12 @@
 import { HomeOutlined } from '@ant-design/icons';
-import { Cart, MyCartUpdateAction } from '@commercetools/platform-sdk';
+import { Cart, ErrorResponse, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import { Breadcrumb, Button, Divider, Input, Layout, message, Popconfirm, Space, theme, Typography } from 'antd';
 import Link from 'next/link';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import updateCart from '@/pages/api/update-cart';
+import removeDiscountFromCart from '@/pages/api/cart/remove-discount-from-cart';
+import getActiveCartWithDiscount from '@/pages/api/cart/get-cart-with-discount';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import CartItem from './cart-item';
 import TotalPrice from '../prices/total-price';
 
@@ -15,9 +18,17 @@ interface Props {
   setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
+type Response = Cart | ErrorResponse | undefined | null;
+
 const CartContent = ({ cart, setCart }: Props) => {
+  function checkIfPromoExists() {
+    return cart.discountCodes && cart.discountCodes.length > 0;
+  }
+
   const [messageApi, contextHolder] = message.useMessage();
-  const key = 'updatable';
+  const [discountApplied, setDiscountApplied] = useState(checkIfPromoExists());
+  const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
+  const key = 'msg';
 
   const {
     token: { colorBgContainer },
@@ -37,14 +48,6 @@ const CartContent = ({ cart, setCart }: Props) => {
     }
   };
 
-  const displayMessageLoading = () => {
-    messageApi.open({
-      key,
-      type: 'loading',
-      content: 'Loading...',
-    });
-  };
-
   const displayMessageLoaded = () => {
     messageApi.open({
       key,
@@ -54,11 +57,40 @@ const CartContent = ({ cart, setCart }: Props) => {
     });
   };
 
-  const handleButtonClick = () => {
-    displayMessageLoading();
-    setTimeout(() => {
-      displayMessageLoaded();
-    }, 1000);
+  const displayMessageRemoved = () => {
+    messageApi.open({
+      key,
+      type: 'success',
+      content: 'Discount removed!',
+      duration: 2,
+    });
+  };
+
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setCart(response);
+        localStorage.setItem('cart', JSON.stringify(response));
+      }
+    }
+  };
+
+  const handleApplyPromo = async () => {
+    setDiscountApplied(true);
+    setIsPromoExist(true);
+    const response = await getActiveCartWithDiscount();
+    handleResponse(response);
+    displayMessageLoaded();
+  };
+
+  const handleRemovePromo = async () => {
+    setDiscountApplied(false);
+    setIsPromoExist(false);
+    const response = await removeDiscountFromCart(cart.discountCodes[0].discountCode);
+    handleResponse(response);
+    displayMessageRemoved();
   };
 
   return (
@@ -79,7 +111,9 @@ const CartContent = ({ cart, setCart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} />;
+            return (
+              <CartItem key={item.id} item={item} cart={cart} discountApplied={discountApplied} setCart={setCart} />
+            );
           })}
           <Space
             style={{
@@ -93,10 +127,16 @@ const CartContent = ({ cart, setCart }: Props) => {
             <Title style={{ margin: 0 }} level={2}>
               Total Price: <TotalPrice cart={cart} />
             </Title>
-            <Space.Compact style={{ width: '100%' }}>
-              <Input placeholder="enter promo" />
-              <Button onClick={handleButtonClick}>Apply</Button>
-            </Space.Compact>
+            {isPromoExists ? (
+              <Space.Compact style={{ width: '100%' }}>
+                <Button onClick={handleRemovePromo}>Remove Promo Discount</Button>
+              </Space.Compact>
+            ) : (
+              <Space.Compact style={{ width: '100%' }}>
+                <Input placeholder="enter promo" />
+                <Button onClick={handleApplyPromo}>Apply</Button>
+              </Space.Compact>
+            )}
           </Space>
           <Popconfirm
             title="Clear Shopping Cart"

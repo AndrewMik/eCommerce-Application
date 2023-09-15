@@ -9,12 +9,13 @@ import ItemQuantity from './quantity/item-quantity';
 interface Props {
   item: LineItem;
   cart: Cart;
+  discountApplied: boolean;
   setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
 const { Title } = Typography;
 
-const CartItem = ({ item, cart, setCart }: Props) => {
+const CartItem = ({ item, cart, setCart, discountApplied }: Props) => {
   let imageUrl = '';
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
@@ -47,7 +48,7 @@ const CartItem = ({ item, cart, setCart }: Props) => {
           Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
         </p>
         <p>
-          Subtotal: <ItemSubtotal item={item} />
+          <ItemSubtotal item={item} discountApplied={discountApplied} />
         </p>
         <Button danger onClick={removeLineItemFromCart}>
           Remove from Cart
