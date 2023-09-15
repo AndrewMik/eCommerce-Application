@@ -19,11 +19,21 @@ const ItemPriceWithCartDiscount = ({ item }: Props) => {
 
   return item.discountedPrice ? (
     <>
-      <s>
+      <s style={{ fontSize: 12, fontWeight: 'normal' }}>
         {currency}
-        {item.price.discounted ? getPrice(item.price.discounted.value) : getPrice(item.price.value)}
+        {item.price.discounted ? (
+          <>
+            <s style={{ fontSize: 12, fontWeight: 'normal' }}>{getPrice(item.price.value)}</s>
+            <b style={{ fontSize: 12, marginLeft: 5, fontWeight: 'normal' }}>
+              {getCurrency(item.price.discounted.value)}
+              {getPrice(item.price.discounted.value)}
+            </b>
+          </>
+        ) : (
+          getPrice(item.price.value)
+        )}
       </s>
-      <b style={{ fontSize: 16, marginLeft: 5 }}>
+      <b style={{ fontSize: 16, marginLeft: 5, color: 'red' }}>
         {currency}
         {getPrice(item.discountedPrice.value)}
       </b>
