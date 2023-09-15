@@ -1,5 +1,6 @@
 import { DiscountCode } from '@commercetools/platform-sdk';
 import { Button, Card, Tooltip } from 'antd';
+import { useState } from 'react';
 
 const { Meta } = Card;
 
@@ -9,6 +10,7 @@ interface Props {
 
 const Promo = (props: Props) => {
   const { promo } = props;
+  const [toolTipText, setToolTipText] = useState('copy');
 
   if (!promo) throw new Error('No attributes found');
 
@@ -19,11 +21,12 @@ const Promo = (props: Props) => {
         description={
           <div style={{ color: 'black', fontWeight: 'bolder', textAlign: 'center' }}>
             <span style={{ marginRight: 10 }}>code:</span>
-            <Tooltip placement="rightTop" title={'copied'} color="geekblue" trigger="click" mouseLeaveDelay={0.1}>
+            <Tooltip placement="rightTop" title={toolTipText} mouseLeaveDelay={0} overlayStyle={{ fontSize: '12px' }}>
               <Button
                 style={{ fontWeight: 'bolder' }}
                 onClick={() => {
                   navigator.clipboard.writeText(promo.code);
+                  setToolTipText('copied');
                 }}
               >
                 {promo.code}
