@@ -12,7 +12,6 @@ import TotalPrice from '../prices/total-price';
 
 const { Content } = Layout;
 const { Title } = Typography;
-
 interface Props {
   cart: Cart;
   setCart: Dispatch<SetStateAction<Cart | null>>;
@@ -26,7 +25,6 @@ const CartContent = ({ cart, setCart }: Props) => {
   }
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [discountApplied, setDiscountApplied] = useState(checkIfPromoExists());
   const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
   const key = 'msg';
 
@@ -78,7 +76,6 @@ const CartContent = ({ cart, setCart }: Props) => {
   };
 
   const handleApplyPromo = async () => {
-    setDiscountApplied(true);
     setIsPromoExist(true);
     const response = await getActiveCartWithDiscount();
     handleResponse(response);
@@ -86,7 +83,6 @@ const CartContent = ({ cart, setCart }: Props) => {
   };
 
   const handleRemovePromo = async () => {
-    setDiscountApplied(false);
     setIsPromoExist(false);
     const response = await removeDiscountFromCart(cart.discountCodes[0].discountCode);
     handleResponse(response);
@@ -111,9 +107,7 @@ const CartContent = ({ cart, setCart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            return (
-              <CartItem key={item.id} item={item} cart={cart} discountApplied={discountApplied} setCart={setCart} />
-            );
+            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} />;
           })}
           <Space
             style={{

@@ -12,19 +12,18 @@ interface DiscountedPrice {
   discount: ProductDiscountReference;
 }
 interface LineItemExpanded extends LineItem {
-  discountedPrice: DiscountedPrice;
+  discountedPrice?: DiscountedPrice;
 }
 
 interface Props {
   item: LineItemExpanded;
   cart: Cart;
-  discountApplied: boolean;
   setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
 const { Title } = Typography;
 
-const CartItem = ({ item, cart, setCart, discountApplied }: Props) => {
+const CartItem = ({ item, cart, setCart }: Props) => {
   let imageUrl = '';
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
@@ -57,7 +56,7 @@ const CartItem = ({ item, cart, setCart, discountApplied }: Props) => {
           Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
         </p>
         <p>
-          <ItemSubtotal item={item} discountApplied={discountApplied} />
+          Subtotal: <ItemSubtotal item={item} />
         </p>
         <Button danger onClick={removeLineItemFromCart}>
           Remove from Cart

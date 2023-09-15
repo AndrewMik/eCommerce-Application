@@ -6,7 +6,7 @@ interface DiscountedPrice {
   discount: ProductDiscountReference;
 }
 interface LineItemExpanded extends LineItem {
-  discountedPrice: DiscountedPrice;
+  discountedPrice?: DiscountedPrice;
 }
 
 interface Props {
@@ -14,15 +14,24 @@ interface Props {
 }
 
 const ItemPriceWithCartDiscount = ({ item }: Props) => {
-  const currency = getCurrency(item.discountedPrice.value);
+  const currency = item.discountedPrice && getCurrency(item.discountedPrice.value);
 
-  return (
+  return item.discountedPrice ? (
     <>
+      <s>
+        {currency}
+        {getPrice(item.price.value)}
+      </s>
       <b style={{ fontSize: 16, marginLeft: 5 }}>
         {currency}
         {getPrice(item.discountedPrice.value)}
       </b>
     </>
+  ) : (
+    <b style={{ fontSize: 16 }}>
+      {currency}
+      {getPrice(item.price.value)}
+    </b>
   );
 };
 
