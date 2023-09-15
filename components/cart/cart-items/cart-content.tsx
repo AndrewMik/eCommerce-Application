@@ -24,10 +24,10 @@ const CartContent = ({ cart, setCart }: Props) => {
   function checkIfPromoExists() {
     return cart.discountCodes && cart.discountCodes.length > 0;
   }
-
+  const promo: boolean = JSON.parse(localStorage.getItem('promo') || 'false');
   const [messageApi, contextHolder] = message.useMessage();
   const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
-  const [isPromoApplied, setIsPromoApplied] = useState(false);
+  const [isPromoApplied, setIsPromoApplied] = useState(promo);
   const [promoInputValue, setPromoInputValue] = useState('');
 
   const {
@@ -56,6 +56,7 @@ const CartContent = ({ cart, setCart }: Props) => {
         setIsPromoApplied(false);
       } else {
         setIsPromoApplied(true);
+        localStorage.setItem('promo', JSON.stringify(true));
         displayMessageLoaded(messageApi, 'msg');
         setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
@@ -71,6 +72,7 @@ const CartContent = ({ cart, setCart }: Props) => {
   };
 
   const handleRemovePromo = async () => {
+    localStorage.setItem('promo', JSON.stringify(false));
     setIsPromoApplied(false);
     setIsPromoExist(false);
     const response = cart.discountCodes[0] && (await removeDiscountFromCart(cart.discountCodes[0].discountCode));

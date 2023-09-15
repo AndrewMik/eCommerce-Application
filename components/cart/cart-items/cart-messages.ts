@@ -21,7 +21,7 @@ export const displayMessageWrongPromo = (messageApi: MessageInstance, key: strin
 export const displayMessageRemoved = (messageApi: MessageInstance, key: string) => {
   messageApi.open({
     key,
-    type: 'success',
+    type: 'warning',
     content: 'Discount removed!',
     duration: 2,
   });
