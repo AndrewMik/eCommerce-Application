@@ -12,6 +12,9 @@ async function getActiveCartWithDiscount() {
         .carts()
         .withId({ ID: cart.id })
         .post({
+          queryArgs: {
+            expand: ['cartDiscounts[*]'],
+          },
           body: {
             version: cart.version,
             actions: [{ action: 'addDiscountCode', code: 'finish-line' }],

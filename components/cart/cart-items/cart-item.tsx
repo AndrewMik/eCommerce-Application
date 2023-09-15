@@ -1,13 +1,22 @@
-import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { Cart, LineItem, ProductDiscountReference, TypedMoney } from '@commercetools/platform-sdk';
 import { Button, Col, Divider, Row, Typography } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
 import updateCart from '@/pages/api/update-cart';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
 import ItemQuantity from './quantity/item-quantity';
+import ItemPriceWithCartDiscount from '../prices/item-cart-discount';
+
+interface DiscountedPrice {
+  value: TypedMoney;
+  discount: ProductDiscountReference;
+}
+interface LineItemExpanded extends LineItem {
+  discountedPrice: DiscountedPrice;
+}
 
 interface Props {
-  item: LineItem;
+  item: LineItemExpanded;
   cart: Cart;
   discountApplied: boolean;
   setCart: Dispatch<SetStateAction<Cart | null>>;
@@ -43,7 +52,7 @@ const CartItem = ({ item, cart, setCart, discountApplied }: Props) => {
         <Title key={item.id} level={4} style={{ margin: 0 }}>
           {item.name.en}
         </Title>
-        <ItemPrice item={item} />
+        {item.discountedPrice ? <ItemPriceWithCartDiscount item={item} /> : <ItemPrice item={item} />}
         <p>
           Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
         </p>
