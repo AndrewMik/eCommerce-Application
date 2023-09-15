@@ -9,6 +9,7 @@ import getActiveCartWithDiscount from '@/pages/api/cart/get-cart-with-discount';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import CartItem from './cart-item';
 import TotalPrice from '../prices/total-price';
+import { displayMessageLoaded, displayMessageRemoved, displayMessageWrongPromo } from './cart-messages';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -28,7 +29,6 @@ const CartContent = ({ cart, setCart }: Props) => {
   const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
   const [isPromoApplied, setIsPromoApplied] = useState(false);
   const [promoInputValue, setPromoInputValue] = useState('');
-  const key = 'msg';
 
   const {
     token: { colorBgContainer },
@@ -48,42 +48,15 @@ const CartContent = ({ cart, setCart }: Props) => {
     }
   };
 
-  const displayMessageLoaded = () => {
-    messageApi.open({
-      key,
-      type: 'success',
-      content: 'Promo Discount applied!',
-      duration: 2,
-    });
-  };
-
-  const displayMessageWrongPromo = () => {
-    messageApi.open({
-      key,
-      type: 'error',
-      content: 'Provided promo does not exist',
-      duration: 2,
-    });
-  };
-
-  const displayMessageRemoved = () => {
-    messageApi.open({
-      key,
-      type: 'success',
-      content: 'Discount removed!',
-      duration: 2,
-    });
-  };
-
   const handleResponse = (response: Response) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
-        displayMessageWrongPromo();
+        displayMessageWrongPromo(messageApi, 'msg');
         setIsPromoApplied(false);
       } else {
         setIsPromoApplied(true);
-        displayMessageLoaded();
+        displayMessageLoaded(messageApi, 'msg');
         setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
       }
@@ -102,7 +75,7 @@ const CartContent = ({ cart, setCart }: Props) => {
     setIsPromoExist(false);
     const response = cart.discountCodes[0] && (await removeDiscountFromCart(cart.discountCodes[0].discountCode));
     handleResponse(response);
-    displayMessageRemoved();
+    displayMessageRemoved(messageApi, 'msg');
   };
 
   return (
