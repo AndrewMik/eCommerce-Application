@@ -63,7 +63,7 @@ const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
         <p>
           Subtotal: <ItemSubtotal item={item} isPromoExists={isPromoExists} />
         </p>
-        <Button danger onClick={removeLineItemFromCart}>
+        <Button size="small" danger onClick={removeLineItemFromCart} style={{ fontSize: '12px' }}>
           Remove from Cart
         </Button>
       </Col>
