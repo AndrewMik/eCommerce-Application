@@ -1,9 +1,12 @@
-import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { Cart, ErrorResponse, LineItem } from '@commercetools/platform-sdk';
 import { App, Button, Input, Spin } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
 import updateCart from '@/pages/api/update-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+
+type Response = Cart | ErrorResponse | undefined;
 
 interface Props {
   item: LineItem;
@@ -21,22 +24,26 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
 
   const maxQuantity = item.variant.availability?.availableQuantity ?? 1;
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setCart(response);
+        localStorage.setItem('cart', JSON.stringify(response));
+      }
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchCart = async () => {
       setLoading(false);
-      try {
-        const response = await updateCart(cart.id, cart.version, [
-          { action: 'changeLineItemQuantity', lineItemId: item.id, quantity },
-        ]);
-        if (response && 'type' in response) {
-          setCart(response as Cart);
-        } else {
-          setCart(null);
-        }
-        setLoading(true);
-      } catch (error) {
-        console.error(error);
-      }
+      const response = await updateCart(cart.id, cart.version, [
+        { action: 'changeLineItemQuantity', lineItemId: item.id, quantity },
+      ]);
+      handleResponse(response);
+      setLoading(true);
     };
 
     if (quantity !== item.quantity) {
