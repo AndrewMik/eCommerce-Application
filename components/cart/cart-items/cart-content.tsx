@@ -52,7 +52,6 @@ const CartContent = ({ cart, setCart }: Props) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
-        setCart(null);
       } else {
         localStorage.setItem('cart', JSON.stringify(response));
         setCart(response);
