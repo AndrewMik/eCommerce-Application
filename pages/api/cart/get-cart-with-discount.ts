@@ -2,7 +2,7 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import Client from '../client';
 
-async function getActiveCartWithDiscount() {
+async function getActiveCartWithDiscount(promoCode: string) {
   const client = Client.getInstance().anonymousClient;
   const cart: Cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
   if (cart) {
@@ -17,7 +17,7 @@ async function getActiveCartWithDiscount() {
           },
           body: {
             version: cart.version,
-            actions: [{ action: 'addDiscountCode', code: 'finish-line' }],
+            actions: [{ action: 'addDiscountCode', code: promoCode }],
           },
         })
         .execute();

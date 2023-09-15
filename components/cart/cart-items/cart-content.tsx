@@ -26,6 +26,8 @@ const CartContent = ({ cart, setCart }: Props) => {
 
   const [messageApi, contextHolder] = message.useMessage();
   const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
+  const [isPromoApplied, setIsPromoApplied] = useState(false);
+  const [promoInputValue, setPromoInputValue] = useState('');
   const key = 'msg';
 
   const {
@@ -50,7 +52,16 @@ const CartContent = ({ cart, setCart }: Props) => {
     messageApi.open({
       key,
       type: 'success',
-      content: 'Discount applied!',
+      content: 'Promo Discount applied!',
+      duration: 2,
+    });
+  };
+
+  const displayMessageWrongPromo = () => {
+    messageApi.open({
+      key,
+      type: 'error',
+      content: 'Provided promo does not exist',
       duration: 2,
     });
   };
@@ -68,7 +79,11 @@ const CartContent = ({ cart, setCart }: Props) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
+        displayMessageWrongPromo();
+        setIsPromoApplied(false);
       } else {
+        setIsPromoApplied(true);
+        displayMessageLoaded();
         setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
       }
@@ -77,14 +92,15 @@ const CartContent = ({ cart, setCart }: Props) => {
 
   const handleApplyPromo = async () => {
     setIsPromoExist(true);
-    const response = await getActiveCartWithDiscount();
+    const response = await getActiveCartWithDiscount(promoInputValue);
     handleResponse(response);
-    displayMessageLoaded();
+    setPromoInputValue('');
   };
 
   const handleRemovePromo = async () => {
+    setIsPromoApplied(false);
     setIsPromoExist(false);
-    const response = await removeDiscountFromCart(cart.discountCodes[0].discountCode);
+    const response = cart.discountCodes[0] && (await removeDiscountFromCart(cart.discountCodes[0].discountCode));
     handleResponse(response);
     displayMessageRemoved();
   };
@@ -121,14 +137,20 @@ const CartContent = ({ cart, setCart }: Props) => {
             <Title style={{ margin: 0 }} level={2}>
               Total Price: <TotalPrice cart={cart} />
             </Title>
-            {isPromoExists ? (
+            {isPromoExists && isPromoApplied ? (
               <Space.Compact style={{ width: '100%' }}>
                 <Button onClick={handleRemovePromo}>Remove Promo Discount</Button>
               </Space.Compact>
             ) : (
               <Space.Compact style={{ width: '100%' }}>
-                <Input placeholder="enter promo" />
-                <Button onClick={handleApplyPromo}>Apply</Button>
+                <Input
+                  placeholder="enter promo"
+                  value={promoInputValue}
+                  onChange={(e) => setPromoInputValue(e.target.value)}
+                />
+                <Button disabled={promoInputValue.length === 0} onClick={handleApplyPromo}>
+                  Apply
+                </Button>
               </Space.Compact>
             )}
           </Space>
