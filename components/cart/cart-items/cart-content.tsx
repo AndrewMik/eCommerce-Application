@@ -40,12 +40,21 @@ const CartContent = ({ cart, setCart }: Props) => {
       lineItemId: lineItem.id,
     }));
 
+    const actionsForPromoRemoval: MyCartUpdateAction | null = cart.discountCodes[0]
+      ? { action: 'removeDiscountCode', discountCode: cart.discountCodes[0].discountCode }
+      : null;
+
+    if (actionsForPromoRemoval) {
+      actions.push(actionsForPromoRemoval);
+    }
+
     const response = await updateCart(cart.id, cart.version, actions);
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
         setCart(null);
       } else {
+        localStorage.setItem('cart', JSON.stringify(response));
         setCart(response);
       }
     }
