@@ -11,11 +11,13 @@ interface Props {
 const Promo = (props: Props) => {
   const { promo } = props;
   const [toolTipText, setToolTipText] = useState('copy');
+  const promoDescription = promo.description?.en.split('|').slice(1);
+  const promoDiscount = promo.description?.en.split('|').slice(0, 1);
 
   if (!promo) throw new Error('No attributes found');
 
   return (
-    <Card style={{ width: 300, marginTop: 16, textAlign: 'center' }}>
+    <Card style={{ width: 300, marginTop: 16, textAlign: 'center', height: '250px' }}>
       <Meta
         title={promo.name && promo.name.en}
         description={
@@ -35,10 +37,8 @@ const Promo = (props: Props) => {
           </div>
         }
       />
-      <Meta
-        style={{ marginTop: 16, textAlign: 'center', fontSize: '12px' }}
-        description={promo.description && promo.description.en}
-      />
+      <Meta style={{ marginTop: 16, textAlign: 'center', fontSize: '12px' }} title={promoDiscount} />
+      <Meta style={{ marginTop: 16, textAlign: 'center', fontSize: '12px' }} description={promoDescription} />
     </Card>
   );
 };
