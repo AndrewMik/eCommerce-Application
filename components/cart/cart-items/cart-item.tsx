@@ -1,7 +1,8 @@
-import { Cart, LineItem, ProductDiscountReference, TypedMoney } from '@commercetools/platform-sdk';
+import { Cart, ErrorResponse, LineItem, ProductDiscountReference, TypedMoney } from '@commercetools/platform-sdk';
 import { Button, Col, Divider, Row, Typography } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
 import updateCart from '@/pages/api/update-cart';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
 import ItemQuantity from './quantity/item-quantity';
@@ -22,6 +23,8 @@ interface Props {
   setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
+type Response = Cart | ErrorResponse | undefined;
+
 const { Title } = Typography;
 
 const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
@@ -30,13 +33,20 @@ const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
     imageUrl = item.variant.images[0].url;
   }
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        localStorage.setItem('cart', JSON.stringify(response));
+        setCart(response);
+      }
+    }
+  };
+
   const removeLineItemFromCart = async () => {
     const response = await updateCart(cart.id, cart.version, [{ action: 'removeLineItem', lineItemId: item.id }]);
-    if (response && 'type' in response) {
-      setCart(response as Cart);
-    } else {
-      setCart(null);
-    }
+    handleResponse(response);
   };
 
   return (
