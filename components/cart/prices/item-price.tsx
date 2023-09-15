@@ -2,6 +2,7 @@ import { LineItem } from '@commercetools/platform-sdk';
 import { getCurrency, getPrice } from '../helpers/get-price';
 
 interface Props {
+  isPromoExists: boolean;
   item: LineItem;
 }
 

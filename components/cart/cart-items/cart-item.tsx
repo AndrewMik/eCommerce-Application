@@ -18,12 +18,13 @@ interface LineItemExpanded extends LineItem {
 interface Props {
   item: LineItemExpanded;
   cart: Cart;
+  isPromoExists: boolean;
   setCart: Dispatch<SetStateAction<Cart | null>>;
 }
 
 const { Title } = Typography;
 
-const CartItem = ({ item, cart, setCart }: Props) => {
+const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
   let imageUrl = '';
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
@@ -51,12 +52,16 @@ const CartItem = ({ item, cart, setCart }: Props) => {
         <Title key={item.id} level={4} style={{ margin: 0 }}>
           {item.name.en}
         </Title>
-        {item.discountedPrice ? <ItemPriceWithCartDiscount item={item} /> : <ItemPrice item={item} />}
+        {item.discountedPrice && isPromoExists ? (
+          <ItemPriceWithCartDiscount item={item} isPromoExists={isPromoExists} />
+        ) : (
+          <ItemPrice item={item} isPromoExists={isPromoExists} />
+        )}
         <p>
           Quantity: <ItemQuantity item={item} cart={cart} setCart={setCart} />
         </p>
         <p>
-          Subtotal: <ItemSubtotal item={item} />
+          Subtotal: <ItemSubtotal item={item} isPromoExists={isPromoExists} />
         </p>
         <Button danger onClick={removeLineItemFromCart}>
           Remove from Cart

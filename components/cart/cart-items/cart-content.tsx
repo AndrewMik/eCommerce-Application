@@ -107,7 +107,7 @@ const CartContent = ({ cart, setCart }: Props) => {
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
-            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} />;
+            return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} isPromoExists={isPromoExists} />;
           })}
           <Space
             style={{

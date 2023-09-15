@@ -10,6 +10,7 @@ interface LineItemExpanded extends LineItem {
 }
 
 interface Props {
+  isPromoExists: boolean;
   item: LineItemExpanded;
 }
 
@@ -20,7 +21,7 @@ const ItemPriceWithCartDiscount = ({ item }: Props) => {
     <>
       <s>
         {currency}
-        {getPrice(item.price.value)}
+        {item.price.discounted ? getPrice(item.price.discounted.value) : getPrice(item.price.value)}
       </s>
       <b style={{ fontSize: 16, marginLeft: 5 }}>
         {currency}

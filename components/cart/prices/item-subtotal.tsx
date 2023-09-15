@@ -10,6 +10,7 @@ interface LineItemExpanded extends LineItem {
 }
 
 interface Props {
+  isPromoExists: boolean;
   item: LineItemExpanded;
 }
 
