@@ -41,11 +41,15 @@ const CartContent = ({ cart, setCart }: Props) => {
     }));
 
     const response = await updateCart(cart.id, cart.version, actions);
-    if (response && 'type' in response) {
-      setCart(response as Cart);
-    } else {
-      setCart(null);
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+        setCart(null);
+      } else {
+        setCart(response);
+      }
     }
+    localStorage.removeItem('promo');
   };
 
   const handleResponse = (response: Response) => {
