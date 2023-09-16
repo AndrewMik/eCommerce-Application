@@ -4,7 +4,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
-import getAllCategories from '@/pages/api/get-categories';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/cart/get-active-cart';
@@ -20,9 +19,13 @@ interface MenuKeyProps {
   keyPath: string[];
 }
 
-interface AllCategories {
+export interface AllCategories {
   mainCategory: Category;
   subCategory: Category[];
+}
+
+interface Props {
+  allCategories: AllCategories[];
 }
 
 type Response = Cart | ErrorResponse | undefined | null;
@@ -32,7 +35,7 @@ const { Search } = Input;
 
 const OFFSET_STEP = 20;
 
-const CatalogCards = (): JSX.Element => {
+const CatalogCards = ({ allCategories }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false);
 
   const [products, setProducts] = useState<ProductProjection[]>([]);
@@ -47,7 +50,6 @@ const CatalogCards = (): JSX.Element => {
   const [filterNames, setFilterNames] = useState<string[]>([]);
 
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
-  const [allCategories, setAllCategories] = useState<AllCategories[] | null>(null);
   const [category, setCategory] = useState<string[]>([]);
   const [dataLength, setDataLength] = useState<number>(0);
 
@@ -162,46 +164,6 @@ const CatalogCards = (): JSX.Element => {
     });
   };
 
-  const showCategories = () => {
-    const getCategory = async () => {
-      const categories = await getAllCategories();
-
-      if (typeof categories.response !== 'number' && categories.response) {
-        const subCategoriesList: Category[] = [];
-        const mainCategoriesList: Category[] = [];
-        const allCategoriesList: AllCategories[] = [];
-
-        categories.response.forEach((categoryValue) => {
-          if (categoryValue.ancestors.length !== 0) {
-            subCategoriesList.push(categoryValue);
-          } else {
-            mainCategoriesList.push(categoryValue);
-          }
-        });
-
-        mainCategoriesList.forEach((mainCategory) => {
-          const matchingSubCategories = subCategoriesList.filter((subCategory) =>
-            subCategory.ancestors.some((ancestor) => ancestor.id === mainCategory.id && ancestor.typeId === 'category'),
-          );
-
-          if (matchingSubCategories.length > 0) {
-            allCategoriesList.push({
-              mainCategory,
-              subCategory: matchingSubCategories,
-            });
-          }
-        });
-
-        setAllCategories(allCategoriesList);
-      }
-    };
-    getCategory();
-  };
-
-  useEffect(() => {
-    showCategories();
-  }, []);
-
   const handleDeselect = (menuProps: MenuKeyProps) => {
     const { keyPath } = menuProps;
 
@@ -281,7 +243,6 @@ const CatalogCards = (): JSX.Element => {
   }, [attributeData]);
 
   useEffect(() => {
-    getProductsInfo();
     getCart();
   }, []);
 
