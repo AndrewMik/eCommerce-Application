@@ -40,8 +40,10 @@ const CartContent = ({ cart, setCart }: Props) => {
       lineItemId: lineItem.id,
     }));
 
-    const actionsForPromoRemoval: MyCartUpdateAction | null = cart.discountCodes[0]
-      ? { action: 'removeDiscountCode', discountCode: cart.discountCodes[0].discountCode }
+    const [discountCode] = cart.discountCodes;
+
+    const actionsForPromoRemoval: MyCartUpdateAction | null = discountCode
+      ? { action: 'removeDiscountCode', discountCode: discountCode.discountCode }
       : null;
 
     if (actionsForPromoRemoval) {
