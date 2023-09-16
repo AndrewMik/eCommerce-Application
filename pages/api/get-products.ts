@@ -4,6 +4,8 @@ import Client from './client';
 
 async function getAllProducts(offset: number, limit: number = 20) {
   const client = Client.getInstance().clientCredentialsClient;
+  // eslint-disable-next-line no-console
+  console.log('getAllProducts called');
 
   try {
     const response = await client

@@ -1,4 +1,4 @@
-import { Col, Layout, MenuProps, Row, Space, Input, Skeleton, Divider, List } from 'antd';
+import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
@@ -14,6 +14,7 @@ import getProducts from '../../pages/api/get-products';
 import { AttributeData } from './types';
 import CatalogSider from './sider';
 import CatalogProductCard from './card';
+import Spinner from '../spinner/spinner';
 
 interface MenuKeyProps {
   keyPath: string[];
@@ -48,7 +49,7 @@ const CatalogCards = (): JSX.Element => {
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
   const [allCategories, setAllCategories] = useState<AllCategories[] | null>(null);
   const [category, setCategory] = useState<string[]>([]);
-  const [offset, setOffset] = useState<number>(0);
+  const [dataLength, setDataLength] = useState<number>(0);
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
     const items: MenuProps['items'] = ['category'].map((mainCategory) => {
@@ -214,9 +215,10 @@ const CatalogCards = (): JSX.Element => {
     setCategory([openKeys[openKeys.length - 1]]);
   };
 
-  // this godforsaken function is HERE!!!!!
   const getProductsInfo = async () => {
-    const { response } = await getProducts(offset);
+    const { response } = await getProducts(dataLength);
+    // eslint-disable-next-line no-console
+    console.log('🚀 ~ file: catalog.tsx:221 ~ getProductsInfo ~ response:', response);
 
     if (!response) {
       setProducts([]);
@@ -337,8 +339,10 @@ const CatalogCards = (): JSX.Element => {
 
     try {
       await getProductsInfo();
-      setOffset((prevOffset) => prevOffset + OFFSET_STEP);
+      setDataLength((prevLength) => prevLength + OFFSET_STEP);
       setLoading(false);
+      // eslint-disable-next-line no-console
+      console.log(dataLength);
     } catch (error) {
       setLoading(false);
     }
@@ -391,56 +395,32 @@ const CatalogCards = (): JSX.Element => {
             overflowX: 'hidden',
           }}
         >
-          {/* <Row
-            style={{
-              marginTop: '14px',
-              display: 'flex',
-              justifyContent: 'center',
-              maxWidth: '1600px',
-              gap: '20px',
-            }}
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={loadMoreData}
+            hasMore={dataLength < 104}
+            // TODO: customize spinner and make in a small one
+            loader={<Spinner />}
           >
-            {products?.map((product) => (
-              <Col
-                key={product.key}
-                style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
-              >
-                <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
-              </Col>
-            ))}
-          </Row> */}
-          <Row
-            style={{
-              marginTop: '14px',
-              display: 'flex',
-              justifyContent: 'center',
-              maxWidth: '1600px',
-              gap: '20px',
-            }}
-          >
-            <InfiniteScroll
-              dataLength={products.length || 0}
-              next={loadMoreData}
-              hasMore={products.length < 104}
-              loader={<Skeleton paragraph={{ rows: 1 }} active />}
-              endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-              // scrollableTarget="scrollableDiv"
+            <Row
+              style={{
+                marginTop: '14px',
+                display: 'flex',
+                justifyContent: 'center',
+                maxWidth: '1600px',
+                gap: '20px',
+              }}
             >
-              <List
-                dataSource={products}
-                renderItem={(product) => (
-                  <List.Item key={product.key}>
-                    <Col
-                      key={product.key}
-                      style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
-                    >
-                      <CatalogProductCard product={product} cart={cart} setCart={setCart} />
-                    </Col>
-                  </List.Item>
-                )}
-              />
-            </InfiniteScroll>
-          </Row>
+              {products?.map((product) => (
+                <Col
+                  key={product.key}
+                  style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
+                >
+                  <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
+                </Col>
+              ))}
+            </Row>
+          </InfiniteScroll>
         </Content>
       </Layout>
     </Layout>
