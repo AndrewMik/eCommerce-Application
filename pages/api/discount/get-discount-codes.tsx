@@ -2,19 +2,23 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from '../client';
 
-async function getActiveCart() {
-  const client = Client.getInstance().anonymousClient;
+async function getDiscountCodes() {
+  const client = Client.getInstance().clientCredentialsClient;
 
   try {
-    const response = await client.me().activeCart().get().execute();
+    const response = await client
+      .discountCodes()
+      .get({
+        queryArgs: {
+          expand: ['cartDiscounts[*]'],
+        },
+      })
+      .execute();
     return response.body;
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-    if (errorResponse.statusCode === 403) {
-      window.location.reload();
-    }
     return errorResponse.body;
   }
 }
 
-export default getActiveCart;
+export default getDiscountCodes;

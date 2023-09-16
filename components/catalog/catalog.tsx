@@ -257,11 +257,14 @@ const CatalogCards = (): JSX.Element => {
 
   const getCart = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
+
     if (refreshToken !== null) {
-      await getCartWithToken();
+      const response = await getCartWithToken();
+      handleResponse(response);
+    } else {
+      const response = await getActiveCart();
+      handleResponse(response);
     }
-    const response = await getActiveCart();
-    handleResponse(response);
   };
 
   useEffect(() => {

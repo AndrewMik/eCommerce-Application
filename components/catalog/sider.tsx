@@ -84,7 +84,7 @@ const CatalogSider = ({
           left: 0,
           top: '0px',
           backgroundColor: 'white',
-          zIndex: 100,
+          zIndex: 99,
           overflow: 'auto',
         }}
       >
