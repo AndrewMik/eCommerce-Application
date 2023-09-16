@@ -2,7 +2,7 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function getAllProducts() {
+async function getAllProducts(offset: number, limit: number = 20) {
   const client = Client.getInstance().clientCredentialsClient;
 
   try {
@@ -10,7 +10,8 @@ async function getAllProducts() {
       .productProjections()
       .get({
         queryArgs: {
-          limit: 200,
+          limit,
+          offset,
           expand: ['masterVariant.prices[*].discounted.discount'],
         },
       })

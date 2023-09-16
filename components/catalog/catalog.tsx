@@ -1,5 +1,6 @@
-import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
+import { Col, Layout, MenuProps, Row, Space, Input, Skeleton, Divider, List } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 import getFilteredProducts from '@/pages/api/filter-products';
@@ -28,8 +29,12 @@ type Response = Cart | ErrorResponse | undefined | null;
 const { Content } = Layout;
 const { Search } = Input;
 
+const OFFSET_STEP = 20;
+
 const CatalogCards = (): JSX.Element => {
-  const [products, setProducts] = useState<ProductProjection[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const [products, setProducts] = useState<ProductProjection[]>([]);
   const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
   const [searchString, setSearchString] = useState<string>('');
   const [clear, setClear] = useState<boolean>(false);
@@ -43,6 +48,7 @@ const CatalogCards = (): JSX.Element => {
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
   const [allCategories, setAllCategories] = useState<AllCategories[] | null>(null);
   const [category, setCategory] = useState<string[]>([]);
+  const [offset, setOffset] = useState<number>(0);
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
     const items: MenuProps['items'] = ['category'].map((mainCategory) => {
@@ -208,16 +214,19 @@ const CatalogCards = (): JSX.Element => {
     setCategory([openKeys[openKeys.length - 1]]);
   };
 
+  // this godforsaken function is HERE!!!!!
   const getProductsInfo = async () => {
-    const { response } = await getProducts();
+    const { response } = await getProducts(offset);
 
     if (!response) {
-      setProducts(null);
+      setProducts([]);
       return;
     }
 
     if (Array.isArray(response)) {
       const newAttributeData: AttributeData = {};
+
+      setProducts([...products, ...response]);
 
       response.forEach((product) => {
         const { attributes } = product.masterVariant;
@@ -236,10 +245,8 @@ const CatalogCards = (): JSX.Element => {
       });
 
       setAttributeData(newAttributeData);
-
-      setProducts(response);
     } else if (typeof response === 'number') {
-      setProducts(null);
+      setProducts([]);
       throw new Error('Error fetching products');
     }
   };
@@ -322,6 +329,25 @@ const CatalogCards = (): JSX.Element => {
     },
   ];
 
+  const loadMoreData = async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+
+    try {
+      await getProductsInfo();
+      setOffset((prevOffset) => prevOffset + OFFSET_STEP);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadMoreData();
+  }, []);
+
   return (
     <Layout hasSider>
       <CatalogSider
@@ -354,7 +380,9 @@ const CatalogCards = (): JSX.Element => {
         </Space>
 
         <Content
+          id="scrollableDiv"
           style={{
+            // height: '100vh',
             marginLeft: '16px',
             marginTop: '10px',
             overflow: 'initial',
@@ -363,7 +391,7 @@ const CatalogCards = (): JSX.Element => {
             overflowX: 'hidden',
           }}
         >
-          <Row
+          {/* <Row
             style={{
               marginTop: '14px',
               display: 'flex',
@@ -380,6 +408,38 @@ const CatalogCards = (): JSX.Element => {
                 <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
               </Col>
             ))}
+          </Row> */}
+          <Row
+            style={{
+              marginTop: '14px',
+              display: 'flex',
+              justifyContent: 'center',
+              maxWidth: '1600px',
+              gap: '20px',
+            }}
+          >
+            <InfiniteScroll
+              dataLength={products.length || 0}
+              next={loadMoreData}
+              hasMore={products.length < 104}
+              loader={<Skeleton paragraph={{ rows: 1 }} active />}
+              endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+              // scrollableTarget="scrollableDiv"
+            >
+              <List
+                dataSource={products}
+                renderItem={(product) => (
+                  <List.Item key={product.key}>
+                    <Col
+                      key={product.key}
+                      style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
+                    >
+                      <CatalogProductCard product={product} cart={cart} setCart={setCart} />
+                    </Col>
+                  </List.Item>
+                )}
+              />
+            </InfiniteScroll>
           </Row>
         </Content>
       </Layout>
