@@ -71,7 +71,7 @@ const CartContent = ({ cart, setCart }: Props) => {
         handleErrorResponse(response);
       } else {
         localStorage.setItem('cart', JSON.stringify(response));
-        setCount(response.lineItems.length);
+        setCount(response.totalLineItemQuantity || 0);
         setCart(response);
       }
     }

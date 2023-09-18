@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
         if (token) {
           setUserToken(token.refreshToken as string);
           saveLogInState(token.token, token.refreshToken as string);
-          setCount(cart?.lineItems.length || 0);
+          setCount(cart?.totalLineItemQuantity || 0);
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);

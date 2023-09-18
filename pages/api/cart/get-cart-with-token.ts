@@ -15,7 +15,7 @@ async function getCartWithToken() {
     } catch (error) {
       const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
       if (errorResponse.statusCode === 403) {
-        // window.location.reload();
+        window.location.reload();
       }
       return errorResponse.body;
     }

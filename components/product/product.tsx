@@ -170,7 +170,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
         } else {
           setCart(response);
           localStorage.setItem('cart', JSON.stringify(response));
-          setCount(response.lineItems.length);
+          setCount(response.totalLineItemQuantity || 0);
         }
         setLoading(false);
       }
@@ -183,7 +183,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
         } else {
           setCart(response);
           localStorage.setItem('cart', JSON.stringify(response));
-          setCount(response.lineItems.length);
+          setCount(response.totalLineItemQuantity || 0);
         }
         setLoading(false);
       }

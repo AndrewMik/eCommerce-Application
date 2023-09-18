@@ -214,7 +214,7 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
       if (nextCart) {
         setCart(nextCart);
         localStorage.setItem('cart', JSON.stringify(nextCart));
-        setCount(nextCart.lineItems.length);
+        setCount(nextCart.totalLineItemQuantity || 0);
       }
     }
 

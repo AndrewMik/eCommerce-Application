@@ -22,7 +22,7 @@ const CustomerCart = () => {
       } else {
         setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
-        setCount((response as Cart).lineItems.length);
+        setCount(response.totalLineItemQuantity || 0);
       }
     }
     setIsCartLoaded(true);
