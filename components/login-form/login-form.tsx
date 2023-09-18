@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useContext } from 'react';
@@ -10,7 +9,6 @@ import { getEmailRules, getPasswordRules } from '../registration-form/helpers/va
 const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
-  const router = useRouter();
   const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken } =
     useContext(AuthContext);
 
@@ -23,7 +21,6 @@ const LoginForm: React.FC = () => {
           setUserToken(token.refreshToken as string);
           saveLogInState(token.token, token.refreshToken as string);
           setIsLoggedIn(true);
-          router.push(`/`);
         } else {
           setIsLoggedIn(false);
         }
