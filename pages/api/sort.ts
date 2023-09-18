@@ -1,32 +1,31 @@
-import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function executeQuery(filterStrings: string[], searchString: string, sortString: string) {
+async function executeQuery(offset: number, filterStrings: string[], searchString: string, sortString?: string) {
   const client = new Client().clientCredentialsClient;
 
-  try {
-    const response = await client
-      .productProjections()
-      .search()
-      .get({
-        queryArgs: {
-          limit: 200,
-          expand: ['masterVariant.prices[*].discounted.discount'],
-          filter: filterStrings,
-          'text.en': searchString,
-          sort: sortString,
-        },
-      })
-      .execute();
-    return { response: response.body.results };
-  } catch (error) {
-    const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-    return { response: errorResponse.body ? errorResponse.body.statusCode : null };
-  }
+  const response = await client
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        offset,
+        limit: 20,
+        expand: ['masterVariant.prices[*].discounted.discount'],
+        filter: filterStrings,
+        'text.en': searchString,
+        sort: sortString || undefined,
+      },
+    })
+    .execute();
+  return response.body;
 }
-/* eslint-disable @typescript-eslint/default-param-last */
-function getSortedProducts(filters: string[][], categories: string[], searchString = '', sortString: string) {
+function getSortedProducts(
+  offset: number,
+  filters: string[][],
+  categories: string[],
+  searchString: string,
+  sortString?: string,
+) {
   let filterStrings: string[] = [];
 
   if (filters.length > 0) {
@@ -64,7 +63,7 @@ function getSortedProducts(filters: string[][], categories: string[], searchStri
     });
   }
 
-  return executeQuery(filterStrings, searchString, sortString);
+  return executeQuery(offset, filterStrings, searchString, sortString);
 }
 
 export default getSortedProducts;
