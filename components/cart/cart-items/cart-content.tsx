@@ -1,6 +1,19 @@
 import { HomeOutlined } from '@ant-design/icons';
 import { Cart, ErrorResponse, MyCartUpdateAction } from '@commercetools/platform-sdk';
-import { Breadcrumb, Button, Divider, Input, Layout, message, Popconfirm, Space, theme, Typography } from 'antd';
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  Divider,
+  Input,
+  Layout,
+  message,
+  Popconfirm,
+  Row,
+  Space,
+  theme,
+  Typography,
+} from 'antd';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
 import updateCart from '@/pages/api/update-cart';
@@ -108,52 +121,58 @@ const CartContent = ({ cart, setCart }: Props) => {
             <Link href="/cart">Cart</Link>
           </Breadcrumb.Item>
         </Breadcrumb>
-        <div style={{ padding: 24, minHeight: 380, background: colorBgContainer }}>
+        <div
+          style={{ maxWidth: 1400, minHeight: 380, marginInline: 'auto', padding: 24, background: colorBgContainer }}
+        >
           <Title style={{ margin: 0 }}>Shopping Cart</Title>
           <Divider />
           {cart.lineItems.map((item) => {
             return <CartItem key={item.id} item={item} cart={cart} setCart={setCart} isPromoExists={isPromoExists} />;
           })}
           <Space
+            size={36}
+            direction="vertical"
             style={{
               width: '100%',
-              height: '50px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px',
             }}
           >
-            <Title style={{ margin: 0 }} level={2}>
-              Total Price: <TotalPrice cart={cart} />
-            </Title>
-            {isPromoExists && isPromoApplied ? (
-              <Space.Compact style={{ width: '100%' }}>
-                <Button onClick={handleRemovePromo}>Remove Promo Discount</Button>
-              </Space.Compact>
-            ) : (
-              <Space.Compact style={{ width: '100%' }}>
-                <Input
-                  placeholder="enter promo"
-                  value={promoInputValue}
-                  onChange={(e) => setPromoInputValue(e.target.value)}
-                />
-                <Button disabled={promoInputValue.length === 0} onClick={handleApplyPromo}>
-                  Apply
-                </Button>
-              </Space.Compact>
-            )}
+            <Row gutter={[0, 24]} justify="space-between" style={{ width: '100%' }}>
+              <Col xs={24} md={10} lg={6}>
+                {isPromoExists && isPromoApplied ? (
+                  <Space.Compact style={{ width: '100%' }}>
+                    <Button onClick={handleRemovePromo}>Remove Promo Discount</Button>
+                  </Space.Compact>
+                ) : (
+                  <Space.Compact style={{ width: '100%' }}>
+                    <Input
+                      placeholder="enter promo"
+                      value={promoInputValue}
+                      onChange={(e) => setPromoInputValue(e.target.value)}
+                    />
+                    <Button disabled={promoInputValue.length === 0} onClick={handleApplyPromo}>
+                      Apply
+                    </Button>
+                  </Space.Compact>
+                )}
+              </Col>
+              <Col xs={24} md={10} lg={7}>
+                <Title style={{ margin: 0, textAlign: 'end' }} level={3}>
+                  Total Price: <TotalPrice cart={cart} />
+                </Title>
+              </Col>
+            </Row>
+            <Popconfirm
+              title="Clear Shopping Cart"
+              description="Are you sure to clear shopping cart?"
+              onConfirm={clearShoppingCartHandler}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                Clear Shopping Cart
+              </Button>
+            </Popconfirm>
           </Space>
-          <Popconfirm
-            title="Clear Shopping Cart"
-            description="Are you sure to clear shopping cart?"
-            onConfirm={clearShoppingCartHandler}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-              Clear Shopping Cart
-            </Button>
-          </Popconfirm>
         </div>
       </Content>
     </Layout>
