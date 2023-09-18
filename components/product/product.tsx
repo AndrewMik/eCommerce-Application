@@ -24,6 +24,8 @@ enum AttributesKeys {
   MATERIAL = 'material',
 }
 
+let loadingTimeout = false;
+
 const containerMediaStyles = `
   .container {
     padding-block: 32px;
@@ -60,21 +62,33 @@ const Product = ({ product }: { product: ProductProjection }) => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
-      } else {
-        setCart(response);
+        return null;
       }
+      return response;
     }
+    return null;
   };
 
   const getCart = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken !== null) {
-      const response = await getCartWithToken();
-      handleResponse(response);
-    } else {
-      const response = await getActiveCart();
-      handleResponse(response);
-    }
+    setTimeout(async () => {
+      const refreshToken = localStorage.getItem('refreshToken');
+      let response = null;
+      if (loadingTimeout) return null;
+      loadingTimeout = true;
+      if (refreshToken !== null) {
+        response = await getCartWithToken();
+      } else {
+        response = await getActiveCart();
+      }
+
+      const nextCart = handleResponse(response);
+      loadingTimeout = false;
+      if (nextCart) {
+        setCart(nextCart);
+        localStorage.setItem('cart', JSON.stringify(nextCart));
+      }
+      return nextCart;
+    }, 100);
   };
 
   const removeLineItemFromCart = async () => {
@@ -104,7 +118,10 @@ const Product = ({ product }: { product: ProductProjection }) => {
   };
 
   useEffect(() => {
-    getCart();
+    async function fn() {
+      await getCart();
+    }
+    fn();
   }, []);
 
   useEffect(() => {

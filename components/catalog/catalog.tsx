@@ -13,6 +13,8 @@ import CatalogSider from './sider';
 import CatalogProductCard from './card';
 import Spinner from '../spinner/spinner';
 
+let loading = false;
+
 interface MenuKeyProps {
   keyPath: string[];
 }
@@ -184,16 +186,25 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   };
 
   const getCart = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    let response = null;
-    if (refreshToken !== null) {
-      response = await getCartWithToken();
-    } else {
-      response = await getActiveCart();
-    }
+    setTimeout(async () => {
+      const refreshToken = localStorage.getItem('refreshToken');
+      let response = null;
+      if (loading) return null;
+      loading = true;
+      if (refreshToken !== null) {
+        response = await getCartWithToken();
+      } else {
+        response = await getActiveCart();
+      }
 
-    const nextCart = handleResponse(response);
-    return nextCart;
+      const nextCart = handleResponse(response);
+      loading = false;
+      if (nextCart) {
+        setCart(nextCart);
+        localStorage.setItem('cart', JSON.stringify(nextCart));
+      }
+      return nextCart;
+    }, 5000);
   };
 
   useEffect(() => {
@@ -204,12 +215,15 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   }, [attributeData]);
 
   useEffect(() => {
+    if (!attributeData) return;
+    const attributeNames = Object.keys(attributeData);
+
+    setFilterNames(attributeNames);
+  }, [attributeData]);
+
+  useEffect(() => {
     async function fn() {
-      const nextCart = await getCart();
-      if (nextCart) {
-        setCart(nextCart);
-        localStorage.setItem('cart', JSON.stringify(nextCart));
-      }
+      await getCart();
     }
 
     fn();
