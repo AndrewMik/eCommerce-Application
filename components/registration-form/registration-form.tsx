@@ -4,7 +4,7 @@ import { useState, useContext } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
 import registerUser from '@/pages/api/register-user';
 import Footer from './fields/footer';
-import { Paths } from '../../utils/route-links';
+import Paths from '../../utils/route-links';
 import AddressSection from './sections/address-section';
 import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';

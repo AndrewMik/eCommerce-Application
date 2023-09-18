@@ -9,17 +9,18 @@ import { getEmailRules, getPasswordRules } from '../registration-form/helpers/va
 const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken } =
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken, setCount } =
     useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const { statusCode, token } = await loginUser(email, password);
+    const { statusCode, token, cart } = await loginUser(email, password);
     if (statusCode) {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
         if (token) {
           setUserToken(token.refreshToken as string);
           saveLogInState(token.token, token.refreshToken as string);
+          setCount(cart?.totalLineItemQuantity || 0);
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);

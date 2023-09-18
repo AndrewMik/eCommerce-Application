@@ -1,8 +1,9 @@
 import { Cart, ErrorResponse, LineItem, ProductDiscountReference, TypedMoney } from '@commercetools/platform-sdk';
 import { Button, Col, Divider, Row, Typography } from 'antd';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 import updateCart from '@/pages/api/update-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import { AuthContext } from '@/context/authorization-context';
 import ItemPrice from '../prices/item-price';
 import ItemSubtotal from '../prices/item-subtotal';
 import ItemQuantity from './quantity/item-quantity';
@@ -28,6 +29,8 @@ type Response = Cart | ErrorResponse | undefined;
 const { Title } = Typography;
 
 const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
+  const { setCount } = useContext(AuthContext);
+
   let imageUrl = '';
   if (item.variant.images) {
     imageUrl = item.variant.images[0].url;
@@ -40,6 +43,7 @@ const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
       } else {
         localStorage.setItem('cart', JSON.stringify(response));
         setCart(response);
+        setCount(response.totalLineItemQuantity || 0);
       }
     }
   };

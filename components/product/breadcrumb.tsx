@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Breadcrumb } from 'antd';
 
-import { Paths } from '../../utils/route-links';
+import Paths from '../../utils/route-links';
 import FontColors from './product.data';
 
 interface ProductBreadcrumbProps {
