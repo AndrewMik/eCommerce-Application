@@ -117,7 +117,6 @@ const CatalogSider = ({
           selectedKeys={allSelectedKeys.map((key) => key[0])}
           onSelect={({ keyPath }) => handleSelect({ keyPath })}
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
-          // onOpenChange={(openKeys) => !collapsed && handleSubMenuClick(openKeys)}
         />
         <Space>
           {chosenSorting.length > 0 ? (
