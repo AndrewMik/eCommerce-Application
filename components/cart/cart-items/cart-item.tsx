@@ -43,7 +43,7 @@ const CartItem = ({ item, cart, setCart, isPromoExists }: Props) => {
       } else {
         localStorage.setItem('cart', JSON.stringify(response));
         setCart(response);
-        setCount(response.lineItems.length);
+        setCount(response.totalLineItemQuantity || 0);
       }
     }
   };

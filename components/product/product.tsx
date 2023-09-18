@@ -90,7 +90,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
         if (response && 'type' in response) {
           setCart(response as Cart);
           localStorage.setItem('cart', JSON.stringify(response));
-          setCount((response as Cart).lineItems.length);
+          setCount((response as Cart).totalLineItemQuantity || 0);
 
           notification.success({
             message: 'Removed from cart',

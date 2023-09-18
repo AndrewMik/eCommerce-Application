@@ -107,14 +107,19 @@ const MainHeader = () => {
       icon: <HomeOutlined style={{ color: '#633211' }} />,
     },
     {
-      key: Paths.PROFILE,
-      label: <Link href={Paths.PROFILE}>Profile</Link>,
-      icon: <UserOutlined style={{ color: '#f5a60a' }} />,
+      key: Paths.ABOUT,
+      label: <Link href={Paths.ABOUT}>About us</Link>,
+      icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
     },
     {
       key: Paths.CATALOG,
       label: <Link href={Paths.CATALOG}>Catalog</Link>,
       icon: <ShoppingOutlined style={{ color: '#f50abe' }} />,
+    },
+    {
+      key: Paths.PROFILE,
+      label: <Link href={Paths.PROFILE}>Profile</Link>,
+      icon: <UserOutlined style={{ color: '#f5a60a' }} />,
     },
     {
       key: Paths.CART,
