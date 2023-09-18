@@ -1,12 +1,13 @@
 import { Card, Row, Col, Button } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Cart, ErrorResponse, ProductDiscountValueRelative, ProductProjection } from '@commercetools/platform-sdk';
 import { permyriadToPercentage, transformCentToDollar } from '@/utils/price';
 import createNewCartWithProduct from '@/pages/api/cart/create-cart-with-product';
 import addProductToActiveCart from '@/pages/api/cart/add-product-to-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import { AuthContext } from '@/context/authorization-context';
 
 const { Meta } = Card;
 
@@ -22,6 +23,7 @@ const CatalogProductCard = (props: Props) => {
   const { key, masterVariant, id, metaDescription } = props.product;
   const { attributes, images, prices } = masterVariant;
   const [loading, setLoading] = useState<boolean>();
+  const { setCount } = useContext(AuthContext);
 
   if (!attributes) throw new Error('No attributes found');
   if (!images) throw new Error('No images found');
@@ -66,6 +68,7 @@ const CatalogProductCard = (props: Props) => {
       } else {
         props.setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
+        setCount(response.lineItems.length);
       }
       setLoading(false);
     }

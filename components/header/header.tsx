@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import { Layout, Menu, Button, Drawer, Row, Col, Space, Badge, ConfigProvider } from 'antd';
 import {
   MenuOutlined,
   HomeOutlined,
@@ -24,7 +24,8 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode, count } =
+    useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible((prevValue) => !prevValue);
@@ -61,8 +62,28 @@ const MainHeader = () => {
     },
     {
       key: Paths.CART,
-      label: <Link href={Paths.CART}>Cart</Link>,
-      icon: <ShoppingCartOutlined style={{ color: '#F94C10' }} />,
+      label: (
+        <Link href={Paths.CART}>
+          <ConfigProvider
+            theme={{
+              components: {
+                Badge: {
+                  fontSizeSM: 8,
+                  lineHeight: 200,
+                  paddingXS: 2,
+                },
+              },
+            }}
+          >
+            <Space>
+              <Badge count={count} size="small" offset={[2, -4]} color="volcano">
+                <ShoppingCartOutlined style={{ color: '#F94C10' }} />
+              </Badge>
+              Cart
+            </Space>
+          </ConfigProvider>
+        </Link>
+      ),
     },
     {
       key: 'sign-out',

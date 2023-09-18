@@ -6,6 +6,8 @@ import {
   ShoppingCartOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
+import { Badge, ConfigProvider, Space } from 'antd';
+
 import Link from 'next/link';
 
 export enum Paths {
@@ -32,8 +34,28 @@ export const navigationLinks = [
   },
   {
     key: Paths.CART,
-    label: <Link href={Paths.CART}>Cart</Link>,
-    icon: <ShoppingCartOutlined style={{ color: '#F94C10' }} />,
+    label: (
+      <Link href={Paths.CART}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Badge: {
+                fontSizeSM: 7,
+                lineHeight: 200,
+                paddingXS: 2,
+              },
+            },
+          }}
+        >
+          <Space>
+            <Badge count={5} size="small" offset={[2, -4]} color="volcano">
+              <ShoppingCartOutlined style={{ color: '#F94C10' }} />
+            </Badge>
+            Cart
+          </Space>
+        </ConfigProvider>
+      </Link>
+    ),
   },
   {
     key: Paths.REGISTRATION,

@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { App, Spin, Row, Col, Button } from 'antd';
 import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+
+import { AuthContext } from '../../context/authorization-context';
 
 import updateCart from '../../pages/api/update-cart';
 import getCartWithToken from '../../pages/api/cart/get-cart-with-token';
@@ -51,6 +53,7 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [cart, setCart] = useState<Cart | null>(null);
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
+  const { setCount } = useContext(AuthContext);
 
   const { notification } = App.useApp();
 
@@ -86,6 +89,9 @@ const Product = ({ product }: { product: ProductProjection }) => {
 
         if (response && 'type' in response) {
           setCart(response as Cart);
+          localStorage.setItem('cart', JSON.stringify(response));
+          setCount((response as Cart).lineItems.length);
+
           notification.success({
             message: 'Removed from cart',
             description: `${product.name.en} was successfully removed from your cart.`,
@@ -163,6 +169,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
           handleErrorResponse(response);
         } else {
           setCart(response);
+          localStorage.setItem('cart', JSON.stringify(response));
+          setCount(response.lineItems.length);
         }
         setLoading(false);
       }
@@ -174,6 +182,8 @@ const Product = ({ product }: { product: ProductProjection }) => {
           handleErrorResponse(response);
         } else {
           setCart(response);
+          localStorage.setItem('cart', JSON.stringify(response));
+          setCount(response.lineItems.length);
         }
         setLoading(false);
       }
