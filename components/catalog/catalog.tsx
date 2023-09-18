@@ -1,16 +1,14 @@
 import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
 import { useState, useEffect, FormEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { AttributeDefinition, Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
-import getFilteredProducts from '@/pages/api/filter-products';
 import { getCapitalizedFirstLabel } from '@/utils/filter';
-import getSortedProducts from '@/pages/api/sort';
 import getActiveCart from '@/pages/api/cart/get-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import getCartWithToken from '@/pages/api/cart/get-cart-with-token';
-import getProducts from '../../pages/api/get-products';
-import { AttributeData } from './types';
+import getSortedProducts from '@/pages/api/sort';
+import { AttributeData, AttributeValue } from './types';
 import CatalogSider from './sider';
 import CatalogProductCard from './card';
 import Spinner from '../spinner/spinner';
@@ -26,6 +24,7 @@ export interface AllCategories {
 
 interface Props {
   allCategories: AllCategories[];
+  attributes: AttributeDefinition[];
 }
 
 type Response = Cart | ErrorResponse | undefined | null;
@@ -33,25 +32,38 @@ type Response = Cart | ErrorResponse | undefined | null;
 const { Content } = Layout;
 const { Search } = Input;
 
-const OFFSET_STEP = 20;
+const attributeTransformer = (initialAttributes: AttributeDefinition[]): AttributeData => {
+  const transformedAttributes: AttributeData = {};
+  initialAttributes.forEach((attr) => {
+    const values: Record<string, AttributeValue> = {};
+    if (attr.type.name === 'enum') {
+      attr.type.values.forEach((value) => {
+        values[value.key] = value;
+      });
+    }
+    transformedAttributes[attr.name] = values;
+  });
 
-const CatalogCards = ({ allCategories }: Props): JSX.Element => {
-  const [loading, setLoading] = useState(false);
+  return transformedAttributes;
+};
 
+const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   const [products, setProducts] = useState<ProductProjection[]>([]);
-  const [attributeData, setAttributeData] = useState<AttributeData | null>(null);
+  const [attributeData] = useState<AttributeData>(attributeTransformer(attributes));
+
   const [searchString, setSearchString] = useState<string>('');
-  const [clear, setClear] = useState<boolean>(false);
   const [passSearchString, setPassSearchString] = useState<boolean>(false);
+
   const [sortString, setSortString] = useState<string>('');
   const [chosenSorting, setChosenSorting] = useState('');
+
   const [cart, setCart] = useState<Cart | null>(null);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
-
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
+
   const [category, setCategory] = useState<string[]>([]);
-  const [dataLength, setDataLength] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
 
   const displayCategories = (categories: AllCategories[]): MenuProps['items'] => {
     const items: MenuProps['items'] = ['category'].map((mainCategory) => {
@@ -90,14 +102,14 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
     return items;
   };
 
-  const displayFilters = (attributes: AttributeData): MenuProps['items'] => {
+  const filtersRenderer = (initialAttributes: AttributeData): MenuProps['items'] => {
     const items: MenuProps['items'] = filterNames.map((name) => {
       const label = getCapitalizedFirstLabel(name);
-      const childrenData = Object.values(attributes[name]);
+      const childrenData = Object.values(initialAttributes[name]);
 
       const title = allSelectedKeys.filter((key) => key[1] === name);
 
-      const titleLabel = title.map((key) => attributes[name][key[0]].label);
+      const titleLabel = title.map((key) => initialAttributes[name][key[0]].label);
 
       return {
         key: name,
@@ -115,34 +127,6 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
     return items;
   };
 
-  const getUpdatedProductCards = (cards: ProductProjection[] | number) => {
-    if (cards && typeof cards !== 'number') {
-      setProducts(cards);
-    }
-  };
-
-  useEffect(() => {
-    const getFilteredProductsInfo = async () => {
-      if (!allSelectedKeys) return;
-      let filtered;
-      if (searchString.length > 0) {
-        filtered = await getFilteredProducts(allSelectedKeys, category, searchString);
-      } else {
-        filtered = await getFilteredProducts(allSelectedKeys, category);
-      }
-      if (filtered.response && typeof filtered.response !== 'number') {
-        if (sortString.length > 0) {
-          filtered = await getSortedProducts(allSelectedKeys, category, searchString, sortString);
-        }
-        if (filtered.response && typeof filtered.response !== 'number') {
-          getUpdatedProductCards(filtered.response);
-        }
-      }
-    };
-
-    getFilteredProductsInfo();
-  }, [allSelectedKeys, category, clear, passSearchString, sortString]);
-
   const onSearch = (string: string) => {
     setSearchString(string);
     setPassSearchString((prevValue) => !prevValue);
@@ -151,9 +135,6 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
   const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setSearchString(target.value);
-    if (target.value.length === 0) {
-      setClear((prevValue) => !prevValue);
-    }
   };
 
   const handleSelect = (menuProps: MenuKeyProps) => {
@@ -173,45 +154,21 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
     });
   };
 
-  const handleSubMenuClick = (openKeys: string[]) => {
-    setCategory([openKeys[openKeys.length - 1]]);
-  };
+  const getProductsInfo = async (isInfiniteLoading: boolean) => {
+    try {
+      let response;
 
-  const getProductsInfo = async () => {
-    const { response } = await getProducts(dataLength);
-    // eslint-disable-next-line no-console
-    console.log('🚀 ~ file: catalog.tsx:221 ~ getProductsInfo ~ response:', response);
+      if (isInfiniteLoading) {
+        response = await getSortedProducts(products.length, allSelectedKeys, category, searchString, sortString);
+        setProducts([...products, ...response.results]);
+      } else {
+        response = await getSortedProducts(0, allSelectedKeys, category, searchString, sortString);
+        setProducts(response.results);
+      }
 
-    if (!response) {
+      setCount(response.total || 0);
+    } catch (error) {
       setProducts([]);
-      return;
-    }
-
-    if (Array.isArray(response)) {
-      const newAttributeData: AttributeData = {};
-
-      setProducts([...products, ...response]);
-
-      response.forEach((product) => {
-        const { attributes } = product.masterVariant;
-
-        if (attributes) {
-          attributes.forEach((attr) => {
-            const { name, value } = attr;
-
-            if (!newAttributeData[name]) {
-              newAttributeData[name] = {};
-            }
-
-            newAttributeData[name][value.key] = value;
-          });
-        }
-      });
-
-      setAttributeData(newAttributeData);
-    } else if (typeof response === 'number') {
-      setProducts([]);
-      throw new Error('Error fetching products');
     }
   };
 
@@ -219,11 +176,11 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
     if (response) {
       if ('statusCode' in response) {
         handleErrorResponse(response);
-      } else {
-        setCart(response);
-        localStorage.setItem('cart', JSON.stringify(response));
+        return null;
       }
+      return response;
     }
+    return null;
   };
 
   const getCart = async () => {
@@ -232,7 +189,8 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
       await getCartWithToken();
     }
     const response = await getActiveCart();
-    handleResponse(response);
+    const nextCart = handleResponse(response);
+    return nextCart;
   };
 
   useEffect(() => {
@@ -243,7 +201,15 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
   }, [attributeData]);
 
   useEffect(() => {
-    getCart();
+    async function fn() {
+      const nextCart = await getCart();
+      if (nextCart) {
+        setCart(nextCart);
+        localStorage.setItem('cart', JSON.stringify(nextCart));
+      }
+    }
+
+    fn();
   }, []);
 
   const handleNameDropDownClick = (key: ItemType) => {
@@ -292,41 +258,30 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
     },
   ];
 
-  const loadMoreData = async () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-
+  const loadMoreData = async (isInfiniteLoading: boolean) => {
     try {
-      await getProductsInfo();
-      setDataLength((prevLength) => prevLength + OFFSET_STEP);
-      setLoading(false);
-      // eslint-disable-next-line no-console
-      console.log(dataLength);
+      await getProductsInfo(isInfiniteLoading);
     } catch (error) {
-      setLoading(false);
+      // TODO: find way to process this error
     }
   };
 
   useEffect(() => {
-    loadMoreData();
-  }, []);
+    loadMoreData(false);
+  }, [allSelectedKeys, category, passSearchString, sortString]);
 
   return (
     <Layout hasSider>
       <CatalogSider
         attributeData={attributeData}
-        getUpdatedProductCards={getUpdatedProductCards}
         allSelectedKeys={allSelectedKeys}
         setAllSelectedKeys={setAllSelectedKeys}
         setCategory={setCategory}
         allCategories={allCategories}
         displayCategories={displayCategories}
-        displayFilters={displayFilters}
+        displayFilters={filtersRenderer}
         handleSelect={handleSelect}
         handleDeselect={handleDeselect}
-        handleSubMenuClick={handleSubMenuClick}
         itemsForPrice={itemsForPrice}
         itemsForName={itemsForName}
         chosenSorting={chosenSorting}
@@ -347,7 +302,6 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
         <Content
           id="scrollableDiv"
           style={{
-            // height: '100vh',
             marginLeft: '16px',
             marginTop: '10px',
             overflow: 'initial',
@@ -357,10 +311,9 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
           }}
         >
           <InfiniteScroll
-            dataLength={dataLength}
-            next={loadMoreData}
-            hasMore={dataLength < 104}
-            // TODO: customize spinner and make in a small one
+            dataLength={products.length}
+            next={() => loadMoreData(true)}
+            hasMore={products.length < count}
             loader={<Spinner />}
           >
             <Row
@@ -377,7 +330,7 @@ const CatalogCards = ({ allCategories }: Props): JSX.Element => {
                   key={product.key}
                   style={{ display: 'flex', justifyContent: 'center', padding: '0', flexWrap: 'wrap', gap: '20px' }}
                 >
-                  <CatalogProductCard product={product} cart={cart && cart} setCart={setCart} />
+                  <CatalogProductCard product={product} cart={cart} setCart={setCart} />
                 </Col>
               ))}
             </Row>
