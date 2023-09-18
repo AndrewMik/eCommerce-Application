@@ -5,6 +5,7 @@ import Client from '../client';
 async function removeDiscountFromCart(discountCode: DiscountCodeReference) {
   const client = Client.getInstance().anonymousClient;
   const cart: Cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
+
   if (cart) {
     try {
       const response = await client
@@ -22,9 +23,6 @@ async function removeDiscountFromCart(discountCode: DiscountCodeReference) {
       return response.body;
     } catch (error) {
       const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-      if (errorResponse.statusCode === 403) {
-        window.location.reload();
-      }
       return errorResponse.body;
     }
   }

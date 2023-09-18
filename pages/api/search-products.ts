@@ -3,7 +3,7 @@ import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
 async function getSearchedProducts(searchString: string) {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
 
   try {
     const response = await client

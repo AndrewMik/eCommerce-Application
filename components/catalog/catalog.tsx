@@ -185,16 +185,13 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
 
   const getCart = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
-
+    let response = null;
     if (refreshToken !== null) {
-      const response = await getCartWithToken();
-      handleResponse(response);
+      response = await getCartWithToken();
     } else {
-      const response = await getActiveCart();
-      handleResponse(response);
+      response = await getActiveCart();
     }
 
-    const response = await getActiveCart();
     const nextCart = handleResponse(response);
     return nextCart;
   };

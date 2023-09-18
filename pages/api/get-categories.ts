@@ -1,7 +1,7 @@
 import Client from './client';
 
 async function getAllCategories() {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
   const response = await client
     .categories()
     .get({

@@ -1,7 +1,7 @@
 import Client from './client';
 
 async function executeQuery(offset: number, filterStrings: string[], searchString: string, sortString?: string) {
-  const client = new Client().clientCredentialsClient;
+  const client = Client.getInstance().clientCredentialsClient;
 
   const response = await client
     .productProjections()

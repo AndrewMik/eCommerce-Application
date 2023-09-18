@@ -5,6 +5,7 @@ import Client from '../client';
 async function getActiveCartWithDiscount(promoCode: string) {
   const client = Client.getInstance().anonymousClient;
   const cart: Cart = JSON.parse(localStorage.getItem('cart') ?? '[]');
+
   if (cart) {
     try {
       const response = await client
@@ -25,9 +26,6 @@ async function getActiveCartWithDiscount(promoCode: string) {
       return response.body;
     } catch (error) {
       const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-      if (errorResponse.statusCode === 403) {
-        window.location.reload();
-      }
       return errorResponse.body;
     }
   }

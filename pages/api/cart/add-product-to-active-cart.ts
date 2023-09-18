@@ -1,26 +1,32 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
-import { handleRefreshTokenInLocalStorage } from '@/utils/handleRefreshTokenInLocalStorage';
 import Client from '../client';
 
-async function getCartWithToken() {
+async function addProductToActiveCart(cartId: string, cartVersion: number, productId: string) {
   const refreshToken = localStorage.getItem('refreshToken');
-
   if (refreshToken) {
     const client = Client.getInstance().clientWithRefreshTokenFlow(refreshToken);
 
-    handleRefreshTokenInLocalStorage();
     try {
-      const response = await client.me().activeCart().get().execute();
+      const response = await client
+        .me()
+        .carts()
+        .withId({ ID: cartId })
+        .post({
+          body: {
+            version: cartVersion,
+            actions: [{ action: 'addLineItem', productId }],
+          },
+        })
+        .execute();
 
       return response.body;
     } catch (error) {
       const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
       return errorResponse.body;
     }
-  } else {
-    return null;
   }
+  return null;
 }
 
-export default getCartWithToken;
+export default addProductToActiveCart;
