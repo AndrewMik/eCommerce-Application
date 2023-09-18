@@ -3,12 +3,9 @@ import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from '../client';
 
 function handleRefreshTokenInLocalStorage() {
-  const refreshToken = localStorage.getItem('refreshToken');
-  if (refreshToken === null) {
-    const token = Client.token.get();
-    if (token.refreshToken && token.refreshToken.length > 0) {
-      localStorage.setItem('refreshToken', token.refreshToken as string);
-    }
+  const token = Client.token.get();
+  if (token.refreshToken && token.refreshToken.length > 0) {
+    localStorage.setItem('refreshToken', token.refreshToken as string);
   }
 }
 
@@ -28,6 +25,9 @@ async function createNewCartWithProduct(productId: string) {
     return response.body;
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
+    if (errorResponse.statusCode === 403) {
+      window.location.reload();
+    }
     return errorResponse.body;
   }
 }

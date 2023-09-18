@@ -81,7 +81,7 @@ const MainHeader = () => {
       <Header
         style={{
           padding: 0,
-          zIndex: 10001,
+          zIndex: 100,
           position: 'sticky',
           top: 0,
           width: '100%',
