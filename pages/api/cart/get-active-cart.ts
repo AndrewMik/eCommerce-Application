@@ -1,6 +1,6 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
-import { handleRefreshTokenInLocalStorage } from '../../../utils/handleRefreshTokenInLocalStorage';
+import handleRefreshTokenInLocalStorage from '../../../utils/handleRefreshTokenInLocalStorage';
 import Client from '../client';
 
 async function getActiveCart() {

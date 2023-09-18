@@ -1,5 +1,5 @@
 import { Col, Layout, MenuProps, Row, Space, Input } from 'antd';
-import { useState, useEffect, FormEvent, useContext } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { AttributeDefinition, Cart, Category, ErrorResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
@@ -7,7 +7,7 @@ import { getCapitalizedFirstLabel } from '@/utils/filter';
 import getActiveCart from '@/pages/api/cart/get-active-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
 import getCartWithToken from '@/pages/api/cart/get-cart-with-token';
-import { AuthContext } from '@/context/authorization-context';
+// import { AuthContext } from '@/context/authorization-context';
 import getSortedProducts from '@/pages/api/sort';
 import { AttributeData, AttributeValue } from './types';
 import CatalogSider from './sider';
@@ -61,7 +61,7 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   const [chosenSorting, setChosenSorting] = useState('');
 
   const [cart, setCart] = useState<Cart | null>(null);
-  const { setCount } = useContext(AuthContext);
+  // const { setCount } = useContext(AuthContext);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
@@ -206,8 +206,15 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
         localStorage.setItem('cart', JSON.stringify(nextCart));
       }
       return nextCart;
-    }, 5000);
+    }, 100);
   };
+
+  useEffect(() => {
+    if (!attributeData) return;
+    const attributeNames = Object.keys(attributeData);
+
+    setFilterNames(attributeNames);
+  }, [attributeData]);
 
   useEffect(() => {
     if (!attributeData) return;
