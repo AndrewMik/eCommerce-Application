@@ -14,8 +14,6 @@ import CatalogSider from './sider';
 import CatalogProductCard from './card';
 import Spinner from '../spinner/spinner';
 
-let loading = false;
-
 interface MenuKeyProps {
   keyPath: string[];
 }
@@ -61,7 +59,6 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   const [chosenSorting, setChosenSorting] = useState('');
 
   const [cart, setCart] = useState<Cart | null>(null);
-  // const { setCount } = useContext(AuthContext);
 
   const [filterNames, setFilterNames] = useState<string[]>([]);
   const [allSelectedKeys, setAllSelectedKeys] = useState<string[][]>([]);
@@ -188,25 +185,16 @@ const CatalogCards = ({ allCategories, attributes }: Props): JSX.Element => {
   };
 
   const getCart = async () => {
-    setTimeout(async () => {
-      const refreshToken = localStorage.getItem('refreshToken');
-      let response = null;
-      if (loading) return null;
-      loading = true;
-      if (refreshToken !== null) {
-        response = await getCartWithToken();
-      } else {
-        response = await getActiveCart();
-      }
+    const refreshToken = localStorage.getItem('refreshToken');
+    let response = null;
+    if (refreshToken !== null) {
+      response = await getCartWithToken();
+    } else {
+      response = await getActiveCart();
+    }
 
-      const nextCart = handleResponse(response);
-      loading = false;
-      if (nextCart) {
-        setCart(nextCart);
-        localStorage.setItem('cart', JSON.stringify(nextCart));
-      }
-      return nextCart;
-    }, 100);
+    const nextCart = handleResponse(response);
+    return nextCart;
   };
 
   useEffect(() => {
