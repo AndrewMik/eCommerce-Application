@@ -1,10 +1,11 @@
 import { Cart, ErrorResponse, LineItem } from '@commercetools/platform-sdk';
 import { App, Button, Input, Spin } from 'antd';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
 import updateCart from '@/pages/api/update-cart';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import { AuthContext } from '@/context/authorization-context';
 
 type Response = Cart | ErrorResponse | undefined;
 
@@ -21,6 +22,7 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
 
   const [quantity, setQuantity] = useState<number>(item.quantity);
   const [loading, setLoading] = useState<boolean>(true);
+  const { setCount } = useContext(AuthContext);
 
   const maxQuantity = item.variant.availability?.availableQuantity ?? 1;
 
@@ -31,6 +33,7 @@ const ItemQuantity = ({ item, cart, setCart }: Props) => {
       } else {
         setCart(response);
         localStorage.setItem('cart', JSON.stringify(response));
+        setCount(response.totalLineItemQuantity || 0);
       }
     }
     setLoading(false);
