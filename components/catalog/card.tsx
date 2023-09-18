@@ -91,7 +91,14 @@ const CatalogProductCard = (props: Props) => {
         bodyStyle={{ padding: '3px', paddingTop: '20px' }}
         key={key}
         hoverable
-        style={{ width: 260, position: 'relative', textAlign: 'center', height: '450px' }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: 260,
+          position: 'relative',
+          textAlign: 'center',
+          height: '100%',
+        }}
         cover={
           <div
             style={{
@@ -185,10 +192,10 @@ const CatalogProductCard = (props: Props) => {
             </Row>
           }
           description={
-            <div style={{ fontSize: 12, lineHeight: '1', margin: '3px', paddingBottom: 5 }}>
-              {descriptionPreview && <div style={{ height: 30 }}>{descriptionPreview}</div>}
+            <div style={{ fontSize: 12, lineHeight: '1', margin: '3px', paddingInline: 12, paddingBottom: 5 }}>
+              {descriptionPreview && <div style={{ minHeight: 50 }}>{descriptionPreview}</div>}
               <div>
-                <Button type="link" style={{ fontSize: '13px', padding: 0, margin: 0 }}>
+                <Button type="link" style={{ fontSize: '13px', paddingInline: 12, margin: 0 }}>
                   see more details
                 </Button>
               </div>
