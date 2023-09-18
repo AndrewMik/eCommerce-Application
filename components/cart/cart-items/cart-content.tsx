@@ -15,11 +15,12 @@ import {
   Typography,
 } from 'antd';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import updateCart from '@/pages/api/update-cart';
 import removeDiscountFromCart from '@/pages/api/cart/remove-discount-from-cart';
 import getActiveCartWithDiscount from '@/pages/api/cart/get-cart-with-discount';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import { AuthContext } from '@/context/authorization-context';
 import CartItem from './cart-item';
 import TotalPrice from '../prices/total-price';
 import { displayMessageLoaded, displayMessageRemoved, displayMessageWrongPromo } from './cart-messages';
@@ -42,6 +43,7 @@ const CartContent = ({ cart, setCart }: Props) => {
   const [isPromoExists, setIsPromoExist] = useState(checkIfPromoExists());
   const [isPromoApplied, setIsPromoApplied] = useState(promo);
   const [promoInputValue, setPromoInputValue] = useState('');
+  const { setCount } = useContext(AuthContext);
 
   const {
     token: { colorBgContainer },
@@ -69,6 +71,7 @@ const CartContent = ({ cart, setCart }: Props) => {
         handleErrorResponse(response);
       } else {
         localStorage.setItem('cart', JSON.stringify(response));
+        setCount(response.totalLineItemQuantity || 0);
         setCart(response);
       }
     }

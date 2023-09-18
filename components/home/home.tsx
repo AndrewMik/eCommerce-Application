@@ -3,7 +3,7 @@ import { Col, List, Row } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiscountCode, DiscountCodePagedQueryResponse, ErrorResponse } from '@commercetools/platform-sdk';
-import { Paths } from '@/utils/route-links';
+import Paths from '@/utils/route-links';
 import { AuthContext } from '@/context/authorization-context';
 import getDiscountCodes from '@/pages/api/discount/get-discount-codes';
 import { handleErrorResponse } from '@/utils/handle-cart-error-response';

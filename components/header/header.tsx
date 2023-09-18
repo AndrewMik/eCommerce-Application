@@ -1,6 +1,6 @@
 'use client';
 
-import { Layout, Menu, Button, Drawer, Row, Col } from 'antd';
+import { Layout, Menu, Button, Drawer, Row, Col, Space, Badge, ConfigProvider } from 'antd';
 import {
   MenuOutlined,
   HomeOutlined,
@@ -8,6 +8,8 @@ import {
   ShoppingOutlined,
   ShoppingCartOutlined,
   LogoutOutlined,
+  TeamOutlined,
+  LoginOutlined,
 } from '@ant-design/icons';
 import { useContext, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -16,7 +18,7 @@ import Image from 'next/image';
 import Client from '../../pages/api/client';
 import { AuthContext } from '../../context/authorization-context';
 import Notifications from '../notifications/notifications';
-import { Paths, navigationLinks } from '../../utils/route-links';
+import Paths from '../../utils/route-links';
 import logo from '../../public/kiddo-logo.svg';
 
 const { Header } = Layout;
@@ -24,7 +26,8 @@ const { Header } = Layout;
 const MainHeader = () => {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode } = useContext(AuthContext);
+  const { isLoggedIn, removeLogInState, setLogInStatusCode, setRegistrationStatusCode, setCount, count } =
+    useContext(AuthContext);
   const router = useRouter();
   const showDrawer = () => {
     setVisible((prevValue) => !prevValue);
@@ -40,19 +43,20 @@ const MainHeader = () => {
     removeLogInState();
     setLogInStatusCode(null);
     setRegistrationStatusCode(null);
+    setCount(0);
     router.push(Paths.LOGIN);
   };
 
-  const navigationLinksForAuthorizedUser = [
+  const navigationLinks = [
     {
       key: Paths.HOME,
       label: <Link href={Paths.HOME}>Home</Link>,
       icon: <HomeOutlined style={{ color: '#633211' }} />,
     },
     {
-      key: Paths.PROFILE,
-      label: <Link href={Paths.PROFILE}>Profile</Link>,
-      icon: <UserOutlined style={{ color: '#f5a60a' }} />,
+      key: Paths.ABOUT,
+      label: <Link href={Paths.ABOUT}>About us</Link>,
+      icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
     },
     {
       key: Paths.CATALOG,
@@ -61,8 +65,86 @@ const MainHeader = () => {
     },
     {
       key: Paths.CART,
-      label: <Link href={Paths.CART}>Cart</Link>,
-      icon: <ShoppingCartOutlined style={{ color: '#F94C10' }} />,
+      label: (
+        <Link href={Paths.CART}>
+          <ConfigProvider
+            theme={{
+              components: {
+                Badge: {
+                  fontSizeSM: 7,
+                  lineHeight: 200,
+                  paddingXS: 2,
+                },
+              },
+            }}
+          >
+            <Space>
+              <Badge count={count} size="small" offset={[2, -4]} color="volcano">
+                <ShoppingCartOutlined style={{ color: '#F94C10' }} />
+              </Badge>
+              Cart
+            </Space>
+          </ConfigProvider>
+        </Link>
+      ),
+    },
+    {
+      key: Paths.REGISTRATION,
+      label: <Link href={Paths.REGISTRATION}>Sign up</Link>,
+      icon: <UserOutlined style={{ color: '#f5a60a' }} />,
+    },
+    {
+      key: Paths.LOGIN,
+      label: <Link href={Paths.LOGIN}>Sign in</Link>,
+      icon: <LoginOutlined style={{ color: '#1ea620' }} />,
+    },
+  ];
+
+  const navigationLinksForAuthorizedUser = [
+    {
+      key: Paths.HOME,
+      label: <Link href={Paths.HOME}>Home</Link>,
+      icon: <HomeOutlined style={{ color: '#633211' }} />,
+    },
+    {
+      key: Paths.ABOUT,
+      label: <Link href={Paths.ABOUT}>About us</Link>,
+      icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
+    },
+    {
+      key: Paths.CATALOG,
+      label: <Link href={Paths.CATALOG}>Catalog</Link>,
+      icon: <ShoppingOutlined style={{ color: '#f50abe' }} />,
+    },
+    {
+      key: Paths.PROFILE,
+      label: <Link href={Paths.PROFILE}>Profile</Link>,
+      icon: <UserOutlined style={{ color: '#f5a60a' }} />,
+    },
+    {
+      key: Paths.CART,
+      label: (
+        <Link href={Paths.CART}>
+          <ConfigProvider
+            theme={{
+              components: {
+                Badge: {
+                  fontSizeSM: 8,
+                  lineHeight: 200,
+                  paddingXS: 2,
+                },
+              },
+            }}
+          >
+            <Space>
+              <Badge count={count} size="small" offset={[2, -4]} color="volcano">
+                <ShoppingCartOutlined style={{ color: '#F94C10' }} />
+              </Badge>
+              Cart
+            </Space>
+          </ConfigProvider>
+        </Link>
+      ),
     },
     {
       key: 'sign-out',

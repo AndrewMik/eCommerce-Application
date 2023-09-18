@@ -18,7 +18,7 @@ async function loginUserWithCart(cart: Cart, email: string, password: string) {
     const token = Client.token.get();
     localStorage.setItem('userToken', token.token);
     localStorage.setItem('refreshToken', token.refreshToken as string);
-    return { statusCode: response.statusCode, token };
+    return { statusCode: response.statusCode, cart: response.body.cart, token };
   } catch (error) {
     Client.getInstance().clearApiRoot();
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
@@ -39,7 +39,7 @@ async function logInWithoutCart(email: string, password: string) {
     const token = Client.token.get();
     localStorage.setItem('userToken', token.token);
     localStorage.setItem('refreshToken', token.refreshToken as string);
-    return { statusCode: response.statusCode, token };
+    return { statusCode: response.statusCode, cart: response.body.cart, token };
   } catch (error) {
     Client.getInstance().clearApiRoot();
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
