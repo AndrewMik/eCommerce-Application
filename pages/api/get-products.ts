@@ -1,24 +1,25 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
-import Client from '../client';
+import Client from './client';
 
-async function getDiscountCodes() {
+async function getAllProducts() {
   const client = Client.getInstance().clientCredentialsClient;
 
   try {
     const response = await client
-      .discountCodes()
+      .productProjections()
       .get({
         queryArgs: {
-          expand: ['cartDiscounts[*]'],
+          limit: 200,
+          expand: ['masterVariant.prices[*].discounted.discount'],
         },
       })
       .execute();
-    return response.body;
+    return { response: response.body.results };
   } catch (error) {
     const errorResponse = JSON.parse(JSON.stringify(error)) as ClientResponse<ErrorResponse>;
-    return errorResponse.body;
+    return { response: errorResponse.body ? errorResponse.body.statusCode : null };
   }
 }
 
-export default getDiscountCodes;
+export default getAllProducts;

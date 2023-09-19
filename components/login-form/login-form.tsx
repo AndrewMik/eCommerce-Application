@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { Button, Form, Input, Space, Row, Col, Divider, Typography } from 'antd';
 import { LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { useContext } from 'react';
@@ -9,19 +10,20 @@ import { getEmailRules, getPasswordRules } from '../registration-form/helpers/va
 const { Link } = Typography;
 
 const LoginForm: React.FC = () => {
-  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken, setCount } =
+  const router = useRouter();
+  const { saveLogInState, setLogInStatusCode, setIsLoggedIn, setToggleNotificationForLogIn, setUserToken } =
     useContext(AuthContext);
 
   const onFinish = async ({ email, password }: FieldType) => {
-    const { statusCode, token, cart } = await loginUser(email, password);
+    const { statusCode, token } = await loginUser(email, password);
     if (statusCode) {
       setLogInStatusCode(statusCode);
       if (statusCode === 200) {
         if (token) {
           setUserToken(token.refreshToken as string);
           saveLogInState(token.token, token.refreshToken as string);
-          setCount(cart?.totalLineItemQuantity || 0);
           setIsLoggedIn(true);
+          router.push(`/`);
         } else {
           setIsLoggedIn(false);
         }

@@ -1,23 +1,12 @@
-import { useState, useEffect, useRef, useContext } from 'react';
-import { App, Spin, Row, Col, Button } from 'antd';
-import { ProductProjection, Image, Cart, ErrorResponse } from '@commercetools/platform-sdk';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { useState, useEffect, useRef } from 'react';
+import { Spin, Row, Col } from 'antd';
+import { ProductProjection, Image } from '@commercetools/platform-sdk';
 
-import { AuthContext } from '../../context/authorization-context';
-
-import updateCart from '../../pages/api/update-cart';
-import getCartWithToken from '../../pages/api/cart/get-cart-with-token';
-import addProductToActiveCart from '../../pages/api/cart/add-product-to-cart';
-import createNewCartWithProduct from '../../pages/api/cart/create-cart-with-product';
-import getActiveCart from '../../pages/api/cart/get-active-cart';
-import { handleErrorResponse } from '../../utils/handle-cart-error-response';
 import Slider from './slider';
 import ProductBreadcrumb from './breadcrumb';
 import ProductDetails from './details';
 import Attributes from './attributes';
 import ImageModal from './modal';
-
-type Response = Cart | ErrorResponse | undefined | null;
 
 enum AttributesKeys {
   BRAND = 'brand',
@@ -49,69 +38,9 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [open, setOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [cart, setCart] = useState<Cart | null>(null);
+
   const carouselRef = useRef<any>(null);
   const modalCarouselRef = useRef<any>(null);
-  const { setCount } = useContext(AuthContext);
-
-  const { notification } = App.useApp();
-
-  const isProductInCart = cart?.lineItems && cart?.lineItems.some((lineItem) => lineItem.productId === product.id);
-
-  const handleResponse = (response: Response) => {
-    if (response) {
-      if ('statusCode' in response) {
-        handleErrorResponse(response);
-      } else {
-        setCart(response);
-      }
-    }
-  };
-
-  const getCart = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken !== null) {
-      const response = await getCartWithToken();
-      handleResponse(response);
-    } else {
-      const response = await getActiveCart();
-      handleResponse(response);
-    }
-  };
-
-  const removeLineItemFromCart = async () => {
-    if (cart) {
-      const item = cart.lineItems.find((lineItem) => lineItem.productId === product.id);
-
-      if (item) {
-        const response = await updateCart(cart.id, cart.version, [{ action: 'removeLineItem', lineItemId: item.id }]);
-
-        if (response && 'type' in response) {
-          setCart(response as Cart);
-          localStorage.setItem('cart', JSON.stringify(response));
-          setCount((response as Cart).totalLineItemQuantity || 0);
-
-          notification.success({
-            message: 'Removed from cart',
-            description: `${product.name.en} was successfully removed from your cart.`,
-            placement: 'bottom',
-          });
-        } else {
-          setCart(null);
-          notification.error({
-            message: 'Oops, something went wrong.',
-            description: `${product.name.en} wasn't removed from your cart. Please try again later.`,
-            placement: 'bottom',
-          });
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    getCart();
-  }, []);
 
   useEffect(() => {
     if (product) {
@@ -153,40 +82,6 @@ const Product = ({ product }: { product: ProductProjection }) => {
   const prev = () => {
     if (modalCarouselRef.current) {
       modalCarouselRef.current.prev();
-    }
-  };
-
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    setLoading(true);
-
-    if (!cart) {
-      const response = await createNewCartWithProduct(product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          setCart(response);
-          localStorage.setItem('cart', JSON.stringify(response));
-          setCount(response.totalLineItemQuantity || 0);
-        }
-        setLoading(false);
-      }
-    } else {
-      const response = await addProductToActiveCart(cart.id, cart.version, product.id);
-
-      if (response) {
-        if ('statusCode' in response) {
-          handleErrorResponse(response);
-        } else {
-          setCart(response);
-          localStorage.setItem('cart', JSON.stringify(response));
-          setCount(response.totalLineItemQuantity || 0);
-        }
-        setLoading(false);
-      }
     }
   };
 
@@ -264,15 +159,6 @@ const Product = ({ product }: { product: ProductProjection }) => {
               />
               <Attributes description={metaDescription} ageRange={ageRange} gender={gender} material={material} />
             </div>
-            {!isProductInCart ? (
-              <Button icon={<ShoppingCartOutlined />} loading={loading} onClick={handleClick} style={{ marginTop: 10 }}>
-                Add to cart
-              </Button>
-            ) : (
-              <Button danger loading={loading} onClick={removeLineItemFromCart} style={{ marginTop: 10 }}>
-                Remove from Cart
-              </Button>
-            )}
           </Col>
         </Row>
         <ImageModal
