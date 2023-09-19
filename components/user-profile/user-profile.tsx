@@ -191,12 +191,18 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                       />
                     );
                   })}
-                <Button onClick={() => setIsModalVisible(true)}>Add New Address</Button>
-                <Form.Item style={{ textAlign: 'center' }}>
-                  <Button type="primary" htmlType="submit">
-                    Save Changes
-                  </Button>
-                </Form.Item>
+                <Row justify={'space-between'}>
+                  <Col>
+                    <Button onClick={() => setIsModalVisible(true)}>Add New Address</Button>
+                  </Col>
+                  <Col>
+                    <Form.Item style={{ textAlign: 'center' }}>
+                      <Button type="primary" htmlType="submit">
+                        Save Changes
+                      </Button>
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Form>
               <div style={{ marginTop: 100 }}></div>
               <DividerText text={'Change Password'} />
@@ -229,9 +235,13 @@ const Profile: React.FC<CountryOptionsProps> = ({ countries }) => {
                   dependencies={['newPassword']}
                 />
                 <Form.Item style={{ textAlign: 'center' }} wrapperCol={{ span: 24 }}>
-                  <Button type="primary" htmlType="submit" style={{ marginTop: 25 }}>
-                    Change Password
-                  </Button>
+                  <Row justify={'end'}>
+                    <Col>
+                      <Button type="primary" htmlType="submit" style={{ marginTop: 25 }}>
+                        Change Password
+                      </Button>
+                    </Col>
+                  </Row>
                 </Form.Item>
               </Form>
             </Card>

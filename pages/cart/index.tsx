@@ -1,11 +1,10 @@
-import { Button, Space } from 'antd';
+import { App } from 'antd';
+import Cart from '@/components/cart/cart';
 
 const Page = (): JSX.Element => (
-  <div style={{ padding: '0 24px' }}>
-    <Space style={{ padding: '0 50px', minHeight: '82vh' }}>
-      <Button type="primary">Test cart page</Button>
-    </Space>
-  </div>
+  <App notification={{ maxCount: 3 }}>
+    <Cart />
+  </App>
 );
 
 export default Page;

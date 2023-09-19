@@ -1,4 +1,9 @@
-import { AllCategories } from '../components/catalog-sider/types';
+import { Category } from '@commercetools/platform-sdk';
+
+interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
+}
 
 export default function findMainCategoryById(mainCategories: AllCategories[], targetIdWithPrefix: string) {
   const targetId = targetIdWithPrefix && targetIdWithPrefix.replace('category-', '');

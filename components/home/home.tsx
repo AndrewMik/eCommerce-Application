@@ -1,11 +1,18 @@
-import { LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { LoginOutlined, UserOutlined, ShoppingOutlined, ShoppingCartOutlined, TeamOutlined } from '@ant-design/icons';
 import { Col, List, Row } from 'antd';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Paths } from '@/utils/route-links';
+import { DiscountCode, DiscountCodePagedQueryResponse, ErrorResponse } from '@commercetools/platform-sdk';
+import Paths from '@/utils/route-links';
 import { AuthContext } from '@/context/authorization-context';
+import getDiscountCodes from '@/pages/api/discount/get-discount-codes';
+import { handleErrorResponse } from '@/utils/handle-cart-error-response';
+import Promo from '../promo/promo';
+
+type Response = DiscountCodePagedQueryResponse | ErrorResponse | undefined;
 
 const Home = (): JSX.Element => {
+  const [promoCodes, setPromoCodes] = useState<DiscountCode[] | null>(null);
   const { isLoggedIn, setToggleInactiveLinks } = useContext(AuthContext);
 
   const handleLinkClick = () => {
@@ -14,7 +21,31 @@ const Home = (): JSX.Element => {
     }
   };
 
+  const handleResponse = (response: Response) => {
+    if (response) {
+      if ('statusCode' in response) {
+        handleErrorResponse(response);
+      } else {
+        setPromoCodes(response.results);
+      }
+    }
+  };
+
+  const setDiscountCodes = async () => {
+    const response = await getDiscountCodes();
+    handleResponse(response);
+  };
+
+  useEffect(() => {
+    setDiscountCodes();
+  }, []);
+
   const navigationMainPage = [
+    {
+      key: Paths.ABOUT,
+      label: <Link href={Paths.ABOUT}>About us</Link>,
+      icon: <TeamOutlined style={{ color: '#5edaeb' }} />,
+    },
     {
       key: Paths.CATALOG,
       label: <Link href={Paths.CATALOG}>Catalog</Link>,
@@ -59,6 +90,13 @@ const Home = (): JSX.Element => {
           </List.Item>
         )}
       />
+      <Row gutter={16} style={{ justifyContent: 'center', display: 'flex' }}>
+        {promoCodes?.map((promo) => (
+          <Col key={promo.id}>
+            <Promo promo={promo} />
+          </Col>
+        ))}
+      </Row>
     </>
   );
 };

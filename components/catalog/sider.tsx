@@ -1,15 +1,22 @@
 import { Button, Dropdown, Layout, Menu, MenuProps, Space } from 'antd';
 import { SetStateAction, useState } from 'react';
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { Category } from '@commercetools/platform-sdk';
 import { CheckSquareOutlined, DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { MenuKeyProps, AllCategories } from './types';
-import { AttributeData } from '../catalog-cards/types';
+import { AttributeData } from './types';
 
 const { Sider } = Layout;
 
+interface MenuKeyProps {
+  keyPath: string[];
+}
+
+interface AllCategories {
+  mainCategory: Category;
+  subCategory: Category[];
+}
+
 interface CatalogSiderProps {
   attributeData: AttributeData | null;
-  getUpdatedProductCards: (cards: ProductProjection[] | number) => void;
   allSelectedKeys: string[][];
   setAllSelectedKeys: (value: SetStateAction<string[][]>) => void;
   setCategory: (value: SetStateAction<string[]>) => void;
@@ -18,7 +25,6 @@ interface CatalogSiderProps {
   displayFilters: (attributes: AttributeData) => MenuProps['items'];
   handleSelect: (menuProps: MenuKeyProps) => void;
   handleDeselect: (menuProps: MenuKeyProps) => void;
-  handleSubMenuClick: (openKeys: string[]) => void;
   itemsForName: MenuProps['items'];
   itemsForPrice: MenuProps['items'];
   chosenSorting: string;
@@ -34,7 +40,6 @@ const CatalogSider = ({
   displayFilters,
   handleSelect,
   handleDeselect,
-  handleSubMenuClick,
   allSelectedKeys,
   setAllSelectedKeys,
   itemsForName,
@@ -76,7 +81,7 @@ const CatalogSider = ({
           left: 0,
           top: '0px',
           backgroundColor: 'white',
-          zIndex: 100,
+          zIndex: 99,
           overflow: 'auto',
         }}
       >
@@ -112,7 +117,6 @@ const CatalogSider = ({
           selectedKeys={allSelectedKeys.map((key) => key[0])}
           onSelect={({ keyPath }) => handleSelect({ keyPath })}
           onDeselect={({ keyPath }) => handleDeselect({ keyPath })}
-          onOpenChange={(openKeys) => handleSubMenuClick(openKeys)}
         />
         <Space>
           {chosenSorting.length > 0 ? (
