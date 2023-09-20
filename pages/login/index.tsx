@@ -1,7 +1,7 @@
+import { Spin } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import LoginForm from '@/components/login-form/login-form';
-import Spinner from '@/components/spinner/spinner';
 import { AuthContext } from '../../context/authorization-context';
 
 const Page = (): JSX.Element => {
@@ -34,7 +34,11 @@ const Page = (): JSX.Element => {
     return <LoginForm />;
   }
 
-  return <Spinner />;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Spin size="large" />
+    </div>
+  );
 };
 
 export default Page;

@@ -2,9 +2,10 @@
 
 import { useState, useContext } from 'react';
 import { Form, Button, Row, Col, Layout, Card } from 'antd';
+import { useRouter } from 'next/navigation';
 import registerUser from '@/pages/api/register-user';
 import Footer from './fields/footer';
-import Paths from '../../utils/route-links';
+import { Paths } from '../../utils/route-links';
 import AddressSection from './sections/address-section';
 import CredentialsSection from './sections/credentials-section';
 import PersonalSection from './sections/personal-section';
@@ -15,6 +16,7 @@ import { CountryOptionsProps } from './helpers/interface';
 const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
   const [form] = Form.useForm();
   const [useBillingAddress, setUseBillingAddress] = useState(false);
+  const router = useRouter();
   const {
     setToggleNotificationForRegistration,
     setRegistrationStatusCode,
@@ -32,6 +34,7 @@ const RegistrationForm: React.FC<CountryOptionsProps> = ({ countries }) => {
         setUserRefreshToken(token.refreshToken as string);
         saveLogInState(token.token, token.refreshToken as string);
         setIsLoggedIn(true);
+        router.push(`/`);
       } else {
         setIsLoggedIn(false);
       }

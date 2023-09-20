@@ -2,7 +2,7 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ErrorResponse } from '@commercetools/platform-sdk';
 import Client from './client';
 
-async function executeQuery(filterStrings: string[], searchString: string, sortString: string) {
+async function executeQuery(filterStrings: string[], searchString: string) {
   const client = new Client().clientCredentialsClient;
 
   try {
@@ -15,7 +15,6 @@ async function executeQuery(filterStrings: string[], searchString: string, sortS
           expand: ['masterVariant.prices[*].discounted.discount'],
           filter: filterStrings,
           'text.en': searchString,
-          sort: sortString,
         },
       })
       .execute();
@@ -25,8 +24,8 @@ async function executeQuery(filterStrings: string[], searchString: string, sortS
     return { response: errorResponse.body ? errorResponse.body.statusCode : null };
   }
 }
-/* eslint-disable @typescript-eslint/default-param-last */
-function getSortedProducts(filters: string[][], categories: string[], searchString = '', sortString: string) {
+
+function getFilteredProducts(filters: string[][], categories: string[], search = '') {
   let filterStrings: string[] = [];
 
   if (filters.length > 0) {
@@ -64,7 +63,7 @@ function getSortedProducts(filters: string[][], categories: string[], searchStri
     });
   }
 
-  return executeQuery(filterStrings, searchString, sortString);
+  return executeQuery(filterStrings, search);
 }
 
-export default getSortedProducts;
+export default getFilteredProducts;

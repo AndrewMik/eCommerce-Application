@@ -19,8 +19,6 @@ interface AuthContextType {
   setToggleNotificationForRegistration: (state: boolean | ((prevState: boolean) => boolean)) => void;
   setRegistrationStatusCode: (statusCode: number | null) => void;
   setLogInStatusCode: (statusCode: number | null) => void;
-  count: number;
-  setCount: (count: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -46,8 +44,6 @@ const AuthContext = createContext<AuthContextType>({
   setToggleNotificationForRegistration: () => {},
   setRegistrationStatusCode: () => {},
   setLogInStatusCode: () => {},
-  count: 0,
-  setCount: () => {},
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -59,7 +55,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [registrationStatusCode, setRegistrationStatusCode] = useState<number | null>(null);
   const [logInStatusCode, setLogInStatusCode] = useState<number | null>(null);
   const [toggleInactiveLinks, setToggleInactiveLinks] = useState<boolean | null>(null);
-  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -80,7 +75,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   };
 
   const removeLogInState = () => {
-    localStorage.clear();
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('refreshToken');
     setIsLoggedIn(false);
   };
 
@@ -105,8 +101,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setIsLoggedIn,
         setUserToken,
         setUserRefreshToken,
-        count,
-        setCount,
       }}
     >
       {children}
