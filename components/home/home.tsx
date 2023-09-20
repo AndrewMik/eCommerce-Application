@@ -90,7 +90,7 @@ const Home = (): JSX.Element => {
           </List.Item>
         )}
       />
-      <Row gutter={16} style={{ justifyContent: 'center', display: 'flex' }}>
+      <Row gutter={[0, 16]} style={{ justifyContent: 'center', display: 'flex' }}>
         {promoCodes?.map((promo) => (
           <Col key={promo.id}>
             <Promo promo={promo} />
