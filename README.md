@@ -52,17 +52,19 @@ using npm:
 
 - **clone repository:** `git clone https://github.com/AndrewMik/eCommerce-Application.git`
 - **navigate to the project directory:** `cd ecommerce-application`
-- **install dependencies:** `npm install --legacy-peer-deps`
+- **install dependencies:** `npm install`
+- **start development server:** `npm run dev`
 - **build for production:** `npm run build`
-- **start development server:** `npm start`
+- **start production server:** `npm start`
 
 using yarn:
 
 - **clone repository:** `git clone https://github.com/AndrewMik/eCommerce-Application.git`
 - **navigate to the project directory:** `cd ecommerce-application`
-- **install dependencies:** `yarn install --legacy-peer-deps`
-- **start development server:** `yarn start`
+- **install dependencies:** `yarn install `
+- **start development server:** `yarn dev`
 - **build for production (if needed):** `yarn build`
+- **start production server:** `yarn start`
 
 ## Available Scripts 📝
 
