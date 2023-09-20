@@ -1,8 +1,8 @@
-import { Spin } from 'antd';
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import RegistrationForm from '@/components/registration-form/registration-form';
 import { AuthContext } from '@/context/authorization-context';
+import Spinner from '@/components/spinner/spinner';
 import getCountries from '../api/get-countries';
 
 const Page = (): JSX.Element => {
@@ -46,11 +46,7 @@ const Page = (): JSX.Element => {
     return <RegistrationForm countries={countries} />;
   }
 
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Spin size="large" />
-    </div>
-  );
+  return <Spinner />;
 };
 
 export default Page;

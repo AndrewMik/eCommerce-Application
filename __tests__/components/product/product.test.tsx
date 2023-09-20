@@ -3,6 +3,21 @@ import '@testing-library/jest-dom/extend-expect';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import Product from '../../../components/product/product';
 
+window.fetch = jest.fn(
+  () =>
+    Promise.resolve({
+      json: () => Promise.resolve({ data: 'mockedData' }),
+    }) as any,
+);
+
+beforeEach(() => {
+  (fetch as jest.Mock).mockClear();
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 window.matchMedia =
   window.matchMedia ||
   function matchMediaPolyfill() {
