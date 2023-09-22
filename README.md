@@ -40,7 +40,7 @@ At Kiddo Kingdom, every toy is a treasure, every smile is a success, and every c
 - **Testing**: [Jest](https://jestjs.io/), [React Testing Library](https://testing-library.com/)
 - **Code Quality**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/)
 - **Styles**: [Ant Design](https://ant.design/)
-- **Backend**: [Commerce Tools](https://commercetools.com/)
+- **Backend**: [Commercetools](https://commercetools.com/)
 
   You can find more about the dependencies in **the package.json** file.
 
@@ -52,17 +52,19 @@ using npm:
 
 - **clone repository:** `git clone https://github.com/AndrewMik/eCommerce-Application.git`
 - **navigate to the project directory:** `cd ecommerce-application`
-- **install dependencies:** `npm install --legacy-peer-deps`
+- **install dependencies:** `npm install`
+- **start development server:** `npm run dev`
 - **build for production:** `npm run build`
-- **start development server:** `npm start`
+- **start production server:** `npm start`
 
 using yarn:
 
 - **clone repository:** `git clone https://github.com/AndrewMik/eCommerce-Application.git`
 - **navigate to the project directory:** `cd ecommerce-application`
-- **install dependencies:** `yarn install --legacy-peer-deps`
-- **start development server:** `yarn start`
+- **install dependencies:** `yarn install `
+- **start development server:** `yarn dev`
 - **build for production (if needed):** `yarn build`
+- **start production server:** `yarn start`
 
 ## Available Scripts 📝
 
