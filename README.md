@@ -40,7 +40,7 @@ At Kiddo Kingdom, every toy is a treasure, every smile is a success, and every c
 - **Testing**: [Jest](https://jestjs.io/), [React Testing Library](https://testing-library.com/)
 - **Code Quality**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://typicode.github.io/husky/)
 - **Styles**: [Ant Design](https://ant.design/)
-- **Backend**: [Commerce Tools](https://commercetools.com/)
+- **Backend**: [Commercetools](https://commercetools.com/)
 
   You can find more about the dependencies in **the package.json** file.
 
